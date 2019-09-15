@@ -1,0 +1,16 @@
+diff --git a/node_modules/react-scripts/config/webpack.config.js b/node_modules/react-scripts/config/webpack.config.js
+index 12157a3..fd87a56 100644
+--- a/node_modules/react-scripts/config/webpack.config.js
++++ b/node_modules/react-scripts/config/webpack.config.js
+@@ -535,6 +535,11 @@ module.exports = function(webpackEnv) {
+                 'sass-loader'
+               ),
+             },
++            // Raw loader for loading shaders
++            {
++              test: /\.(frag|vert)$/i,
++              use: 'raw-loader'
++            },
+             // "file" loader makes sure those assets get served by WebpackDevServer.
+             // When you `import` an asset, you get its (virtual) filename.
+             // In production, they would get copied to the `build` folder.
