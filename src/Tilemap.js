@@ -4,6 +4,7 @@ import tilemapFS from './shaders/tilemap.frag';
 import { vec2 } from './utils/gl-matrix-min';
 import GLUtil from './utils/gl-utils';
 
+
 // https://github.com/toji/webgl-samples/blob/master/js/webgl-tilemap.js#L217
 // A lot of the webgl is from here
 // Tilemap is rendered by generating an RGBA texture with the coordinates of the sprite in the R and G channels (B and A channels are available, if we want to use more data, or have bigger spritesheets)
@@ -42,26 +43,28 @@ class Tilemap extends Function {
 
         // this.spriteSheet = gl.createTexture();
 
-        const quadVerts = [
+        
+        this.quadVerts = [
             //x  y  u  v
             -1, -1, 0, 1,
             1, -1, 1, 1,
             1, 1, 1, 0,
-
+            
             -1, -1, 0, 1,
             1, 1, 1, 0,
             -1, 1, 0, 0
         ];
-
+        
         this.quadVertBuffer = gl.createBuffer();
+        
         gl.bindBuffer(gl.ARRAY_BUFFER, this.quadVertBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(quadVerts), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.quadVerts), gl.STATIC_DRAW);
 
         this.scrollScaleX = 1;
         this.scrollScaleY = 1;
         this.inverseTextureSize = vec2.create();
 
-        this.shader = GLUtil.createProgram(gl, tilemapVS, tilemapFS);
+        Tilemap.shader = Tilemap.shader || GLUtil.createProgram(gl, tilemapVS, tilemapFS);
 
         this.ready = this.prerender(this.gl);
     }
@@ -134,12 +137,15 @@ class Tilemap extends Function {
     draw() {
         const { x, y } = this.offset;
         const gl = this.gl;
-        const shader = this.shader;
+        const shader = Tilemap.shader;
 
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
         gl.useProgram(shader.program);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.quadVertBuffer);
+        // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.quadVerts), gl.STATIC_DRAW);
 
         gl.enableVertexAttribArray(shader.attribute.position);
         gl.enableVertexAttribArray(shader.attribute.texture);
