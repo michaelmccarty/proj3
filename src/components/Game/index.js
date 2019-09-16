@@ -53,15 +53,15 @@ class Game extends React.Component {
     setup = async () => {
         // Make some sprites, load a map, whatever
         // const actorSpritesPromise = new Promise(resolve => PIXI.Loader.shared.add('./spritesheets/overworld-actors.json').load(resolve));
-        this.coords = { x: 10, y: 10 };
-        await this.loadMap('Route 1', (this.coords.x - 4 ) * 16, (this.coords.y - 4 )* 16);
+        this.coords = { x: 4, y: 4 };
+        await this.loadMap('Route 1', (this.coords.x - 4) * 16, (this.coords.y - 4) * 16);
         this.currentMap = 'Route 1';
 
         this.state.app.ticker.add(this.gameLoop);
 
         this.player = new Sprite(this.gl, {
-            x: 80,
-            y: 80,
+            x: 64,
+            y: 64,
             size: 16,
             frames: [
                 {
@@ -138,7 +138,9 @@ class Game extends React.Component {
             this.maps[mapName].draw();
         }
 
-        Sprite.drawSprites(this.gl, [this.player], {x: (this.coords.x - 4) * 64, y: (this.coords.y - 4) * 64}, this.actorSpriteSheet);
+        // Sprite.drawSprites(this.gl, [this.player], {x: (this.coords.x - 4) * 64, y: (this.coords.y - 4) * 64}, this.actorSpriteSheet);
+        Sprite.drawSprites(this.gl, [this.player], { x: this.coords.x * 16 - 64, y: this.coords.y *16 - 64 }, this.actorSpriteSheet);
+
         // this.gl.useProgram(this.state.app.renderer.shader.program.glProgram);
         // if (this.state.app.renderer.shader.program && this.state.app.renderer.shader.program.glPrograms) {
         //     this.gl.useProgram(this.state.app.renderer.shader.program.glPrograms.program);

@@ -64,10 +64,11 @@ class Sprite {
 }
 
 Sprite.drawSprites = function (gl, sprites, offset, spritesheet) {
+    console.log(offset);
     const shader = Sprite.program;
     gl.useProgram(shader.program);
     gl.uniform2f(shader.uniform.inverseViewportSize, 1 / 160, 1 / 144);
-    gl.uniform2f(shader.uniform.viewportOffset, offset.x, offset.y);
+    gl.uniform2f(shader.uniform.viewOffset, offset.x, offset.y);
     gl.uniform2f(shader.uniform.inverseTextureSize, spritesheet.inverseWidth, spritesheet.inverseHeight);
 
     gl.activeTexture(gl.TEXTURE0);
