@@ -11,9 +11,9 @@ import GLUtil from './utils/gl-utils';
 // Then that texture is used for the map.
 // When the fragment shader goes to color in that texture, instead of using its RGBA channels for color, it uses them to look up the sprites in the spritesheet
 
-class Tilemap extends Function {
+class Tilemap {
     constructor(gl, { width, height, tiles, spritesheet }) {
-        super((x, y) => this.tiles[y * this.width + x]);
+        // super((x, y) => {console.log(this.tiles[y * this.width + x]); return this.tiles[y * this.width + x]});
         this.width = width;
         this.height = height;
         this.tiles = tiles;
@@ -73,9 +73,13 @@ class Tilemap extends Function {
     frames = []
     offset = { x: 0, y: 0 } // change to scroll the map
 
+    getTile(x, y) {
+        return this.tiles[y * this.width + x]
+    }
+
     async prerender(gl) {
         this.frameCount = this.tiles.reduce((a, { frames }) => a * frames / gcd(a, frames), 1);
-        console.log(this.frameCount);
+        // console.log(this.frameCount);
         // for each frame we need to render
         await this.spritesheet.loaded;
 
@@ -83,7 +87,7 @@ class Tilemap extends Function {
 
         const shift = Math.log2(this.spritesheet.size);
         const mask = this.spritesheet.size - 1;
-        console.log(mask);
+        // console.log(mask);
 
         const mapSize = this.spritesheet.size * this.spritesheet.size * 4;    // r, g, b, a
 
@@ -111,7 +115,6 @@ class Tilemap extends Function {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-            console.log(pixels);
             this.inverseTextureSize[0] = 1 / this.width;
             this.inverseTextureSize[1] = 1 / this.height;
 

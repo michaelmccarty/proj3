@@ -5,6 +5,7 @@ import Spritesheet from '../../Spritesheet';
 import Tilemap from '../../Tilemap';
 import Sprite from '../../Sprite';
 import Texture from '../../Texture';
+import Player from '../../actors/Player';
 
 // overworld actor sprites
 import actors from '../../actors.json';
@@ -59,41 +60,45 @@ class Game extends React.Component {
 
         this.state.app.ticker.add(this.gameLoop);
 
-        this.player = new Sprite(this.gl, {
-            x: 64,
-            y: 64,
-            size: 16,
-            frames: [
-                {
-                    "x": 64,
-                    "y": 0,
-                    "flip_h": false,
-                    "flip_v": false
-                },
-                {
-                    "x": 48,
-                    "y": 0,
-                    "flip_h": false,
-                    "flip_v": false
-                },
-                {
-                    "x": 64,
-                    "y": 0,
-                    "flip_h": true,
-                    "flip_v": false
-                },
-                {
-                    "x": 48,
-                    "y": 0,
-                    "flip_h": false,
-                    "flip_v": false
-                }
-            ]
-        });
-
+        // this.player = new Sprite(this.gl, {
+        //     x: 64,
+        //     y: 64,
+        //     size: 16,
+        //     frames: [
+        //         {
+        //             "x": 64,
+        //             "y": 0,
+        //             "flip_h": false,
+        //             "flip_v": false
+        //         },
+        //         {
+        //             "x": 48,
+        //             "y": 0,
+        //             "flip_h": false,
+        //             "flip_v": false
+        //         },
+        //         {
+        //             "x": 64,
+        //             "y": 0,
+        //             "flip_h": true,
+        //             "flip_v": false
+        //         },
+        //         {
+        //             "x": 48,
+        //             "y": 0,
+        //             "flip_h": false,
+        //             "flip_v": false
+        //         }
+        //     ]
+        // });
+        
         this.actorSpriteSheet = new Texture(this.gl, './spritesheets/overworld-actors.png');
 
-        this.player.playOnce();
+        this.player = new Player(this.coords.x, this.coords.y, this.maps[this.currentMap]);
+        this.actors = [this.player];
+        console.log(this.player.sprites['east'].position[0])
+
+        this.player.walk('east');
         // this.actorSpriteSheet = new Texture(this.gl, './spritesheets/test-sprite.png');
 
 
@@ -138,8 +143,16 @@ class Game extends React.Component {
             this.maps[mapName].draw();
         }
 
+        const sprites = [];
+        for (let actor of this.actors) {
+            const update = actor.update();
+            // console.log(update);
+
+            sprites.push(update);
+        }
+
         // Sprite.drawSprites(this.gl, [this.player], {x: (this.coords.x - 4) * 64, y: (this.coords.y - 4) * 64}, this.actorSpriteSheet);
-        Sprite.drawSprites(this.gl, [this.player], { x: this.coords.x * 16 - 64, y: this.coords.y *16 - 64 }, this.actorSpriteSheet);
+        Sprite.drawSprites(this.gl, sprites, { x: this.coords.x * 16 - 64, y: this.coords.y *16 - 64 }, this.actorSpriteSheet);
 
         // this.gl.useProgram(this.state.app.renderer.shader.program.glProgram);
         // if (this.state.app.renderer.shader.program && this.state.app.renderer.shader.program.glPrograms) {

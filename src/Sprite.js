@@ -5,7 +5,7 @@ import { vec2 } from './utils/gl-matrix-min';
 import GLUtil from './utils/gl-utils';
 
 class Sprite {
-    constructor(gl, options) {
+    constructor(options) {
         this.currentFrame = 0;
         this.sheet = options.spriteSheet;
         this.size = options.size || 16;
@@ -18,10 +18,6 @@ class Sprite {
         this.position = vec2.create();
         this.position[0] = options.x || 0;
         this.position[1] = options.y || 0;
-
-        this.gl = gl;
-        Sprite.program = Sprite.program || GLUtil.createProgram(gl, spriteVS, spriteFS);
-
         
         this.frameGen = (function* (sprite) {
             const frameInterval = 1 / sprite.framerate * 1000;
@@ -67,7 +63,8 @@ class Sprite {
 }
 
 Sprite.drawSprites = function (gl, sprites, offset, spritesheet) {
-    console.log(offset);
+    if (!Sprite.program) Sprite.program = GLUtil.createProgram(gl, spriteVS, spriteFS);
+    // console.log(offset);
     const shader = Sprite.program;
     gl.useProgram(shader.program);
     gl.uniform2f(shader.uniform.inverseViewportSize, 1 / 160, 1 / 144);
