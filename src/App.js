@@ -5,7 +5,7 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <Game width={160 * 4} height={144 * 4}/>
+      <Game />
     </div>
   );
 }
