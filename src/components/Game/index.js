@@ -65,12 +65,6 @@ class Game extends React.Component {
             size: 16,
             frames: [
                 {
-                    "x": 48,
-                    "y": 0,
-                    "flip_h": false,
-                    "flip_v": false
-                },
-                {
                     "x": 64,
                     "y": 0,
                     "flip_h": false,
@@ -87,13 +81,19 @@ class Game extends React.Component {
                     "y": 0,
                     "flip_h": true,
                     "flip_v": false
+                },
+                {
+                    "x": 48,
+                    "y": 0,
+                    "flip_h": false,
+                    "flip_v": false
                 }
             ]
         });
 
         this.actorSpriteSheet = new Texture(this.gl, './spritesheets/overworld-actors.png');
 
-        this.player.play();
+        this.player.playOnce();
         // this.actorSpriteSheet = new Texture(this.gl, './spritesheets/test-sprite.png');
 
 

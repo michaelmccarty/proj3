@@ -12,6 +12,8 @@ class Sprite {
         this.frames = options.frames || [{ x: 0, y: 0 }]; // [{x, y}]
         this.framerate = options.framerate || 2;
 
+        this.defaultFrame = options.restFrame == 'first' || 1;
+
         // Sprites position in the world
         this.position = vec2.create();
         this.position[0] = options.x || 0;
@@ -21,19 +23,22 @@ class Sprite {
         Sprite.program = Sprite.program || GLUtil.createProgram(gl, spriteVS, spriteFS);
 
         
-        this.frameGen = (function* (frames, framerate, isPlaying) {
-            const frameInterval = 1 / framerate * 1000;
+        this.frameGen = (function* (sprite) {
+            const frameInterval = 1 / sprite.framerate * 1000;
             while (true) {
-                for (let frame of frames) {
+                for (let frame of sprite.frames) {
                     // Advance frames every frameInterval milliseconds
                     const last = Date.now();
                     while (Date.now() - last < frameInterval) {
-                        if (isPlaying) yield frame;
-                        else yield frames[0];
+                        if (sprite._playing) yield frame;
+                        else yield sprite.frames[sprite.defaultFrame && sprite.frames.length -1];
                     }
                 }
+                if (sprite._playOnce) {
+                    sprite.pause();
+                }
             }
-        })(this.frames, this.framerate, this.isPlaying);
+        })(this);
     }
     
     get textureOffset() {
@@ -41,7 +46,7 @@ class Sprite {
     }
 
     _playing = false;
-    isPlaying = () => this._playing;
+    _playOnce = false;
 
     play() {
         this._playing = true;
@@ -55,11 +60,9 @@ class Sprite {
         return this.frameGen.next().value;
     }
 
-    advanceFrame() {
-        this.currentFrame++;
-        if (this.currentFrame > this.frames.length) {
-
-        }
+    playOnce() {
+        this._playOnce = true;
+        this.play();
     }
 }
 
@@ -77,6 +80,7 @@ Sprite.drawSprites = function (gl, sprites, offset, spritesheet) {
     const buffer = new Float32Array(192); // 64 sprites active at once;
     let i = 0;
     for (let sprite of sprites) {
+        if (!sprite) continue;
         const textureOffset = sprite.textureOffset;
         buffer[i++] = sprite.position[0];
         buffer[i++] = sprite.position[1];
