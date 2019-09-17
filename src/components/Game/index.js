@@ -19,6 +19,8 @@ class Game extends React.Component {
     state = {
     }
 
+    pressedKeys = new Set();
+
     maps = {};
     _spritesheetCache = {};
     spritesheetCache = new Proxy(this._spritesheetCache, {
@@ -94,9 +96,20 @@ class Game extends React.Component {
     }
 
     gameLoop = (delta) => {
+        const keys = this.pressedKeys;
+        if (keys.has('ArrowUp') || keys.has('w') || keys.has('W')) {
+            this.player.walk('north');
+        } else if (keys.has('ArrowDown') || keys.has('s') || keys.has('S')) {
+            this.player.walk('south');
+        } else if (keys.has('ArrowLeft') || keys.has('a') || keys.has('A')) {
+            this.player.walk('west');
+        } else if (keys.has('ArrowRight') || keys.has('d') || keys.has('D')) {
+            this.player.walk('east');
+        }
+
+
         [this.coords.x, this.coords.y] = [this.player.x, this.player.y];
-        
-        
+
         // If the player moved, subtract the movement from the offset of all loaded maps
         for (let mapName in this.maps) {
             this.maps[mapName].offset = { x: (this.coords.x - 4) * 16, y: (this.coords.y - 4) * 16 }
@@ -111,18 +124,21 @@ class Game extends React.Component {
             sprites.push(update);
         }
 
-        // Sprite.drawSprites(this.gl, [this.player], {x: (this.coords.x - 4) * 64, y: (this.coords.y - 4) * 64}, this.actorSpriteSheet);
         Sprite.drawSprites(this.gl, sprites, { x: this.coords.x * 16 - 64, y: this.coords.y * 16 - 64 }, this.actorSpriteSheet);
 
         requestAnimationFrame(this.gameLoop);
     }
 
     handleKeyDown = (e) => {
-        console.log(e.key);
+        this.pressedKeys.add(e.key);
+    }
+
+    handleKeyUp = (e) => {
+        this.pressedKeys.delete(e.key);
     }
 
     render() {
-        return <canvas tabindex="0" className="game-screen" width="160" height="144" ref={this.setupCanvas} onKeyDown={this.handleKeyDown}/>;
+        return <canvas tabindex="0" className="game-screen" width="160" height="144" ref={this.setupCanvas} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp} />;
     }
 }
 

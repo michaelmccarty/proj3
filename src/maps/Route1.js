@@ -55,7 +55,7 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -76,7 +76,7 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -118,7 +118,7 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -139,49 +139,49 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -202,49 +202,49 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -265,7 +265,7 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -370,7 +370,7 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -391,7 +391,7 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -496,7 +496,7 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -517,7 +517,7 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -559,7 +559,7 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -622,7 +622,7 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -643,7 +643,7 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -685,7 +685,7 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -748,7 +748,7 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -769,7 +769,7 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -811,7 +811,7 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -874,7 +874,7 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -895,7 +895,7 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -937,7 +937,7 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -1000,7 +1000,7 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -1021,7 +1021,7 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -1041,90 +1041,6 @@ const map = {
     },
     {
       id: 23,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: []
-    },
-    {
-      id: 23,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: []
-    },
-    {
-      id: 23,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: []
-    },
-    {
-      id: 29,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: []
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: []
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: []
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: []
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: []
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: []
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: []
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: []
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: []
-    },
-    {
-      id: 29,
       frames: 1,
       collision: false,
       events: [],
@@ -1147,7 +1063,91 @@ const map = {
     {
       id: 29,
       frames: 1,
+      collision: true,
+      events: [],
+      flags: []
+    },
+    {
+      id: 24,
+      frames: 1,
       collision: false,
+      events: [],
+      flags: []
+    },
+    {
+      id: 24,
+      frames: 1,
+      collision: false,
+      events: [],
+      flags: []
+    },
+    {
+      id: 24,
+      frames: 1,
+      collision: false,
+      events: [],
+      flags: []
+    },
+    {
+      id: 24,
+      frames: 1,
+      collision: false,
+      events: [],
+      flags: []
+    },
+    {
+      id: 24,
+      frames: 1,
+      collision: false,
+      events: [],
+      flags: []
+    },
+    {
+      id: 24,
+      frames: 1,
+      collision: false,
+      events: [],
+      flags: []
+    },
+    {
+      id: 24,
+      frames: 1,
+      collision: false,
+      events: [],
+      flags: []
+    },
+    {
+      id: 24,
+      frames: 1,
+      collision: false,
+      events: [],
+      flags: []
+    },
+    {
+      id: 29,
+      frames: 1,
+      collision: true,
+      events: [],
+      flags: []
+    },
+    {
+      id: 23,
+      frames: 1,
+      collision: false,
+      events: [],
+      flags: []
+    },
+    {
+      id: 23,
+      frames: 1,
+      collision: false,
+      events: [],
+      flags: []
+    },
+    {
+      id: 29,
+      frames: 1,
+      collision: true,
       events: [],
       flags: []
     },
@@ -1189,7 +1189,7 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -1252,7 +1252,7 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -1273,7 +1273,7 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -1378,7 +1378,7 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -1399,7 +1399,7 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -1504,7 +1504,7 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -1525,7 +1525,7 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -1630,7 +1630,7 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -1651,21 +1651,21 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -1700,28 +1700,28 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -1756,7 +1756,7 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -1777,7 +1777,7 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -1882,7 +1882,7 @@ const map = {
     {
       id: 29,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -1903,7 +1903,7 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -2008,7 +2008,7 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -2029,7 +2029,7 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -2134,7 +2134,7 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
@@ -2155,7 +2155,7 @@ const map = {
     {
       id: 6,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: []
     },
