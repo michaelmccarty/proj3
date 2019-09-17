@@ -154,34 +154,43 @@ class Player extends Actor {
         if (this.walking) return;
         this.turn(direction);
         const [dx, dy] = directions[direction];
-
+        
         const [newx, newy] = [this.x + dx, this.y + dy];
         // console.log(this.map(newx, newy));
         const nextTile = this.map.getTile(newx, newy);
         if (nextTile.collision !== direction && nextTile.collision) {
             return this.bonk();
         }
-        for (let event of this.map.getTile(newx, newy).events) {
+
+        const cb = () => {}; // callback after walk cycle
+        for (let event of nextTile.events) {
+            const result = event(this);
+            if (result === true) return; // if true, the event has taken control.
+            else if (result) { // if the event fired, but wants the default walk behavior, it returns a callback
+                cb = result;
+                break;
+            }
             // Events can trigger at different times in the walk.
             // for example, ledge jumps happen near the start, and encounters happen when fully in the new tile
             // Maybe figure out what step number the event happens on and have our step function activate it.
-            event();
         }
+
         this.sprites[this.facing].playOnce();
-        console.log('walk '+ direction);
+        console.log('walk ' + direction);
 
         this.walking = true;
         this.emit('walk', direction);
-        this.step(16);
+        this.step(16, cb);
     }
 
-    step = (steps) => {
+    step = (steps, cb) => {
         const [dx, dy] = directions[this.facing].map(n => n * this.stepDistance);
         this.x += dx;
         this.y += dy;
         // console.log(this.x, this.y)
-        if (--steps) return setTimeout(() => this.step(steps), this.stepPeriod);
+        if (--steps) return setTimeout(() => this.step(steps, cb), this.stepPeriod);
         this.walking = false;
+        cb();
     }
 
     setSpeed(speed) {
@@ -201,6 +210,7 @@ class Player extends Actor {
         sprite.x = Math.floor(this.x * 16); // multiply by 16 to translate from actor coords to world coords
         sprite.y = Math.floor(this.y * 16);
         return sprite;
+        // Possibly have a way to return multiple sprites, to add a shadow to jumping
     }
 
 }
