@@ -1,5 +1,7 @@
 import React from 'react';
 import Game from './components/Game'
+import OptionsWrapper from './components/Options'
+import ChatBox from './components/Chat'
 import './App.css';
 
 function App() {
@@ -10,10 +12,10 @@ function App() {
 
       </div>
       <div className="options">
-
+        <OptionsWrapper />
       </div>
       <div className="chat">
-
+        <ChatBox />
       </div>
     </main>
   );
