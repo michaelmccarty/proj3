@@ -138,7 +138,7 @@ class Player extends Actor {
         this.facing = 'north';
         this.walking = false;
         this.map = map;
-        this.speed = 2; // tile per second
+        this.speed = 3; // tile per second
         this.stepDistance = 1 / 16;
         this.stepPeriod = 1000 * this.stepDistance / this.speed; // one tile per second.  Walk speed * step distance.  1000 walk speed is 1 tile per second;
         //need to adjust sprites framerate to 4 * this.speed
@@ -157,7 +157,8 @@ class Player extends Actor {
 
         const [newx, newy] = [this.x + dx, this.y + dy];
         // console.log(this.map(newx, newy));
-        if (this.map.getTile(newx, newy).collision) {
+        const nextTile = this.map.getTile(newx, newy);
+        if (nextTile.collision !== direction && nextTile.collision) {
             return this.bonk();
         }
         for (let event of this.map.getTile(newx, newy).events) {

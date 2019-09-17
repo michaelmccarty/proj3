@@ -33,10 +33,10 @@ class Sprite {
                     const last = Date.now();
                     while (Date.now() - last < frameInterval) {
                         // Maybe test if a _resetAnimation flag is set and continue
-                        if (!sprite._playing || sprite._resetAnimation) continue restingFrame;
                         yield frame;
+                        if (!sprite._playing || sprite._resetAnimation) continue restingFrame;
                     }
-                    if (sprite._resetAnimation) continue restingFrame;
+                    // if (sprite._resetAnimation) continue restingFrame;
                 }
                 if (sprite._playOnce) {
                     sprite.pause();

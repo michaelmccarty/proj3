@@ -650,35 +650,35 @@ const map = {
     {
       id: 117,
       frames: 1,
-      collision: false,
+      collision: 'south',
       events: [],
       flags: []
     },
     {
       id: 117,
       frames: 1,
-      collision: false,
+      collision: 'south',
       events: [],
       flags: []
     },
     {
       id: 117,
       frames: 1,
-      collision: false,
+      collision: 'south',
       events: [],
       flags: []
     },
     {
       id: 117,
       frames: 1,
-      collision: false,
+      collision: 'south',
       events: [],
       flags: []
     },
     {
       id: 73,
       frames: 1,
-      collision: false,
+      collision: 'south',
       events: [],
       flags: []
     },
@@ -692,28 +692,28 @@ const map = {
     {
       id: 78,
       frames: 1,
-      collision: false,
+      collision: 'south',
       events: [],
       flags: []
     },
     {
       id: 123,
       frames: 1,
-      collision: false,
+      collision: 'south',
       events: [],
       flags: []
     },
     {
       id: 78,
       frames: 1,
-      collision: false,
+      collision: 'south',
       events: [],
       flags: []
     },
     {
       id: 123,
       frames: 1,
-      collision: false,
+      collision: 'south',
       events: [],
       flags: []
     },
