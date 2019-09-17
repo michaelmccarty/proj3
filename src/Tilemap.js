@@ -124,6 +124,7 @@ class Tilemap {
         this.frameGen = (function* (frames) {
             const frameInterval = 1 / 2 * 1000;
             while (true) {
+                //eslint-disable-next-line
                 for (let frame of frames) {
                     // Advance frames every frameInterval milliseconds
                     const last = Date.now();

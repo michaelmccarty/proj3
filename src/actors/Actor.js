@@ -1,7 +1,8 @@
+import EventEmitter from 'events';
 
-
-class Actor {
+class Actor extends EventEmitter {
     constructor(x, y, sprites) {
+        super();
         this.sprites = sprites;
         this.x = x;
         this.y = y;

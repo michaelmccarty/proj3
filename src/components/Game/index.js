@@ -1,20 +1,20 @@
 import React from 'react';
-import * as PIXI from 'pixi.js';
 import maps from '../../maps';
 import Spritesheet from '../../Spritesheet';
 import Tilemap from '../../Tilemap';
 import Sprite from '../../Sprite';
 import Texture from '../../Texture';
 import Player from '../../actors/Player';
+// import directions from '../../directions';
 import './style.css';
 
 // overworld actor sprites
 import actors from '../../actors.json';
 
 class Game extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+    // constructor(props) {
+    //     super(props);
+    // }
 
     state = {
     }
@@ -31,15 +31,7 @@ class Game extends React.Component {
     })
 
     setupCanvas = (element) => {
-        // the element is the DOM object that we will use as container to add pixi stage(canvas)
         this.canvas = element;
-        //now we are adding the application to the DOM element which we got from the Ref.
-        // if (this.pixi_cnt && this.pixi_cnt.children.length <= 0) {
-        //     this.pixi_cnt.appendChild(this.state.app.view);
-        //     // this.gl = this.state.app.renderer.gl;
-        //     // eslint-disable-next-line
-        // }
-        // console.log(document.getElementsByClassName('test')[0])
         this.gl = element.getContext('webgl');
         this.setup();
     };
@@ -59,25 +51,12 @@ class Game extends React.Component {
         this.actors = [this.player];
         console.log(this.player.sprites['east'].position[0])
 
+        // this.player.on('walk', this.scrollScreen);
+
         this.player.walk('east');
-        // this.actorSpriteSheet = new Texture(this.gl, './spritesheets/test-sprite.png');
-
-
 
         // await Promise.all(this.maps.map(map => map.ready));
         // await actorSpritesPromise;
-        // this.actorSprites = PIXI.Loader.shared.resources['./spritesheets/overworld-actors.json'].spritesheet;
-        // this.playerSprite = new PIXI.AnimatedSprite(this.actorSprites.animations['player_south']);
-        // let id = PIXI.Loader.shared.resources['./spritesheets/overworld-actors.json'].textures; 
-        // const playerSouth = new PIXI.Sprite(id['player_south.png'])
-        // this.playerSprite.x = 4 * 16;
-        // this.playerSprite.y = 4 * 16;
-        // playerSouth.x = 64;
-        // playerSouth.y = 64;
-        // this.state.app.stage.addChild(this.playerSprite);
-        // this.playerSprite.animationSpeed = 1/15;
-        // this.playerSprite.play();
-
     }
 
     async loadMap(name, relX, relY) {
@@ -94,13 +73,33 @@ class Game extends React.Component {
         return this.maps[name].ready;
     }
 
+    // scrollScreen = direction => {
+    //     const [dx, dy] = directions[direction].map(n => n * 0.0625); // -1 / 16
+    //     this.coords.x += dx;
+    //     this.coords.y += dy;
+
+    //     this.scrollTimer = setInterval(() => {
+    //         const [dx, dy] = directions[direction].map(n => n * 0.0625); // -1 / 16
+    //         this.coords.x += dx;
+    //         this.coords.y += dy;
+
+    //         if (Number.isInteger(this.coords.x) && Number.isInteger(this.coords.y)) {
+    //             clearInterval(this.scrollTimer);
+    //         }
+    //     }, 1000 / (this.player.speed * 16));
+    // }
+
     unloadMap(name) {
         delete this.maps[name];
     }
 
     gameLoop = (delta) => {
+        [this.coords.x, this.coords.y] = [this.player.x, this.player.y];
+        
+        
         // If the player moved, subtract the movement from the offset of all loaded maps
         for (let mapName in this.maps) {
+            this.maps[mapName].offset = { x: (this.coords.x - 4) * 16, y: (this.coords.y - 4) * 16 }
             this.maps[mapName].draw();
         }
 
@@ -115,17 +114,15 @@ class Game extends React.Component {
         // Sprite.drawSprites(this.gl, [this.player], {x: (this.coords.x - 4) * 64, y: (this.coords.y - 4) * 64}, this.actorSpriteSheet);
         Sprite.drawSprites(this.gl, sprites, { x: this.coords.x * 16 - 64, y: this.coords.y * 16 - 64 }, this.actorSpriteSheet);
 
-        // this.gl.useProgram(this.state.app.renderer.shader.program.glProgram);
-        // if (this.state.app.renderer.shader.program && this.state.app.renderer.shader.program.glPrograms) {
-        //     this.gl.useProgram(this.state.app.renderer.shader.program.glPrograms.program);
-        // }
-        // console.log(this.state.app.renderer.shader.program && this.state.app.renderer.shader.program.glPrograms);
-
         requestAnimationFrame(this.gameLoop);
     }
 
+    handleKeyDown = (e) => {
+        console.log(e.key);
+    }
+
     render() {
-        return <canvas className="game-screen" width="160" height="144" ref={this.setupCanvas} />;
+        return <canvas tabindex="0" className="game-screen" width="160" height="144" ref={this.setupCanvas} onKeyDown={this.handleKeyDown}/>;
     }
 }
 

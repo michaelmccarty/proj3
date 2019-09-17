@@ -18,16 +18,22 @@ class Sprite {
         this.position = vec2.create();
         this.position[0] = options.x || 0;
         this.position[1] = options.y || 0;
-        
+
         this.frameGen = (function* (sprite) {
             const frameInterval = 1 / sprite.framerate * 1000;
+            restingFrame:
             while (true) {
+                while (!sprite._playing) {
+                    yield sprite.frames[sprite.defaultFrame && sprite.frames.length - 1];
+                }
+
                 for (let frame of sprite.frames) {
                     // Advance frames every frameInterval milliseconds
                     const last = Date.now();
                     while (Date.now() - last < frameInterval) {
+                        // Maybe test if a _resetAnimation flag is set and continue
                         if (sprite._playing) yield frame;
-                        else yield sprite.frames[sprite.defaultFrame && sprite.frames.length -1];
+                        else continue restingFrame;
                     }
                 }
                 if (sprite._playOnce) {
@@ -36,7 +42,7 @@ class Sprite {
             }
         })(this);
     }
-    
+
     get textureOffset() {
         return this.nextFrame();
     }
@@ -51,14 +57,30 @@ class Sprite {
     pause() {
         this._playing = false;
     }
-    
-    nextFrame () {
+
+    nextFrame() {
         return this.frameGen.next().value;
     }
 
     playOnce() {
         this._playOnce = true;
         this.play();
+    }
+
+    get x() {
+        return this.position[0];
+    }
+
+    set x(val) {
+        this.position[0] = val;
+    }
+
+    get y() {
+        return this.position[1];
+    }
+
+    set y(val) {
+        this.position[1] = val;
     }
 }
 

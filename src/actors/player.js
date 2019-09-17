@@ -1,12 +1,6 @@
 import Sprite from '../Sprite';
 import Actor from './Actor';
-
-const directions = {
-    north: [0, -1],
-    south: [0, 1],
-    east: [1, 0],
-    west: [-1, 0]
-}
+import directions from '../directions';
 
 class Player extends Actor {
     constructor(x, y, map) {
@@ -144,8 +138,10 @@ class Player extends Actor {
         this.facing = 'north';
         this.walking = false;
         this.map = map;
+        this.speed = 2; // tile per second
         this.stepDistance = 1 / 16;
-        this.stepPeriod = 1000 / 16; // one tile per second.  Walk speed * step distance.  1000 walk speed is 1 tile per second;
+        this.stepPeriod = 1000 * this.stepDistance / this.speed; // one tile per second.  Walk speed * step distance.  1000 walk speed is 1 tile per second;
+        //need to adjust sprites framerate to 4 * this.speed
     }
 
     turn(direction) {
@@ -171,9 +167,11 @@ class Player extends Actor {
             event();
         }
         this.sprites[this.facing].playOnce();
+        console.log('walk '+ direction);
 
         this.walking = true;
-        this.step(16)
+        this.emit('walk', direction);
+        this.step(16);
     }
 
     step = (steps) => {
@@ -185,7 +183,12 @@ class Player extends Actor {
         this.walking = false;
     }
 
-
+    setSpeed(speed) {
+        this.speed = speed;
+    }
+    resetSpeed() {
+        this.speed = 2; // 2 is normal movement, 1 is for cutscenes.  other actors move at 1.
+    }
 
     bonk() {
         return null;
@@ -193,9 +196,9 @@ class Player extends Actor {
 
     update() {
         const sprite = this.sprites[this.facing];
-
-        sprite.position[0] = Math.floor(this.x * 16); // multiply by 16 to translate from actor coords to world coords
-        sprite.position[1] = Math.floor(this.y * 16);
+        sprite.framerate = this.speed * 4;
+        sprite.x = Math.floor(this.x * 16); // multiply by 16 to translate from actor coords to world coords
+        sprite.y = Math.floor(this.y * 16);
         return sprite;
     }
 
