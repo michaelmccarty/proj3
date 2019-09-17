@@ -36,6 +36,7 @@ class Sprite {
                         if (!sprite._playing || sprite._resetAnimation) continue restingFrame;
                         yield frame;
                     }
+                    if (sprite._resetAnimation) continue restingFrame;
                 }
                 if (sprite._playOnce) {
                     sprite.pause();
@@ -57,6 +58,7 @@ class Sprite {
 
     pause() {
         this._playing = false;
+        this._playOnce = false;
     }
 
     nextFrame() {
