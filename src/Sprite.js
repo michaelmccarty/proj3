@@ -5,77 +5,111 @@ import { vec2 } from './utils/gl-matrix-min';
 import GLUtil from './utils/gl-utils';
 
 class Sprite {
-    constructor(gl, options) {
+    constructor(options) {
         this.currentFrame = 0;
         this.sheet = options.spriteSheet;
         this.size = options.size || 16;
         this.frames = options.frames || [{ x: 0, y: 0 }]; // [{x, y}]
         this.framerate = options.framerate || 2;
 
+        this.defaultFrame = options.restFrame === 'first' || 1;
+
         // Sprites position in the world
         this.position = vec2.create();
         this.position[0] = options.x || 0;
         this.position[1] = options.y || 0;
 
-        this.gl = gl;
-        Sprite.program = Sprite.program || GLUtil.createProgram(gl, spriteVS, spriteFS);
-
-        
-        this.frameGen = (function* (frames, framerate, isPlaying) {
-            const frameInterval = 1 / framerate * 1000;
+        this.frameGen = (function* (sprite) {
+            const frameInterval = 1 / sprite.framerate * 1000;
+            restingFrame:
             while (true) {
-                for (let frame of frames) {
+                sprite._resetAnimation = false;
+                while (!sprite._playing) {
+                    yield sprite.frames[sprite.defaultFrame && sprite.frames.length - 1];
+                }
+
+                for (let frame of sprite.frames) { //eslint-disable-line
                     // Advance frames every frameInterval milliseconds
                     const last = Date.now();
                     while (Date.now() - last < frameInterval) {
-                        if (isPlaying) yield frame;
-                        else yield frames[0];
+                        // Maybe test if a _resetAnimation flag is set and continue
+                        yield frame;
+                        if (!sprite._playing || sprite._resetAnimation) continue restingFrame;
                     }
+                    // if (sprite._resetAnimation) continue restingFrame;
+                }
+ 
+                if (sprite._repeat && !--sprite._repeat){ // decrement only if nonzero
+                    sprite.pause();
                 }
             }
-        })(this.frames, this.framerate, this.isPlaying);
+        })(this);
     }
-    
+
     get textureOffset() {
         return this.nextFrame();
     }
 
     _playing = false;
-    isPlaying = () => this._playing;
+    // _playOnce = false;
 
-    play() {
+    play(n = null) {
+        this._resetAnimation = true;
         this._playing = true;
+        this._repeat = n;
     }
 
     pause() {
         this._playing = false;
+        // this._playOnce = false;
+        this._repeat = 0;
     }
-    
-    nextFrame () {
+
+    nextFrame() {
         return this.frameGen.next().value;
     }
 
-    advanceFrame() {
-        this.currentFrame++;
-        if (this.currentFrame > this.frames.length) {
+    playOnce() {
+        this._resetAnimation = true;
+        this._playOnce = true;
+        this.play(1);
+    }
 
-        }
+    get x() {
+        return this.position[0];
+    }
+
+    set x(val) {
+        this.position[0] = val;
+    }
+
+    get y() {
+        return this.position[1];
+    }
+
+    set y(val) {
+        this.position[1] = val;
     }
 }
 
 Sprite.drawSprites = function (gl, sprites, offset, spritesheet) {
+    if (!Sprite.program) Sprite.program = GLUtil.createProgram(gl, spriteVS, spriteFS);
+    // console.log(offset);
     const shader = Sprite.program;
     gl.useProgram(shader.program);
     gl.uniform2f(shader.uniform.inverseViewportSize, 1 / 160, 1 / 144);
-    gl.uniform2f(shader.uniform.viewportOffset, offset.x, offset.y);
+    gl.uniform2f(shader.uniform.viewOffset, offset.x, offset.y);
     gl.uniform2f(shader.uniform.inverseTextureSize, spritesheet.inverseWidth, spritesheet.inverseHeight);
 
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, spritesheet.texture);
 
-    const buffer = new Float32Array(192); // 64 sprites active at once;
+    const buffer = new Float32Array(448); // 64 sprites active at once;
     let i = 0;
-    for (let sprite of sprites) {
+    let count = 0;
+    for (let sprite of sprites) { //eslint-disable-line
+        if (!sprite) continue;
+        // console.log(i);
         const textureOffset = sprite.textureOffset;
         buffer[i++] = sprite.position[0];
         buffer[i++] = sprite.position[1];
@@ -84,8 +118,10 @@ Sprite.drawSprites = function (gl, sprites, offset, spritesheet) {
         buffer[i++] = textureOffset.y;
         buffer[i++] = textureOffset.flip_h ? 1.0 : 0.0;
         buffer[i++] = textureOffset.flip_v ? 1.0 : 0.0;
+        count++;
         // console.log(sprite.flip_h);
     }
+    // if (sprites.length > 1) console.log(buffer);
 
     const glBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, glBuffer);
@@ -96,12 +132,12 @@ Sprite.drawSprites = function (gl, sprites, offset, spritesheet) {
     gl.enableVertexAttribArray(shader.attribute.texOffset);
     gl.enableVertexAttribArray(shader.attribute.flip);
 
-    gl.vertexAttribPointer(shader.attribute.spritePosition, 2, gl.FLOAT, false, 0, 0);
-    gl.vertexAttribPointer(shader.attribute.spriteSize, 1, gl.FLOAT, false, 0, 8);
-    gl.vertexAttribPointer(shader.attribute.texOffset, 2, gl.FLOAT, false, 0, 12);
-    gl.vertexAttribPointer(shader.attribute.flip, 2, gl.FLOAT, false, 0, 20);
+    gl.vertexAttribPointer(shader.attribute.spritePosition, 2, gl.FLOAT, false, 28, 0);
+    gl.vertexAttribPointer(shader.attribute.spriteSize, 1, gl.FLOAT, false, 28, 8);
+    gl.vertexAttribPointer(shader.attribute.texOffset, 2, gl.FLOAT, false, 28, 12);
+    gl.vertexAttribPointer(shader.attribute.flip, 2, gl.FLOAT, false, 28, 20);
 
-    gl.drawArrays(gl.POINTS, 0, 1);
+    gl.drawArrays(gl.POINTS, 0, count);
 
 }
 

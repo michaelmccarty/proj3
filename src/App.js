@@ -8,9 +8,8 @@ import Socket from "./components/Socket";
 function App() {
   return (
     <main className="container">
-      {/* <Game width={160 * 4} height={144 * 4}/> */}
       <div className="game">
-        <img className="game-content" src="http://via.placeholder.com/200" alt="test" /> {/*Replace this line with the canvas*/}
+        <Game />
       </div>
       <div className="options">
         <OptionsWrapper />
