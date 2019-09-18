@@ -51,11 +51,10 @@ class Game extends React.Component {
 
         this.player = new Player(this.coords.x, this.coords.y, this.maps[this.currentMap]);
         this.actors = [this.player];
-        console.log(this.player.sprites['east'].position[0])
 
         // this.player.on('walk', this.scrollScreen);
 
-        this.player.walk('east');
+        // this.player.walk('east');
 
         // await Promise.all(this.maps.map(map => map.ready));
         // await actorSpritesPromise;
