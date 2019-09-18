@@ -1,5 +1,6 @@
 import React from 'react';
 import './style.css';
+import moment from 'moment';
 
 function ChatMessage({userName, time, message}) {
     return (
@@ -9,7 +10,7 @@ function ChatMessage({userName, time, message}) {
             </div>
             <div className="chat-message-content ml-2">
                 <div className="mb-2">
-                    <span>{userName} <span>{time}</span></span>
+                    <span>{userName} <span>{moment(time).from(Date.now())}</span></span>
                 </div>
                 <p>{message}</p>
             </div>

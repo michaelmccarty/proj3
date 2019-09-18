@@ -1,6 +1,7 @@
 import React from "react";
 import ChatMessage from "./ChatMessage";
 import "./style.css";
+import Moment from 'moment';
 
 class ChatBox extends React.Component {
   state = {
@@ -68,6 +69,10 @@ class ChatBox extends React.Component {
 
     this.setState({
       messages: [...this.state.messages, newMessage] // Must match the objects in this.state.messages
+    });
+
+    this.setState({
+      chatInput: ""
     });
   };
 
