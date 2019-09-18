@@ -1,7 +1,7 @@
 import Actor from './Actor';
 import creatureSprites from './actors.json';
 import shadowSprite from './shadow.json';
-import Sprite from '../Sprite';
+import {Sprite, AlternatingSprite} from '../Sprite';
 import directions from '../directions';
 
 import hopAnimation from './animations/hop';
@@ -10,8 +10,8 @@ import hopAnimation from './animations/hop';
 class Creature extends Actor {
     constructor(x, y, skin, facing = 'north', map) {
         const sprites = {
-            south: new Sprite(creatureSprites[skin].south),
-            north: new Sprite(creatureSprites[skin].north),
+            south: new AlternatingSprite(creatureSprites[skin].south),
+            north: new AlternatingSprite(creatureSprites[skin].north),
             east: new Sprite(creatureSprites[skin].east),
             west: new Sprite(creatureSprites[skin].west),
             shadow: new Sprite(shadowSprite)
@@ -115,7 +115,7 @@ class Creature extends Actor {
 
     update() {
         const sprite = this.sprites[this.facing];
-        sprite.framerate = this.speed * 4;
+        sprite.framerate = this.speed * 2;
         sprite.x = Math.floor(this.x * 16); // multiply by 16 to translate from actor coords to world coords
         sprite.y = Math.floor(this.y * 16 - this.vOffset);
         if (this.shadow) {
