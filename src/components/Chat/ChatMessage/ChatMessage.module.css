@@ -9,3 +9,7 @@
 .chat-avatar { composes: w-100 h-100 from global; }
 .chat-message-content { composes: ml-2 from global; }
 .chat-message-info { composes: mb-2 from global; }
+
+@media screen and (max-width: 768px) {
+    .chat-message-info { font-size: 0.7em; }
+}
