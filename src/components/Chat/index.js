@@ -1,5 +1,6 @@
 import React from "react";
 import ChatMessage from "./ChatMessage";
+import OnlineUser from "./OnlineUser";
 import "./style.css";
 import Moment from 'moment';
 
@@ -10,6 +11,46 @@ class ChatBox extends React.Component {
       {
         userName: "Username123",
         avatarImg: "https://via.placeholder.com/100",
+        socketId: ""
+      }, 
+      {
+        userName: "Username1234",
+        avatarImg: "https://via.placeholder.com/200",
+        socketId: ""
+      }, 
+      {
+        userName: "Username1234",
+        avatarImg: "https://via.placeholder.com/200",
+        socketId: ""
+      }, 
+      {
+        userName: "Username1234",
+        avatarImg: "https://via.placeholder.com/200",
+        socketId: ""
+      }, 
+      {
+        userName: "Username1234",
+        avatarImg: "https://via.placeholder.com/200",
+        socketId: ""
+      }, 
+      {
+        userName: "Username1234",
+        avatarImg: "https://via.placeholder.com/200",
+        socketId: ""
+      }, 
+      {
+        userName: "Username1234",
+        avatarImg: "https://via.placeholder.com/200",
+        socketId: ""
+      }, 
+      {
+        userName: "Username1234",
+        avatarImg: "https://via.placeholder.com/200",
+        socketId: ""
+      }, 
+      {
+        userName: "Username1234",
+        avatarImg: "https://via.placeholder.com/200",
         socketId: ""
       }
     ],
@@ -79,7 +120,15 @@ class ChatBox extends React.Component {
   render() {
     return (
       <div className="chatbox h-100 flx flx-row">
-        <div className="online-users">Online users here</div>
+        <div className="online-users">
+          {this.state.usersOnline.map(({userName, avatarImg}, i) => 
+            <OnlineUser 
+              key={i}
+              userName={userName}
+              avatarImg={avatarImg}
+            />  
+          )}
+        </div>
         <div className="chat-wrapper flx-grow-1">
           <div className="chat-messages">
             {this.state.messages.map(({ userName, time, message }, i) => (
@@ -91,7 +140,7 @@ class ChatBox extends React.Component {
               />
             ))}
           </div>
-          <form className="chat-form">
+          <form className="chat-form ml-2">
             <input
               onChange={this.handleInputChange}
               name="chatInput"

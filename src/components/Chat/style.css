@@ -1,5 +1,10 @@
 div.chat-message-container{}
 
+div.online-users { 
+    overflow-y: auto;
+    width: 270px;
+}
+
 div.chat-wrapper {
     display: flex;
     flex-direction: column;
