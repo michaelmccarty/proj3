@@ -5,6 +5,7 @@ import "./style.css";
 import Moment from 'moment';
 
 class ChatBox extends React.Component {
+
   state = {
     chatInput: "",
     usersOnline: [
@@ -154,6 +155,7 @@ class ChatBox extends React.Component {
       </div>
     );
   }
+
 }
 
 export default ChatBox;
