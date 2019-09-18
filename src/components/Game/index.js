@@ -52,10 +52,6 @@ class Game extends React.Component {
         this.player = new Player(this.coords.x, this.coords.y, this.maps[this.currentMap]);
         this.actors = [this.player];
 
-        // this.player.on('walk', this.scrollScreen);
-
-        // this.player.walk('east');
-
         // await Promise.all(this.maps.map(map => map.ready));
         // await actorSpritesPromise;
     }
@@ -74,38 +70,33 @@ class Game extends React.Component {
         return this.maps[name].ready;
     }
 
-    // scrollScreen = direction => {
-    //     const [dx, dy] = directions[direction].map(n => n * 0.0625); // -1 / 16
-    //     this.coords.x += dx;
-    //     this.coords.y += dy;
-
-    //     this.scrollTimer = setInterval(() => {
-    //         const [dx, dy] = directions[direction].map(n => n * 0.0625); // -1 / 16
-    //         this.coords.x += dx;
-    //         this.coords.y += dy;
-
-    //         if (Number.isInteger(this.coords.x) && Number.isInteger(this.coords.y)) {
-    //             clearInterval(this.scrollTimer);
-    //         }
-    //     }, 1000 / (this.player.speed * 16));
-    // }
-
     unloadMap(name) {
         delete this.maps[name];
     }
 
     gameLoop = (delta) => {
         const keys = this.pressedKeys;
-        if (keys.has('ArrowUp') || keys.has('w') || keys.has('W')) {
-            this.player.walk('north');
-        } else if (keys.has('ArrowDown') || keys.has('s') || keys.has('S')) {
-            this.player.walk('south');
-        } else if (keys.has('ArrowLeft') || keys.has('a') || keys.has('A')) {
-            this.player.walk('west');
-        } else if (keys.has('ArrowRight') || keys.has('d') || keys.has('D')) {
-            this.player.walk('east');
+        if (Date.now() > this.movementDelay) {
+            if (keys.has('ArrowUp') || keys.has('w') || keys.has('W')) {
+                this.player.walk('north');
+            } else if (keys.has('ArrowDown') || keys.has('s') || keys.has('S')) {
+                this.player.walk('south');
+            } else if (keys.has('ArrowLeft') || keys.has('a') || keys.has('A')) {
+                this.player.walk('west');
+            } else if (keys.has('ArrowRight') || keys.has('d') || keys.has('D')) {
+                this.player.walk('east');
+            }
+        } else {
+            if (keys.has('ArrowUp') || keys.has('w') || keys.has('W')) {
+                this.player.turn('north');
+            } else if (keys.has('ArrowDown') || keys.has('s') || keys.has('S')) {
+                this.player.turn('south');
+            } else if (keys.has('ArrowLeft') || keys.has('a') || keys.has('A')) {
+                this.player.turn('west');
+            } else if (keys.has('ArrowRight') || keys.has('d') || keys.has('D')) {
+                this.player.turn('east');
+            }
         }
-
 
         [this.coords.x, this.coords.y] = [this.player.x, this.player.y];
 
@@ -119,7 +110,6 @@ class Game extends React.Component {
         for (let actor of this.actors) { //eslint-disable-line
             const update = actor.update();
 
-            // console.log(Array.isArray(update) ? update : [update])
             sprites.push(...(Array.isArray(update) ? update : [update]));
         }
 
@@ -129,6 +119,7 @@ class Game extends React.Component {
     }
 
     handleKeyDown = (e) => {
+        if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
         this.pressedKeys.add(e.key);
     }
 
