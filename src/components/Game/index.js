@@ -6,7 +6,7 @@ import Sprite from '../../Sprite';
 import Texture from '../../Texture';
 import Player from '../../actors/Player';
 // import directions from '../../directions';
-import './style.css';
+import styles from './Game.module.css';
 
 // overworld actor sprites
 // import actors from '../../actors.json';
@@ -138,7 +138,7 @@ class Game extends React.Component {
     }
 
     render() {
-        return <canvas className="game-content game-screen" tabIndex="0" width="160" height="144" ref={this.setupCanvas} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp} />;
+        return <canvas className={styles["game-screen"]} tabIndex="0" width="160" height="144" ref={this.setupCanvas} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp} />;
     }
 }
 

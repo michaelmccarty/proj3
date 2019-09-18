@@ -1,7 +1,7 @@
 import React from "react";
 import ChatMessage from "./ChatMessage";
 import OnlineUser from "./OnlineUser";
-import "./style.css";
+import styles from "./ChatBox.module.css";
 import Moment from 'moment';
 
 class ChatBox extends React.Component {
@@ -120,8 +120,8 @@ class ChatBox extends React.Component {
 
   render() {
     return (
-      <div className="chatbox h-100 flx flx-row">
-        <div className="online-users">
+      <div className={styles["chatbox"]}>
+        <div className={styles["online-users"]}>
           {this.state.usersOnline.map(({userName, avatarImg}, i) => 
             <OnlineUser 
               key={i}
@@ -130,8 +130,8 @@ class ChatBox extends React.Component {
             />  
           )}
         </div>
-        <div className="chat-wrapper flx-grow-1">
-          <div className="chat-messages">
+        <div className={styles["chat-wrapper"]}>
+          <div className={styles["chat-messages"]}>
             {this.state.messages.map(({ userName, time, message }, i) => (
               <ChatMessage
                 key={i}
@@ -141,7 +141,7 @@ class ChatBox extends React.Component {
               />
             ))}
           </div>
-          <form className="chat-form ml-2">
+          <form className={styles["chat-form"]}>
             <input
               onChange={this.handleInputChange}
               name="chatInput"

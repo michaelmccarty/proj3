@@ -1,6 +1,6 @@
 import React from "react";
 import Game from "./components/Game";
-import OptionsWrapper from "./components/Options";
+import OptionsWrapper from "./components/OptionsWrapper";
 import ChatBox from "./components/Chat";
 import "./App.css";
 import Socket from "./components/Socket";

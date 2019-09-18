@@ -1,0 +1,15 @@
+.chat-message-container { composes: flx flx-row m-2 from global; }
+.chat-avatar-wrapper {
+  border-radius: 31px;
+  overflow: hidden;
+  width: 62px;
+  min-width: 62px;
+  height: 62px;
+}
+.chat-avatar { composes: w-100 h-100 from global; }
+.chat-message-content { composes: ml-2 from global; }
+.chat-message-info { composes: mb-2 from global; }
+
+@media screen and (max-width: 768px) {
+    .chat-message-info { font-size: 0.7em; }
+}

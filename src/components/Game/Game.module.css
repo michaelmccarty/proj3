@@ -1,0 +1,7 @@
+.game-screen {
+    composes: w-100 h-100 from global;
+    position: absolute;
+    top: 0;
+    left: 0;
+    image-rendering: pixelated;
+}

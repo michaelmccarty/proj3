@@ -21,6 +21,8 @@
 
   --m-large: 82px;
 
+  --media-query-mobile: 768px;
+
   --font-sans: 'Montserrat', sans-serif;
   --font-serif: 'Averia Serif Libre', 'Times New Roman', Serif;
 }
@@ -174,7 +176,7 @@ main.container {
   "game options"
   "chat chat";
   grid-template-rows: 1fr minmax(0, 1fr);
-  grid-template-columns: 600px 1fr;
+  grid-template-columns: 640px 1fr;
   grid-gap: 10px;
   height: 100vh;
   padding: 20px;
@@ -190,20 +192,8 @@ main.container {
   position: relative;
   padding-top: 90%;
 }
-/* Game can only have one direct child */
-.game-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-.option { grid-area: options; }
+.options { grid-area: options; }
 .chat { grid-area: chat; }
-
-main > div:nth-child(1) { background-color: #999; }
-main > div:nth-child(2) { background-color: #555; }
-main > div:nth-child(3) { background-color: #a6a6a6; }
 
 @media screen and (max-width: 768px) {
   main.container { /* Options will be fulscreen over game on start button click */
@@ -216,11 +206,5 @@ main > div:nth-child(3) { background-color: #a6a6a6; }
     min-height: unset;
     height: unset;
   }
-  div.chatbox { flex-direction: column; }
-  div.chat-messages { height: 280px; width: 100%; flex: unset; }
-  div.chat-message-info { font-size: 0.7em; }
-  div.chat-avatar-wrapper { width: 28px; min-width: 28px; height: 28px; }
-  div.online-users { height: 140px; width: 100%; order: 2; }
-  form.chat-form { margin-left: 0; }
   div.options { display: none; }
 }
