@@ -168,7 +168,7 @@ main.container {
   grid-template-areas: 
   "game options"
   "chat chat";
-  grid-template-rows: 80% 1fr;
+  grid-template-rows: 70% minmax(0, 1fr);
   grid-template-columns: 80% 1fr;
   grid-gap: 10px;
   height: 100vh;
@@ -177,8 +177,6 @@ main.container {
 .game { grid-area: game; }
 .option { grid-area: options; }
 .chat { grid-area: chat; }
-
-div.online-users { width: 270px; }
 
 main > div:nth-child(1) { background-color: #999; }
 main > div:nth-child(2) { background-color: #555; }

@@ -1,0 +1,15 @@
+div.chat-message-container {
+    display: flex;
+    flex-flow: row nowrap;
+
+}
+
+div.chat-avatar-wrapper {
+    border-radius: 31px;
+    overflow: hidden;
+}
+
+img.chat-avatar {
+    width: 62px;
+    height: 62px;
+}
