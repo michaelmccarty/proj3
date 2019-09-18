@@ -1,0 +1,17 @@
+.chat-message-container {
+  composes: m-2 p-2 from global;
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.chat-avatar-wrapper {
+  border-radius: 31px;
+  overflow: hidden;
+  width: 62px;
+  min-width: 62px;
+  height: 62px;
+}
+
+.chat-avatar {
+  composes: w-100 h-100 from global;
+}
