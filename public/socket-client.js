@@ -1,6 +1,6 @@
 // make connection
 const socket = io.connect('http://localhost:3001');
-
+console.log(socket)
 // query DOM
 
 let message = document.getElementById('message');

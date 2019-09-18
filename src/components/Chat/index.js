@@ -1,45 +1,44 @@
-import React from "react";
-import "./style.css";
+import React from 'react';
+import ChatMessage from './ChatMessage';
 
-class Chat extends React.Component {
-  constructor(props) {
-    //what does the below line do?
-    super(props);
-  }
+class ChatBox extends React.Component {
+    state = {
+        usersOnline: [
+            {
+                userName: "Username123",
+                avatarImg: "https://via.placeholder.com/100",
+                socketId: ""
+            }
+        ],
+        messages: [
+            {
+                userName: "Username123",
+                time: Date.now(),
+                message: "Here's my message to the chat box."
+            }
+        ]
+    }
 
-  state = {};
-
-  componentDidMount() {
-    const script = document.createElement("script");
-
-    script.src = "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js";
-    script.async = true;
-
-    const script2 = document.createElement("script");
-
-    script2.src = "socket-client.js";
-    script2.async = true;
-
-    document.body.appendChild(script);
-    document.body.appendChild(script2);
-  }
-
-  render() {
-    return (
-      <div id="chat">
-        <div id="socket-chat">
-          <div id="chat-window">
-            <div id="output"></div>
-            <div id="feedback"></div>
-          </div>
-          <input type="text" placeholder="Handle" id="handle" />
-          <input type="text" placeholder="Message" id="message" />
-          <button id="send">Send</button>
-        </div>
-        <div id="player"></div>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div className="chatbox h-100 flx flx-row">
+                <div className="online-users">
+                    Online users here
+                </div>
+                <div className="chat-wrapper flx-grow-1">
+                    <div>
+                        {this.state.messages.map(({userName, time, message}, i) =>     
+                            <ChatMessage key={i} userName={userName} time={time} message={message}/>
+                        )}
+                    </div>
+                    <form>
+                        <input type="text" placeholder="Your message here"/>
+                        <button>Send</button>
+                    </form>
+                </div>
+            </div>
+        )
+    }
 }
 
-export default Chat;
+export default ChatBox;
