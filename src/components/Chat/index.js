@@ -32,8 +32,8 @@ class ChatBox extends React.Component {
                         )}
                     </div>
                     <form>
-                        <input type="text" placeholder="Your message here"/>
-                        <button>Send</button>
+                        <input id="messageInput" type="text" placeholder="Your message here"/>
+                        <button id="sendBtn">Send</button>
                     </form>
                 </div>
             </div>
