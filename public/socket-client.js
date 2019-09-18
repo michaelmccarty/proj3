@@ -3,9 +3,9 @@ const socket = io.connect('http://localhost:3001');
 console.log(socket)
 // query DOM
 
-let message = document.getElementById('message');
+let message = document.getElementById('messageInput');
 let handle = document.getElementById('handle');
-let sendButton = document.getElementById('send');
+let sendButton = document.getElementById('sendBtn');
 let output = document.getElementById('output');
 
 // emit events
