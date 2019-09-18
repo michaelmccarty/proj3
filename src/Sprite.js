@@ -28,7 +28,7 @@ class Sprite {
                     yield sprite.frames[sprite.defaultFrame && sprite.frames.length - 1];
                 }
 
-                for (let frame of sprite.frames) {
+                for (let frame of sprite.frames) { //eslint-disable-line
                     // Advance frames every frameInterval milliseconds
                     const last = Date.now();
                     while (Date.now() - last < frameInterval) {
@@ -38,9 +38,7 @@ class Sprite {
                     }
                     // if (sprite._resetAnimation) continue restingFrame;
                 }
-                // if (sprite._playOnce) {
-                //     sprite.pause();
-                // }
+ 
                 if (sprite._repeat && !--sprite._repeat){ // decrement only if nonzero
                     sprite.pause();
                 }
@@ -55,7 +53,8 @@ class Sprite {
     _playing = false;
     // _playOnce = false;
 
-    play(n = 1) {
+    play(n = null) {
+        this._resetAnimation = true;
         this._playing = true;
         this._repeat = n;
     }
@@ -108,7 +107,7 @@ Sprite.drawSprites = function (gl, sprites, offset, spritesheet) {
     const buffer = new Float32Array(448); // 64 sprites active at once;
     let i = 0;
     let count = 0;
-    for (let sprite of sprites) {
+    for (let sprite of sprites) { //eslint-disable-line
         if (!sprite) continue;
         // console.log(i);
         const textureOffset = sprite.textureOffset;
@@ -138,7 +137,6 @@ Sprite.drawSprites = function (gl, sprites, offset, spritesheet) {
     gl.vertexAttribPointer(shader.attribute.texOffset, 2, gl.FLOAT, false, 28, 12);
     gl.vertexAttribPointer(shader.attribute.flip, 2, gl.FLOAT, false, 28, 20);
 
-    console.log(count);
     gl.drawArrays(gl.POINTS, 0, count);
 
 }

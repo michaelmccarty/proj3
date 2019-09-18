@@ -9,7 +9,7 @@ import Player from '../../actors/Player';
 import './style.css';
 
 // overworld actor sprites
-import actors from '../../actors.json';
+// import actors from '../../actors.json';
 
 class Game extends React.Component {
     // constructor(props) {
@@ -111,13 +111,13 @@ class Game extends React.Component {
         [this.coords.x, this.coords.y] = [this.player.x, this.player.y];
 
         // If the player moved, subtract the movement from the offset of all loaded maps
-        for (let mapName in this.maps) {
+        for (let mapName in this.maps) { // eslint-disable-line
             this.maps[mapName].offset = { x: (this.coords.x - 4) * 16, y: (this.coords.y - 4) * 16 }
             this.maps[mapName].draw();
         }
 
         const sprites = [];
-        for (let actor of this.actors) {
+        for (let actor of this.actors) { //eslint-disable-line
             const update = actor.update();
 
             // console.log(Array.isArray(update) ? update : [update])
