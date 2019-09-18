@@ -138,7 +138,7 @@ class Game extends React.Component {
     }
 
     render() {
-        return <canvas tabIndex="0" className="game-screen" width="160" height="144" ref={this.setupCanvas} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp} />;
+        return <canvas className="game-content game-screen" tabIndex="0" width="160" height="144" ref={this.setupCanvas} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp} />;
     }
 }
 

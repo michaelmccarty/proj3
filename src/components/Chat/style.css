@@ -1,0 +1,23 @@
+div.chat-message-container{}
+
+div.online-users { 
+    overflow-y: auto;
+    width: 270px;
+}
+
+div.chat-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+div.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+}
+
+form.chat-form {
+    border-top: 1px solid black;
+    flex-basis: 52px;
+    display: flex;
+    align-items: center;
+}
