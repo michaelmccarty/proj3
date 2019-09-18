@@ -211,7 +211,7 @@ class Player extends Actor {
             // console.log(frameData);
             if (frameData.shadow) this.toggleShadow();
             this.y += frameData.south * 0.0625;
-            this.vOffset += frameData.offset;
+            this.vOffset += frameData.offset || 0;
 
             if (--counter) return setTimeout(hopFrame, this.stepPeriod * 2);
             console.log('done: ', this.x, this.y);
