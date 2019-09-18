@@ -1,0 +1,19 @@
+div.chat-message-container{
+
+}
+
+div.chat-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+div.chat-messages {
+    flex: 1;
+    max-height: 1fr;
+    overflow: auto;
+}
+
+form.chat-form {
+    flex-basis: 48px;
+    background-color: red;
+}

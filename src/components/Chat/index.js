@@ -1,5 +1,6 @@
 import React from 'react';
 import ChatMessage from './ChatMessage';
+import './style.css';
 
 class ChatBox extends React.Component {
     state = {
@@ -15,7 +16,28 @@ class ChatBox extends React.Component {
                 userName: "Username123",
                 time: Date.now(),
                 message: "Here's my message to the chat box."
+            },
+            {
+                userName: "Username1234",
+                time: Date.now(),
+                message: "Here's my message to the chat box."
+            },
+            {
+                userName: "Username1234",
+                time: Date.now(),
+                message: "Here's my message to the chat box."
+            },
+            {
+                userName: "Username1234",
+                time: Date.now(),
+                message: "Here's my message to the chat box."
+            },
+            {
+                userName: "Username1234",
+                time: Date.now(),
+                message: "Here's my message to the chat box."
             }
+            
         ]
     }
 
@@ -26,12 +48,12 @@ class ChatBox extends React.Component {
                     Online users here
                 </div>
                 <div className="chat-wrapper flx-grow-1">
-                    <div>
+                    <div className="chat-messages">
                         {this.state.messages.map(({userName, time, message}, i) =>     
                             <ChatMessage key={i} userName={userName} time={time} message={message}/>
                         )}
                     </div>
-                    <form>
+                    <form className="chat-form">
                         <input type="text" placeholder="Your message here"/>
                         <button>Send</button>
                     </form>

@@ -168,7 +168,7 @@ main.container {
   grid-template-areas: 
   "game options"
   "chat chat";
-  grid-template-rows: 80% 1fr;
+  grid-template-rows: 70% minmax(0, 1fr);
   grid-template-columns: 80% 1fr;
   grid-gap: 10px;
   height: 100vh;
