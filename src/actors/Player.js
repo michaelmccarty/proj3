@@ -133,6 +133,20 @@ class Player extends Actor {
                     }
                 ]
             }),
+            shadow: new Sprite({
+                x: 64,
+                y: 64,
+                size: 16,
+                framerate: 1,
+                frames: [
+                    {
+                        "x": 32,
+                        "y": 0,
+                        "flip_h": false,
+                        "flip_v": false
+                    },
+                ]
+            })
         }
         super(x, y, sprites);
         this.facing = 'north';
@@ -165,6 +179,7 @@ class Player extends Actor {
         }
 
         let cb = () => { }; // callback after walk cycle
+        //eslint-disable-next-line
         for (let event of nextTile.events) {
             const result = event(this);
             if (result === true) return; // if true, the event has taken control.
@@ -198,6 +213,7 @@ class Player extends Actor {
         let counter = 16;
         const nextTile = this.map.getTile(this.x, this.y + 2);
         let cb = () => { }; // callback after walk cycle
+        //eslint-disable-next-line
         for (let event of nextTile.events) {
             const result = event(this);
             if (typeof result === 'function') { //events can't take control until after the movement is finished
@@ -235,7 +251,7 @@ class Player extends Actor {
     }
 
     toggleShadow() {
-
+        this.shadow = !this.shadow;
     }
 
     update() {
@@ -243,6 +259,12 @@ class Player extends Actor {
         sprite.framerate = this.speed * 4;
         sprite.x = Math.floor(this.x * 16); // multiply by 16 to translate from actor coords to world coords
         sprite.y = Math.floor(this.y * 16 - this.vOffset);
+        if (this.shadow) {
+            const shadow = this.sprites.shadow;
+            shadow.x = Math.floor(this.x * 16);
+            shadow.y = Math.floor(this.y * 16 + 8);
+        return [shadow, sprite];
+        }
         return sprite;
         // Possibly have a way to return multiple sprites, to add a shadow to jumping
     }

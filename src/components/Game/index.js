@@ -119,9 +119,9 @@ class Game extends React.Component {
         const sprites = [];
         for (let actor of this.actors) {
             const update = actor.update();
-            // console.log(update);
 
-            sprites.push(update);
+            // console.log(Array.isArray(update) ? update : [update])
+            sprites.push(...(Array.isArray(update) ? update : [update]));
         }
 
         Sprite.drawSprites(this.gl, sprites, { x: this.coords.x * 16 - 64, y: this.coords.y * 16 - 64 }, this.actorSpriteSheet);
@@ -138,7 +138,7 @@ class Game extends React.Component {
     }
 
     render() {
-        return <canvas tabindex="0" className="game-screen" width="160" height="144" ref={this.setupCanvas} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp} />;
+        return <canvas tabIndex="0" className="game-screen" width="160" height="144" ref={this.setupCanvas} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp} />;
     }
 }
 
