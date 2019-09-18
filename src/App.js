@@ -9,7 +9,9 @@ function App() {
   return (
     <main className="container">
       {/* <Game width={160 * 4} height={144 * 4}/> */}
-      <div className="game"></div>
+      <div className="game">
+        <img className="game-content" src="http://via.placeholder.com/200" src="placeholder" />
+      </div>
       <div className="options">
         <OptionsWrapper />
       </div>

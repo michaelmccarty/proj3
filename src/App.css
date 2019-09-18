@@ -163,18 +163,40 @@
 .text-right { text-align: right }
 .cursor-pointer { cursor: pointer; }
 
+#root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 main.container { 
   display: grid;
   grid-template-areas: 
   "game options"
   "chat chat";
-  grid-template-rows: 70% minmax(0, 1fr);
-  grid-template-columns: 80% 1fr;
+  grid-template-rows: 1fr minmax(0, 1fr);
+  grid-template-columns: 600px 1fr;
   grid-gap: 10px;
   height: 100vh;
   padding: 20px;
+  max-width: 1200px;
+  max-height: 900px;
+  min-height: 780px;
 }
-.game { grid-area: game; }
+.game { 
+  grid-area: game;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  padding-top: 90%;
+}
+.game-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
 .option { grid-area: options; }
 .chat { grid-area: chat; }
 
@@ -188,7 +210,14 @@ main > div:nth-child(3) { background-color: #a6a6a6; }
     "game"
     "options"
     "chat";
-    grid-template-rows: 200px;
+    grid-template-rows: 1fr;
     grid-template-columns: 100%;
+    max-height: unset;
+    min-height: unset;
+    height: unset;
   }
+  div.chatbox { flex-direction: column; }
+  div.chat-messages { height: 280px; width: 100%; }
+  div.online-users { height: 140px; width: 100%; order: 2; }
+  form.chat-form { margin-left: 0; }
 }
