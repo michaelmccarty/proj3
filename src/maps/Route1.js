@@ -1,3 +1,5 @@
+import {hop} from '../events';
+
 const map = {
   width: 18,
   height: 36,
@@ -651,35 +653,35 @@ const map = {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 73,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
@@ -693,28 +695,28 @@ const map = {
       id: 78,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 123,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 78,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 123,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
@@ -1155,35 +1157,35 @@ const map = {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 73,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
@@ -1673,28 +1675,28 @@ const map = {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
@@ -2415,7 +2417,7 @@ const map = {
       id: 73,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
@@ -2429,21 +2431,21 @@ const map = {
       id: 78,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 123,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 73,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
@@ -2457,56 +2459,56 @@ const map = {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 117,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
@@ -3003,14 +3005,14 @@ const map = {
       id: 78,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 123,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
@@ -3423,14 +3425,14 @@ const map = {
       id: 78,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 123,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
@@ -3465,56 +3467,56 @@ const map = {
       id: 78,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 123,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 78,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 123,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 78,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 123,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 78,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {
       id: 123,
       frames: 1,
       collision: 'south',
-      events: [],
+      events: [hop],
       flags: []
     },
     {

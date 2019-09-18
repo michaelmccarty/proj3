@@ -144,6 +144,8 @@ class Player extends Actor {
         //need to adjust sprites framerate to 4 * this.speed
     }
 
+    vOffset = 4;// how far in the tile we stand.  Changes during jumps, always 4 while walking
+
     turn(direction) {
         if (!this.walking) {
             this.facing = direction
@@ -154,7 +156,7 @@ class Player extends Actor {
         if (this.walking) return;
         this.turn(direction);
         const [dx, dy] = directions[direction];
-        
+
         const [newx, newy] = [this.x + dx, this.y + dy];
         // console.log(this.map(newx, newy));
         const nextTile = this.map.getTile(newx, newy);
@@ -162,7 +164,7 @@ class Player extends Actor {
             return this.bonk();
         }
 
-        const cb = () => {}; // callback after walk cycle
+        let cb = () => { }; // callback after walk cycle
         for (let event of nextTile.events) {
             const result = event(this);
             if (result === true) return; // if true, the event has taken control.
@@ -170,16 +172,12 @@ class Player extends Actor {
                 cb = result;
                 break;
             }
-            // Events can trigger at different times in the walk.
-            // for example, ledge jumps happen near the start, and encounters happen when fully in the new tile
-            // Maybe figure out what step number the event happens on and have our step function activate it.
         }
 
         this.sprites[this.facing].playOnce();
-        console.log('walk ' + direction);
 
         this.walking = true;
-        this.emit('walk', direction);
+        // this.emit('walk', direction);
         this.step(16, cb);
     }
 
@@ -193,6 +191,38 @@ class Player extends Actor {
         cb();
     }
 
+    hop = () => {
+        console.log('hop');
+        this.walking = true;
+        this.sprites.south.play(2);
+        let counter = 16;
+        const nextTile = this.map.getTile(this.x, this.y + 2);
+        let cb = () => { }; // callback after walk cycle
+        for (let event of nextTile.events) {
+            const result = event(this);
+            if (typeof result === 'function') { //events can't take control until after the movement is finished
+                cb = result;
+                break;
+            }
+        }
+
+        const hopFrame = () => {
+            const frameData = hopAnimation[16 - counter];
+            // console.log(frameData);
+            if (frameData.shadow) this.toggleShadow();
+            this.y += frameData.south * 0.0625;
+            this.vOffset += frameData.offset;
+
+            if (--counter) return setTimeout(hopFrame, this.stepPeriod * 2);
+            console.log('done: ', this.x, this.y);
+            this.walking = false;
+            cb();
+        }
+        hopFrame();
+    }
+
+    
+
     setSpeed(speed) {
         this.speed = speed;
     }
@@ -204,15 +234,37 @@ class Player extends Actor {
         return null;
     }
 
+    toggleShadow() {
+
+    }
+
     update() {
         const sprite = this.sprites[this.facing];
         sprite.framerate = this.speed * 4;
         sprite.x = Math.floor(this.x * 16); // multiply by 16 to translate from actor coords to world coords
-        sprite.y = Math.floor(this.y * 16);
+        sprite.y = Math.floor(this.y * 16 - this.vOffset);
         return sprite;
         // Possibly have a way to return multiple sprites, to add a shadow to jumping
     }
-
 }
+
+const hopAnimation = [
+    {south: 2, offset: 0, shadow: true},
+    {south: 2, offset: 4},
+    {south: 2, offset: 2},
+    {south: 2, offset: 2},
+    {south: 2, offset: 3},
+    {south: 2, offset: 1},
+    {south: 2, offset: 0},
+    {south: 2, offset: 0},
+    {south: 2, offset: -1},
+    {south: 2, offset: -1},
+    {south: 2, offset: -1},
+    {south: 2, offset: -1},
+    {south: 2, offset: -4},
+    {south: 2, offset: -4},
+    {south: 2},
+    {south: 2, offset: 0, shadow: true},
+];
 
 export default Player;

@@ -12,7 +12,7 @@ class Sprite {
         this.frames = options.frames || [{ x: 0, y: 0 }]; // [{x, y}]
         this.framerate = options.framerate || 2;
 
-        this.defaultFrame = options.restFrame == 'first' || 1;
+        this.defaultFrame = options.restFrame === 'first' || 1;
 
         // Sprites position in the world
         this.position = vec2.create();
@@ -38,7 +38,10 @@ class Sprite {
                     }
                     // if (sprite._resetAnimation) continue restingFrame;
                 }
-                if (sprite._playOnce) {
+                // if (sprite._playOnce) {
+                //     sprite.pause();
+                // }
+                if (sprite._repeat && !--sprite._repeat){ // decrement only if nonzero
                     sprite.pause();
                 }
             }
@@ -50,15 +53,17 @@ class Sprite {
     }
 
     _playing = false;
-    _playOnce = false;
+    // _playOnce = false;
 
-    play() {
+    play(n = 1) {
         this._playing = true;
+        this._repeat = n;
     }
 
     pause() {
         this._playing = false;
-        this._playOnce = false;
+        // this._playOnce = false;
+        this._repeat = 0;
     }
 
     nextFrame() {
@@ -68,7 +73,7 @@ class Sprite {
     playOnce() {
         this._resetAnimation = true;
         this._playOnce = true;
-        this.play();
+        this.play(1);
     }
 
     get x() {
