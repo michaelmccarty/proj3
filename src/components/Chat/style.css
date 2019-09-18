@@ -1,6 +1,4 @@
-div.chat-message-container{
-
-}
+div.chat-message-container{}
 
 div.chat-wrapper {
     display: flex;
@@ -9,11 +7,12 @@ div.chat-wrapper {
 
 div.chat-messages {
     flex: 1;
-    max-height: 1fr;
-    overflow: auto;
+    overflow-y: auto;
 }
 
 form.chat-form {
-    flex-basis: 48px;
-    background-color: red;
+    border-top: 1px solid black;
+    flex-basis: 52px;
+    display: flex;
+    align-items: center;
 }

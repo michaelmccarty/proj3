@@ -4,6 +4,7 @@ import './style.css';
 
 class ChatBox extends React.Component {
     state = {
+        chatInput: "",
         usersOnline: [
             {
                 userName: "Username123",
@@ -41,6 +42,28 @@ class ChatBox extends React.Component {
         ]
     }
 
+    handleInputChange = event => {
+        const {value} = event.target;
+
+        this.setState({
+            chatInput: value
+        });
+    }
+
+    handleSubmitChatMessage = event => {
+        event.preventDefault();
+
+        const newMessage = {
+            userName: "Pass Username here",
+            time: Date.now(),
+            message: this.state.chatInput
+        };
+
+        this.setState({
+            messages: [...this.state.messages, newMessage] // Must match the objects in this.state.messages
+        });
+    }
+
     render() {
         return (
             <div className="chatbox h-100 flx flx-row">
@@ -54,8 +77,8 @@ class ChatBox extends React.Component {
                         )}
                     </div>
                     <form className="chat-form">
-                        <input type="text" placeholder="Your message here"/>
-                        <button>Send</button>
+                        <input onChange={this.handleInputChange} name="chatInput" value={this.state.chatInput} type="text" placeholder="Your message here"/>
+                        <button onClick={this.handleSubmitChatMessage}>Send</button>
                     </form>
                 </div>
             </div>
