@@ -27,6 +27,8 @@ io.on("connection", function(socket) {
   for (let property in connectedUsers) {
     console.log(property);
   }
+
+
   // connectedUsers.forEach(socket=>{
   //   console.log(socket.id)
   // })
@@ -35,6 +37,11 @@ io.on("connection", function(socket) {
     // const packet = { socketId: socket.id, connectedUsers:connectedUsers };
     // io.sockets.emit("helloworld", packet);
   });
+
+  socket.on('move', data => {
+    console.log(data)
+    io.sockets.emit('move', data);
+  })
 
   socket.on("disconnect", data => {
     console.log(socket.id + "disconnected");
