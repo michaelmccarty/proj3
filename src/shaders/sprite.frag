@@ -9,9 +9,9 @@ varying vec2 vflip;
 
 
 void main() {
-    // vec2 offset = vec2()
-    // gl_FragColor = texture2D(spritesheet, gl_PointCoord + fTexOffset); 
+    // if gl_PointCoord.y is masked, gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+    // mask is 16 bit number
+    // mask >> floor(gl_PointCoord.y * 16) & 1;
     
     gl_FragColor = texture2D(spritesheet, (abs(vflip - gl_PointCoord) * fSpriteSize + fTexOffset) * inverseTextureSize);
-    // gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
 }
