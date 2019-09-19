@@ -7,6 +7,7 @@ import Texture from '../../Texture';
 import Player from '../../actors/Player';
 // import directions from '../../directions';
 import styles from './Game.module.css';
+import Creature from '../../actors/Creature';
 
 // overworld actor sprites
 // import actors from '../../actors.json';
@@ -49,8 +50,9 @@ class Game extends React.Component {
 
         this.actorSpriteSheet = new Texture(this.gl, './spritesheets/overworld-actors.png');
 
-        this.player = new Player(this.coords.x, this.coords.y, this.maps[this.currentMap]);
+        this.player = new Player(this.coords.x, this.coords.y, this.maps[this.currentMap], 'professor oak');
         this.actors = [this.player];
+        this.actors.push(new Creature(13, 13, 'youngster', 'west', 'Route 1'));
 
         // await Promise.all(this.maps.map(map => map.ready));
         // await actorSpritesPromise;

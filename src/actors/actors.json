@@ -80,5 +80,579 @@
                 }
             ]
         }
+    },
+    "youngster": {
+        "south": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 16,
+                    "y": 16,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 0,
+                    "y": 16,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "north": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 48,
+                    "y": 16,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 32,
+                    "y": 16,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "west": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 80,
+                    "y": 16,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 64,
+                    "y": 16,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "east": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 80,
+                    "y": 16,
+                    "flip_h": true,
+                    "flip_v": false
+                },
+                {
+                    "x": 64,
+                    "y": 16,
+                    "flip_h": true,
+                    "flip_v": false
+                }
+            ]
+        }
+    },
+    "professor oak": {
+        "south": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 16,
+                    "y": 64,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 0,
+                    "y": 64,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "north": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 48,
+                    "y": 64,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 32,
+                    "y": 64,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "west": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 80,
+                    "y": 64,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 64,
+                    "y": 64,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "east": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 80,
+                    "y": 64,
+                    "flip_h": true,
+                    "flip_v": false
+                },
+                {
+                    "x": 64,
+                    "y": 64,
+                    "flip_h": true,
+                    "flip_v": false
+                }
+            ]
+        }
+    },
+    "gary": {
+        "south": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 16,
+                    "y": 48,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 0,
+                    "y": 48,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "north": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 48,
+                    "y": 48,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 32,
+                    "y": 48,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "west": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 80,
+                    "y": 48,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 64,
+                    "y": 48,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "east": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 80,
+                    "y": 48,
+                    "flip_h": true,
+                    "flip_v": false
+                },
+                {
+                    "x": 64,
+                    "y": 48,
+                    "flip_h": true,
+                    "flip_v": false
+                }
+            ]
+        }
+    },
+    "lass": {
+        "south": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 16,
+                    "y": 32,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 0,
+                    "y": 32,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "north": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 48,
+                    "y": 32,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 32,
+                    "y": 32,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "west": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 80,
+                    "y": 32,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 64,
+                    "y": 32,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "east": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 80,
+                    "y": 32,
+                    "flip_h": true,
+                    "flip_v": false
+                },
+                {
+                    "x": 64,
+                    "y": 32,
+                    "flip_h": true,
+                    "flip_v": false
+                }
+            ]
+        }
+    },
+    "sabrina": {
+        "south": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 16,
+                    "y": 80,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 0,
+                    "y": 80,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "north": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 48,
+                    "y": 80,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 32,
+                    "y": 80,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "west": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 80,
+                    "y": 80,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 64,
+                    "y": 80,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "east": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 80,
+                    "y": 80,
+                    "flip_h": true,
+                    "flip_v": false
+                },
+                {
+                    "x": 64,
+                    "y": 80,
+                    "flip_h": true,
+                    "flip_v": false
+                }
+            ]
+        }
+    },
+    "daisy oak": {
+        "south": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 16,
+                    "y": 96,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 0,
+                    "y": 96,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "north": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 48,
+                    "y": 96,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 32,
+                    "y": 96,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "west": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 80,
+                    "y": 96,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 64,
+                    "y": 96,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "east": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 80,
+                    "y": 96,
+                    "flip_h": true,
+                    "flip_v": false
+                },
+                {
+                    "x": 64,
+                    "y": 96,
+                    "flip_h": true,
+                    "flip_v": false
+                }
+            ]
+        }
+    },
+    "gentleman": {
+        "south": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 16,
+                    "y": 112,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 0,
+                    "y": 112,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "north": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 48,
+                    "y": 112,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 32,
+                    "y": 112,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "west": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 80,
+                    "y": 112,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 64,
+                    "y": 112,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "east": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 80,
+                    "y": 112,
+                    "flip_h": true,
+                    "flip_v": false
+                },
+                {
+                    "x": 64,
+                    "y": 112,
+                    "flip_h": true,
+                    "flip_v": false
+                }
+            ]
+        }
     }
 }
