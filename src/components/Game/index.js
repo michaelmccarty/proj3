@@ -2,7 +2,7 @@ import React from 'react';
 import maps from '../../maps';
 import Spritesheet from '../../Spritesheet';
 import Tilemap from '../../Tilemap';
-import Sprite from '../../Sprite';
+import {Sprite} from '../../Sprite';
 import Texture from '../../Texture';
 import Player from '../../actors/Player';
 // import directions from '../../directions';

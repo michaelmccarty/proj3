@@ -4,24 +4,12 @@
             "x": 0,
             "y": 0,
             "size": 16,
-            "framerate": 4,
+            "framerate": 2,
             "frames": [
                 {
                     "x": 64,
                     "y": 0,
                     "flip_h": false,
-                    "flip_v": false
-                },
-                {
-                    "x": 48,
-                    "y": 0,
-                    "flip_h": false,
-                    "flip_v": false
-                },
-                {
-                    "x": 64,
-                    "y": 0,
-                    "flip_h": true,
                     "flip_v": false
                 },
                 {
@@ -36,24 +24,12 @@
             "x": 0,
             "y": 0,
             "size": 16,
-            "framerate": 4,
+            "framerate": 2,
             "frames": [
                 {
                     "x": 16,
                     "y": 0,
                     "flip_h": false,
-                    "flip_v": false
-                },
-                {
-                    "x": 0,
-                    "y": 0,
-                    "flip_h": false,
-                    "flip_v": false
-                },
-                {
-                    "x": 16,
-                    "y": 0,
-                    "flip_h": true,
                     "flip_v": false
                 },
                 {
@@ -68,20 +44,8 @@
             "x": 0,
             "y": 0,
             "size": 16,
-            "framerate": 4,
+            "framerate": 2,
             "frames": [
-                {
-                    "x": 112,
-                    "y": 0,
-                    "flip_h": false,
-                    "flip_v": false
-                },
-                {
-                    "x": 96,
-                    "y": 0,
-                    "flip_h": false,
-                    "flip_v": false
-                },
                 {
                     "x": 112,
                     "y": 0,
@@ -100,20 +64,8 @@
             "x": 0,
             "y": 0,
             "size": 16,
-            "framerate": 4,
+            "framerate": 2,
             "frames": [
-                {
-                    "x": 112,
-                    "y": 0,
-                    "flip_h": true,
-                    "flip_v": false
-                },
-                {
-                    "x": 96,
-                    "y": 0,
-                    "flip_h": true,
-                    "flip_v": false
-                },
                 {
                     "x": 112,
                     "y": 0,

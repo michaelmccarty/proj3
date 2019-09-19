@@ -20,7 +20,7 @@ class Sprite {
         this.position[1] = options.y || 0;
 
         this.frameGen = (function* (sprite) {
-            const frameInterval = 1 / sprite.framerate * 1000;
+            // const frameInterval = 1 / sprite.framerate * 1000;
             restingFrame:
             while (true) {
                 sprite._resetAnimation = false;
@@ -31,7 +31,7 @@ class Sprite {
                 for (let frame of sprite.frames) { //eslint-disable-line
                     // Advance frames every frameInterval milliseconds
                     const last = Date.now();
-                    while (Date.now() - last < frameInterval) {
+                    while (Date.now() - last < 1000 / sprite.framerate) {
                         // Maybe test if a _resetAnimation flag is set and continue
                         yield frame;
                         if (!sprite._playing || sprite._resetAnimation) continue restingFrame;
@@ -141,4 +141,37 @@ Sprite.drawSprites = function (gl, sprites, offset, spritesheet) {
 
 }
 
-export default Sprite;
+// flips left/right each time it plays all the way through
+class AlternatingSprite extends Sprite {
+    constructor(options) {
+        super(options);
+
+        this.frameGen = (function* (sprite) {
+            restingFrame:
+            while (true) {
+                sprite.frames.map(frame => frame.flip_h = !frame.flip_h);
+                sprite._resetAnimation = false;
+                while (!sprite._playing) {
+                    yield sprite.frames[sprite.defaultFrame && sprite.frames.length - 1];
+                }
+
+                for (let frame of sprite.frames) { //eslint-disable-line
+                    // Advance frames every frameInterval milliseconds
+                    const last = Date.now();
+                    while (Date.now() - last < 1000 / sprite.framerate) {
+                        // Maybe test if a _resetAnimation flag is set and continue
+                        yield frame;
+                        if (!sprite._playing || sprite._resetAnimation) continue restingFrame;
+                    }
+                    // if (sprite._resetAnimation) continue restingFrame;
+                }
+ 
+                if (sprite._repeat && !--sprite._repeat){ // decrement only if nonzero
+                    sprite.pause();
+                }
+            }
+        })(this);
+    }
+}
+
+export {Sprite, AlternatingSprite};
