@@ -5,6 +5,6 @@
 .login-form-container { composes: gameboy-form-container p-3 from global; }
 .login-form { composes: flx flx-col flx-align-center from global; }
 .login-form-inputs { composes: gameboy-form-inputs-wrapper flx flx-col flx-align-center mb-5 from global; }
-.inputs { composes: inputs from global; }
+.inputs { composes: inputs from global; }   
 .start-button { composes: gameboy-start-button mb-3 from global; }
 .dont-have-account { composes: m-1 from global; font-size: 0.7em; }

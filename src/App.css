@@ -156,14 +156,14 @@
   margin-bottom: 5px;
 }
 
-.gameboy-start-button:hover {
-  letter-spacing: 0px;
-}
-
 .gameboy-form-container {
   background-color: var(--light-grey);
   border-radius: 0 0 30px 0;
   box-shadow: 12px 6px 20px rgba(0,0,0,0.2);
+  background-image: url('/images/gameboy-detail.png');
+  background-position: bottom right;
+  background-repeat: no-repeat;
+  background-size: 90px;
 }
 
 .gameboy-form-inputs-wrapper {
