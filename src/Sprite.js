@@ -124,11 +124,7 @@ Sprite.drawSprites = function (gl, sprites, offset, spritesheet) {
         buffer[i++] = sprite.mask[0];
         buffer[i++] = sprite.mask[1];
         count++;
-        // console.log(sprite.flip_h);
     }
-    // if (sprites.length > 1) console.log(buffer);
-
-    console.log(count);
 
     const glBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, glBuffer);
