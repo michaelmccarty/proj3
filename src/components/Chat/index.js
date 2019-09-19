@@ -27,6 +27,7 @@ class ChatBox extends React.Component {
                 </div>
                 <div className="chat-wrapper flx-grow-1">
                     <div>
+                        <div id="output"></div>
                         {this.state.messages.map(({userName, time, message}, i) =>     
                             <ChatMessage key={i} userName={userName} time={time} message={message}/>
                         )}

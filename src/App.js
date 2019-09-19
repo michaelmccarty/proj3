@@ -3,11 +3,34 @@ import Game from "./components/Game";
 import OptionsWrapper from "./components/Options";
 import ChatBox from "./components/Chat";
 import "./App.css";
-import Socket from "./components/Socket";
+import socketIOClient from "socket.io-client";
 
-function App() {
-  return (
-    <main className="container">
+
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      socket: false,
+      response: false,
+      endpoint: "http://localhost:3001"
+    };
+  }
+
+  componentDidMount() {
+    const { endpoint } = this.state;
+    const socket = socketIOClient(endpoint);
+    socket.on("connect", data => this.setState({ response: data, socket: socket }));
+    console.log(socket);
+  }
+
+  buttonClick() {
+    
+  }
+
+  render() {
+    
+    return (
+      <main className="container">
       {/* <Game width={160 * 4} height={144 * 4}/> */}
       <div className="game"></div>
       <div className="options">
@@ -16,9 +39,13 @@ function App() {
       <div className="chat">
         <ChatBox />
       </div>
-      <Socket />
     </main>
-  );
+    );
+  }
 }
+
+
+
+
 
 export default App;
