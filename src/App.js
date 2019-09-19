@@ -1,9 +1,12 @@
 import React from "react";
 import Game from "./components/Game";
+import LoginPage from "./pages/authentication/LoginPage";
+import RegisterPage from "./pages/authentication/RegisterPage";
 import OptionsWrapper from "./components/OptionsWrapper";
 import ChatBox from "./components/Chat";
 import "./App.css";
 import socketIOClient from "socket.io-client";
+import {BrowserRouter as Router, Route } from 'react-router-dom';
 
 function Button() {
   return <button id="button">Click me</button>;
@@ -61,22 +64,31 @@ class App extends React.Component {
   render() {
     const { socket } = this.state;
     return (
-      <main className="container">
-        <Button
-          onClick={() => {
-            this.buttonClick();
-          }}
-        ></Button>
-        <div className="game">
-          <Game socket={socket} />
-        </div>
-        <div className="options">
-          <OptionsWrapper socket={socket} />
-        </div>
-        <div className="chat">
-          <ChatBox socket={socket} />
-        </div>
-      </main>
+      <Router>
+        <Route
+          exact path="/game"
+          component={() => 
+            <main className="container">
+              <Button
+                onClick={() => {
+                  this.buttonClick();
+                }}
+              />
+              <div className="game">
+                <Game socket={socket} />
+              </div>
+              <div className="options">
+                <OptionsWrapper socket={socket} />
+              </div>
+              <div className="chat">
+                <ChatBox socket={socket} />
+              </div>
+            </main>
+          }
+        />
+        <Route exact path="/" component={LoginPage} />
+        <Route exact path="/register" component={RegisterPage} />
+      </Router>
     );
   }
 }

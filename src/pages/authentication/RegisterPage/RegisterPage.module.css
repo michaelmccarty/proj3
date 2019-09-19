@@ -1,0 +1,10 @@
+.register-page {
+    composes: w-100 flx flx-center-all from global;
+    height: 100vh;
+}
+.register-form-container { composes: gameboy-form-container p-3 from global; }
+.register-form { composes: flx flx-col flx-align-center from global; }
+.register-form-inputs { composes: gameboy-form-inputs-wrapper flx flx-col flx-align-center mb-5 from global; }
+.inputs { composes: inputs from global; }
+.register-button { composes: gameboy-start-button mb-3 from global; }
+.already-have-account { composes: m-1 from global; font-size: 0.7em; }
