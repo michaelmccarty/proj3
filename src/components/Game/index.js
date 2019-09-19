@@ -17,6 +17,7 @@ class Game extends React.Component {
     // }
 
     state = {
+        socket: this.props.socket,  
     }
 
     pressedKeys = new Set();

@@ -16,18 +16,21 @@ require('./routes/api/user')(app);
 
 // socket setup
 const io = socket(server);
-
+// console.log(io)
 io.on("connection", function(socket) {
-  console.log(socket);
+  // console.log(socket);
+  console.log(socket.client)
+  // console.log(socket.sockets)
   console.log("made socket connection", socket.id);
   socket.on('connect', data=>{
-    io.sockets.emit('connect');
+    io.sockets.emit('connect', socket.id);
   })
   socket.on("disconnect", data => {
     console.log(socket.id + "disconnected");
   });
 
   socket.on("chat", function(data) {
+    console.log(data)
     io.sockets.emit("chat", data);
   });
 
