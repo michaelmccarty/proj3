@@ -29,6 +29,7 @@ class Player extends Creature {
         if (cb === true) return; // event has taken control
 
         super.walk(direction, cb);
+        this.emit('walk')
     }
 
     hop() {
