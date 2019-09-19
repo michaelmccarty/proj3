@@ -19,6 +19,13 @@
   --dark-2: #9f9e9a;
   --accent: #4f7d83;
 
+  --light-grey: #BFBFBF;
+  --dark-grey: #7C7C7C;
+  --dark-grey-2: #7C7C7C;
+  --screen: #9BAA77;
+  --red: #AF3F3F;
+  --blue: #563D77;
+
   --m-large: 82px;
 
   --media-query-mobile: 768px;
@@ -127,7 +134,33 @@
 .rounded-2 { border-radius: 4px }
 .rounded-3 { border-radius: 8px }
 
-.button {
+.gameboy-start-button {
+  cursor: pointer;
+  color: var(--blue);
+  border: none;
+  background: none;
+  padding-top: 4px;
+  text-transform: uppercase;
+  transform: rotate(-10deg);
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+
+.gameboy-start-button:before {
+  content:""; 
+  float:left; 
+  background:var(--dark-grey-2); 
+  width:100%; 
+  height:8px; 
+  border-radius: 3px;
+  margin-bottom: 5px;
+}
+
+.gameboy-start-button:hover {
+  letter-spacing: 0px;
+}
+
+/* .button {
   cursor: pointer;
   padding: 8px 16px;
   border: 1px solid;
@@ -157,12 +190,17 @@
 .button-dark:hover {
   background-color: var(--light-2);
   color: var(--dark-1) !important;
-}
+} */
 
 .text-center { text-align: center }
 .text-left { text-align: left }
 .text-right { text-align: right }
 .cursor-pointer { cursor: pointer; }
+
+.inputs {
+  padding: var(--p1);
+  margin: 16px 24px;
+}
 
 #root {
   display: flex;

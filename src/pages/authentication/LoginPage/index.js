@@ -16,6 +16,7 @@ class LoginForm extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     console.log(this.state.email) // Do whatever with authentication here using the component's state.
+    // Run this always after the .then from checking the login
     this.setState({
       password: ""
     });
@@ -23,26 +24,39 @@ class LoginForm extends React.Component {
 
   render() {
     return (
-      <div id="authenticate-form-container">
-        <form>
-          <input
-            name="email"
-            onChange={this.handleInputChange}
-            value={this.state.email}
-          />
-          <input
-            name="password"
-            onChange={this.handleInputChange}
-            value={this.state.password}
-            type="password"
-          />
-          <button onClick={this.handleSubmit}>Login</button>
-          <div>
-            <span>
-              Don't have an account? <Link to="/register">Register!</Link>
-            </span>
-          </div>
-        </form>
+      <div className={styles["login-page"]}>
+        <div className={styles["login-form-container"]}>
+          <form className={styles["login-form"]}>
+            <div className={styles["login-form-inputs"]}>
+              <input
+                className={styles["inputs"]}
+                name="email"
+                onChange={this.handleInputChange}
+                value={this.state.email}
+                placeholder="Email"
+              />
+              <input
+                className={styles["inputs"]}
+                name="password"
+                onChange={this.handleInputChange}
+                value={this.state.password}
+                type="password"
+                placeholder="Password"
+              />
+            </div>
+            <button
+              className={styles["start-button"]}
+              onClick={this.handleSubmit}
+            >
+              Start
+            </button>
+            <div>
+              <span className={styles["dont-have-account"]}>
+                Don't have an account? <Link to="/register">Register!</Link>
+              </span>
+            </div>
+          </form>
+        </div>
       </div>
     );
   }
