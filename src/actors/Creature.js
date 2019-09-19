@@ -93,8 +93,6 @@ class Creature extends Actor {
         // Play bonk sound
         this.sprites[this.facing].play(1);
         setTimeout(() => this.walking = false, 1000 / this.speed);
-
-
     }
 
     nextTile(direction, distance = 1) {
@@ -127,7 +125,7 @@ class Creature extends Actor {
         if (this.shadow) {
             const shadow = this.sprites.shadow;
             shadow.x = Math.floor(this.x * 16);
-            shadow.y = Math.floor(this.y * 16 + 8);
+            shadow.y = Math.floor(this.y * 16 + 4);
             return [shadow, sprite];
         }
         return sprite;
