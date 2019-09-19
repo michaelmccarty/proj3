@@ -23,25 +23,22 @@ io.on("connection", function(socket) {
 
   connectedUsers[socket.id] = socket;
 
-
-  console.log('======================================\nsockets online')
-  for(let property in connectedUsers) {
-    console.log(property)
+  console.log("======================================\nsockets online");
+  for (let property in connectedUsers) {
+    console.log(property);
   }
   // connectedUsers.forEach(socket=>{
   //   console.log(socket.id)
   // })
 
   socket.on("connect", () => {
-
-
     // const packet = { socketId: socket.id, connectedUsers:connectedUsers };
     // io.sockets.emit("helloworld", packet);
   });
 
   socket.on("disconnect", data => {
     console.log(socket.id + "disconnected");
-    socket.broadcast.emit('disconnection', socket.id)
+    socket.broadcast.emit("disconnection", socket.id);
   });
 
   socket.on("chat", function(data) {
