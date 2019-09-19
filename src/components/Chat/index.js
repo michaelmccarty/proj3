@@ -7,6 +7,7 @@ import Moment from 'moment';
 class ChatBox extends React.Component {
 
   state = {
+    socket: this.props.socket,  
     chatInput: "",
     usersOnline: [
       {
@@ -102,7 +103,8 @@ class ChatBox extends React.Component {
 
   handleSubmitChatMessage = event => {
     event.preventDefault();
-
+    const {socket} = this.state;
+    
     const newMessage = {
       userName: "Pass Username here",
       time: Date.now(),
@@ -112,6 +114,8 @@ class ChatBox extends React.Component {
     this.setState({
       messages: [...this.state.messages, newMessage] // Must match the objects in this.state.messages
     });
+
+    socket.emit('chat', newMessage)
 
     this.setState({
       chatInput: ""
