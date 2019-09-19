@@ -12,12 +12,17 @@ const server = app.listen(PORT, function() {
   console.log("http://localhost:" + PORT);
 });
 
+require('./routes/api/user')(app);
+
 // socket setup
 const io = socket(server);
 
 io.on("connection", function(socket) {
   console.log(socket);
   console.log("made socket connection", socket.id);
+  socket.on('connect', data=>{
+    io.sockets.emit('connect');
+  })
   socket.on("disconnect", data => {
     console.log(socket.id + "disconnected");
   });

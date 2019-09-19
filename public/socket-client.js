@@ -6,16 +6,16 @@ console.log(socket)
 let message = document.getElementById('messageInput');
 let handle = document.getElementById('handle');
 let sendButton = document.getElementById('sendBtn');
-let output = document.getElementById('output');
 
 // emit events
 // chat event
 
 // vanilla JS send to 'chat' channel
-sendButton.addEventListener('click', function(){
+sendButton.addEventListener('click', function(e){
+    e.preventDefault();
     socket.emit('chat', {
         message: message.value,
-        handle: handle.value
+        handle: socket.id
     })
 })
 
@@ -25,9 +25,9 @@ socket.on('chat', function(data) {
 })
 
 // vanilla JS send to 'typing' channel
-message.addEventListener('keypress', function(){
-    socket.emit('typing', handle.value);
-})
+// message.addEventListener('keypress', function(){
+//     socket.emit('typing', handle.value);
+// })
 
 // vanilla JS receive from 'typing' channel 
 socket.on('typing', function(data){

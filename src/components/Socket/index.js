@@ -1,13 +1,18 @@
 import React from "react";
 
 class Socket extends React.Component {
-  state = {};
+  // constructor (props) {
+  //   this.state.socket = props.socket || "hello world"
+  // }
+  
+  state = {
+    socket: this.socket
+  }
 
   componentDidMount() {
     const socketIOCDN = document.createElement("script");
 
-    socketIOCDN.src =
-      "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js";
+    socketIOCDN.src = "socket-io-client.js";
     socketIOCDN.async = true;
 
     const socketClient = document.createElement("script");
