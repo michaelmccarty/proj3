@@ -1052,62 +1052,14 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
     {
       id: 29,
       frames: 1,
@@ -1458,34 +1410,10 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
     {
       id: 29,
       frames: 1,
@@ -1584,34 +1512,10 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
     {
       id: 29,
       frames: 1,
@@ -1710,34 +1614,10 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
     {
       id: 29,
       frames: 1,
@@ -1836,34 +1716,10 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {grass: true}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
     {
       id: 6,
       frames: 1,
@@ -2704,34 +2560,10 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
     {
       id: 2,
       frames: 1,
@@ -2830,34 +2662,10 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
     {
       id: 78,
       frames: 1,
@@ -2956,34 +2764,10 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
     {
       id: 2,
       frames: 1,
@@ -3082,34 +2866,10 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
     {
       id: 2,
       frames: 1,
@@ -3418,34 +3178,10 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
     {
       id: 2,
       frames: 1,
@@ -3474,34 +3210,10 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
     {
       id: 29,
       frames: 1,
@@ -3544,34 +3256,10 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
     {
       id: 2,
       frames: 1,
@@ -3600,34 +3288,10 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
     {
       id: 29,
       frames: 1,
@@ -3656,34 +3320,10 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
     {
       id: 10,
       frames: 3,
@@ -3712,34 +3352,10 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
     {
       id: 10,
       frames: 3,
@@ -3782,34 +3398,10 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
     {
       id: 34,
       frames: 3,
@@ -3838,34 +3430,10 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
+    tallGrass,
+    tallGrass,
+    tallGrass,
+    tallGrass,
     {
       id: 34,
       frames: 3,
@@ -3950,20 +3518,8 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
+    tallGrass,
+    tallGrass,
     {
       id: 6,
       frames: 1,
@@ -4077,20 +3633,8 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
+    tallGrass,
+    tallGrass,
     {
       id: 6,
       frames: 1,
@@ -4203,20 +3747,8 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
+    tallGrass,
+    tallGrass,
     {
       id: 6,
       frames: 1,
@@ -4329,20 +3861,8 @@ const map = {
       events: [],
       flags: {}
     },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
-    {
-      id: 24,
-      frames: 1,
-      collision: false,
-      events: [],
-      flags: {}
-    },
+    tallGrass,
+    tallGrass,
     {
       id: 6,
       frames: 1,
