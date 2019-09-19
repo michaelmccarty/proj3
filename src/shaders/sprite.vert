@@ -4,14 +4,17 @@ attribute vec2 spritePosition;
 attribute float spriteSize;
 attribute vec2 texOffset;
 attribute vec2 flip;
+attribute vec2 mask;
 
 varying vec2 fTexOffset;
 varying float fSpriteSize;
 varying vec2 vflip;
+varying vec2 maskOut;
 
 uniform vec2 inverseViewportSize;
 
 void main() {
+    maskOut = vec2(65535.0);
     fTexOffset = texOffset;// * (1.0 / spriteSize);
     fSpriteSize = spriteSize;
     vflip = flip;
