@@ -1,30 +1,29 @@
 import React from 'react';
-import styles from './LoginForm.module.css';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
-class LoginForm extends React.Component {
+class RegisterPage extends React.Component {
   state = {
+    username: "",
     email: "",
     password: ""
   };
 
-  handleInputChange = event => {
-    const {name, value} = event.target;
-    this.setState({ [name]: value });
-  }
-
   handleSubmit = event => {
     event.preventDefault();
-    console.log(this.state.email) // Do whatever with authentication here using the component's state.
-    this.setState({
-      password: ""
-    });
+    const {username, email, password} = event.target;
+
+    console.log(username, email, password);
   }
 
   render() {
     return (
       <div id="authenticate-form-container">
         <form>
+          <input
+            name="username"
+            onChange={this.handleInputChange}
+            value={this.state.username}
+          />
           <input
             name="email"
             onChange={this.handleInputChange}
@@ -36,10 +35,10 @@ class LoginForm extends React.Component {
             value={this.state.password}
             type="password"
           />
-          <button onClick={this.handleSubmit}>Login</button>
+          <button onClick={this.handleSubmit}>Register</button>
           <div>
             <span>
-              Don't have an account? <Link to="/register">Register!</Link>
+              Already have an account? <Link to="/">Login!</Link>
             </span>
           </div>
         </form>
@@ -48,4 +47,4 @@ class LoginForm extends React.Component {
   }
 }
 
-export default LoginForm;
+export default RegisterPage;

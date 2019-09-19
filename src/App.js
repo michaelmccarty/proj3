@@ -1,6 +1,7 @@
 import React from "react";
 import Game from "./components/Game";
 import LoginPage from "./pages/authentication/LoginPage";
+import RegisterPage from "./pages/authentication/RegisterPage";
 import OptionsWrapper from "./components/OptionsWrapper";
 import ChatBox from "./components/Chat";
 import "./App.css";
@@ -50,6 +51,7 @@ class App extends React.Component {
           }
         />
         <Route exact path="/" component={LoginPage} />
+        <Route exact path="/register" component={RegisterPage} />
       </Router>
     );
   }
