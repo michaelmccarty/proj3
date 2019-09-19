@@ -1,5 +1,5 @@
 import React from 'react';
-import './style.css';
+import styles from './OptionsWrapper.module.css';
 
 function Option(props) {
     const {optionName} = props;
@@ -23,7 +23,7 @@ class OptionsWrapper extends React.Component {
 
     render() {
         return (
-            <div className="options">
+            <div className={styles["option"]}>
                 <ul>
                     <Option optionName="Pokemon"/>
                     <Option optionName="Pokedex"/>

@@ -1,0 +1,23 @@
+.chatbox { composes: bg-light-2 h-100 flx from global; }
+.online-users {
+    overflow-y: auto;
+    width: 270px;
+}
+.chat-wrapper { composes: flx flx-col flx-grow-1 from global; }
+.chat-messages { 
+    flex: 1;
+    overflow-y: auto;
+}
+.chat-form {
+    composes: flx flx-align-center ml-2 from global;
+    border-top: 1px solid black;
+    flex-basis: 52px;
+}
+
+@media screen and (max-width: 768px) {
+    .chatbox { flex-direction: column; }
+    .chat-messages { height: 280px; width: 100%; flex: unset; }
+    .chat-avatar-wrapper { width: 28px; min-width: 28px; height: 28px; }
+    .online-users { height: 140px; width: 100%; order: 2; }
+    .chat-form { margin-left: 0; }
+}

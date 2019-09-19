@@ -1,6 +1,6 @@
 import React from "react";
 import Game from "./components/Game";
-import OptionsWrapper from "./components/Options";
+import OptionsWrapper from "./components/OptionsWrapper";
 import ChatBox from "./components/Chat";
 import "./App.css";
 import socketIOClient from "socket.io-client";
@@ -31,8 +31,9 @@ class App extends React.Component {
     
     return (
       <main className="container">
-      {/* <Game width={160 * 4} height={144 * 4}/> */}
-      <div className="game"></div>
+      <div className="game">
+      <Game />
+      </div>
       <div className="options">
         <OptionsWrapper />
       </div>

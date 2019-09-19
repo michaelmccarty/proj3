@@ -1,168 +1,145 @@
-import React from "react";
-import * as PIXI from "pixi.js";
-import maps from "../../maps";
-import Spritesheet from "../../Spritesheet";
-import Tilemap from "../../Tilemap";
-import Sprite from "../../Sprite";
-import Texture from "../../Texture";
+import React from 'react';
+import maps from '../../maps';
+import Spritesheet from '../../Spritesheet';
+import Tilemap from '../../Tilemap';
+import {Sprite} from '../../Sprite';
+import Texture from '../../Texture';
+import Player from '../../actors/Player';
+// import directions from '../../directions';
+import styles from './Game.module.css';
 
 // overworld actor sprites
-import actors from "../../actors.json";
+// import actors from '../../actors.json';
 
 class Game extends React.Component {
-  constructor(props) {
-    super(props);
-    this.pixi_cnt = null;
-  }
-
-  state = {
-    app: new PIXI.Application({
-      width: 160,
-      height: 144,
-      transparent: false,
-      antialias: false
-    })
-  };
-
-  maps = {};
-  _spritesheetCache = {};
-  spritesheetCache = new Proxy(this._spritesheetCache, {
-    get: (target, key, ...rest) => {
-      if (!target[key]) {
-        target[key] = new Spritesheet(this.gl, key);
-      }
-      return Reflect.get(target, key, ...rest);
-    }
-  });
-
-  updatePixiCnt = element => {
-    // the element is the DOM object that we will use as container to add pixi stage(canvas)
-    this.pixi_cnt = element;
-    //now we are adding the application to the DOM element which we got from the Ref.
-    if (this.pixi_cnt && this.pixi_cnt.children.length <= 0) {
-      this.pixi_cnt.appendChild(this.state.app.view);
-      // this.gl = this.state.app.renderer.gl;
-      // eslint-disable-next-line
-      this.state.app.renderer.clearBeforeRender = false;
-      console.log(document.getElementsByClassName("test")[0]);
-      this.gl = document.getElementsByClassName("test")[0].getContext("webgl");
-      this.setup();
-    }
-  };
-
-  setup = async () => {
-    // Make some sprites, load a map, whatever
-    // const actorSpritesPromise = new Promise(resolve => PIXI.Loader.shared.add('./spritesheets/overworld-actors.json').load(resolve));
-    this.coords = { x: 10, y: 10 };
-    await this.loadMap(
-      "Route 1",
-      (this.coords.x - 4) * 16,
-      (this.coords.y - 4) * 16
-    );
-    this.currentMap = "Route 1";
-
-    this.state.app.ticker.add(this.gameLoop);
-
-    this.player = new Sprite(this.gl, {
-      x: 80,
-      y: 80,
-      size: 16,
-      frames: [
-        {
-          x: 48,
-          y: 0,
-          flip_h: false,
-          flip_v: false
-        },
-        {
-          x: 64,
-          y: 0,
-          flip_h: false,
-          flip_v: false
-        },
-        {
-          x: 48,
-          y: 0,
-          flip_h: false,
-          flip_v: false
-        },
-        {
-          x: 64,
-          y: 0,
-          flip_h: true,
-          flip_v: false
-        }
-      ]
-    });
-
-    this.actorSpriteSheet = new Texture(
-      this.gl,
-      "./spritesheets/overworld-actors.png"
-    );
-
-    this.player.play();
-    // this.actorSpriteSheet = new Texture(this.gl, './spritesheets/test-sprite.png');
-
-    // await Promise.all(this.maps.map(map => map.ready));
-    // await actorSpritesPromise;
-    // this.actorSprites = PIXI.Loader.shared.resources['./spritesheets/overworld-actors.json'].spritesheet;
-    // this.playerSprite = new PIXI.AnimatedSprite(this.actorSprites.animations['player_south']);
-    // let id = PIXI.Loader.shared.resources['./spritesheets/overworld-actors.json'].textures;
-    // const playerSouth = new PIXI.Sprite(id['player_south.png'])
-    // this.playerSprite.x = 4 * 16;
-    // this.playerSprite.y = 4 * 16;
-    // playerSouth.x = 64;
-    // playerSouth.y = 64;
-    // this.state.app.stage.addChild(this.playerSprite);
-    // this.playerSprite.animationSpeed = 1/15;
-    // this.playerSprite.play();
-  };
-
-  async loadMap(name, relX, relY) {
-    const map = maps[name];
-    const spritesheet = this.spritesheetCache[map.spritesheet];
-    this.maps[name] = new Tilemap(this.gl, {
-      width: map.width,
-      height: map.height,
-      tiles: map.tiles,
-      spritesheet
-    });
-
-    this.maps[name].offset = { x: relX, y: relY };
-    return this.maps[name].ready;
-  }
-
-  unloadMap(name) {
-    delete this.maps[name];
-  }
-
-  gameLoop = delta => {
-    // If the player moved, subtract the movement from the offset of all loaded maps
-    for (let mapName in this.maps) {
-      this.maps[mapName].draw();
-    }
-
-    Sprite.drawSprites(
-      this.gl,
-      [this.player],
-      { x: (this.coords.x - 4) * 64, y: (this.coords.y - 4) * 64 },
-      this.actorSpriteSheet
-    );
-    // this.gl.useProgram(this.state.app.renderer.shader.program.glProgram);
-    // if (this.state.app.renderer.shader.program && this.state.app.renderer.shader.program.glPrograms) {
-    //     this.gl.useProgram(this.state.app.renderer.shader.program.glPrograms.program);
+    // constructor(props) {
+    //     super(props);
     // }
-    // console.log(this.state.app.renderer.shader.program && this.state.app.renderer.shader.program.glPrograms);
-  };
 
-  render() {
-    return (
-      <div
-        style={{ width: this.props.width, height: this.props.height }}
-        ref={this.updatePixiCnt}
-      />
-    );
-  }
+    state = {
+    }
+
+    pressedKeys = new Set();
+
+    maps = {};
+    _spritesheetCache = {};
+    spritesheetCache = new Proxy(this._spritesheetCache, {
+        get: (target, key, ...rest) => {
+            if (!target[key]) {
+                target[key] = new Spritesheet(this.gl, key);
+            }
+            return Reflect.get(target, key, ...rest);
+        }
+    })
+
+    setupCanvas = (element) => {
+        this.canvas = element;
+        this.gl = element.getContext('webgl');
+        this.setup();
+    };
+
+    setup = async () => {
+        // Make some sprites, load a map, whatever
+        // const actorSpritesPromise = new Promise(resolve => PIXI.Loader.shared.add('./spritesheets/overworld-actors.json').load(resolve));
+        this.coords = { x: 4, y: 4 };
+        await this.loadMap('Route 1', (this.coords.x - 4) * 16, (this.coords.y - 4) * 16);
+        this.currentMap = 'Route 1';
+
+        requestAnimationFrame(this.gameLoop);
+
+        this.actorSpriteSheet = new Texture(this.gl, './spritesheets/overworld-actors.png');
+
+        this.player = new Player(this.coords.x, this.coords.y, this.maps[this.currentMap]);
+        this.actors = [this.player];
+        console.log(this.player.sprites['east'].position[0])
+
+        // this.player.on('walk', this.scrollScreen);
+
+        this.player.walk('east');
+
+        // await Promise.all(this.maps.map(map => map.ready));
+        // await actorSpritesPromise;
+    }
+
+    async loadMap(name, relX, relY) {
+        const map = maps[name];
+        const spritesheet = this.spritesheetCache[map.spritesheet];
+        this.maps[name] = new Tilemap(this.gl, {
+            width: map.width,
+            height: map.height,
+            tiles: map.tiles,
+            spritesheet
+        });
+
+        this.maps[name].offset = { x: relX, y: relY }
+        return this.maps[name].ready;
+    }
+
+    // scrollScreen = direction => {
+    //     const [dx, dy] = directions[direction].map(n => n * 0.0625); // -1 / 16
+    //     this.coords.x += dx;
+    //     this.coords.y += dy;
+
+    //     this.scrollTimer = setInterval(() => {
+    //         const [dx, dy] = directions[direction].map(n => n * 0.0625); // -1 / 16
+    //         this.coords.x += dx;
+    //         this.coords.y += dy;
+
+    //         if (Number.isInteger(this.coords.x) && Number.isInteger(this.coords.y)) {
+    //             clearInterval(this.scrollTimer);
+    //         }
+    //     }, 1000 / (this.player.speed * 16));
+    // }
+
+    unloadMap(name) {
+        delete this.maps[name];
+    }
+
+    gameLoop = (delta) => {
+        const keys = this.pressedKeys;
+        if (keys.has('ArrowUp') || keys.has('w') || keys.has('W')) {
+            this.player.walk('north');
+        } else if (keys.has('ArrowDown') || keys.has('s') || keys.has('S')) {
+            this.player.walk('south');
+        } else if (keys.has('ArrowLeft') || keys.has('a') || keys.has('A')) {
+            this.player.walk('west');
+        } else if (keys.has('ArrowRight') || keys.has('d') || keys.has('D')) {
+            this.player.walk('east');
+        }
+
+
+        [this.coords.x, this.coords.y] = [this.player.x, this.player.y];
+
+        // If the player moved, subtract the movement from the offset of all loaded maps
+        for (let mapName in this.maps) { // eslint-disable-line
+            this.maps[mapName].offset = { x: (this.coords.x - 4) * 16, y: (this.coords.y - 4) * 16 }
+            this.maps[mapName].draw();
+        }
+
+        const sprites = [];
+        for (let actor of this.actors) { //eslint-disable-line
+            const update = actor.update();
+
+            // console.log(Array.isArray(update) ? update : [update])
+            sprites.push(...(Array.isArray(update) ? update : [update]));
+        }
+
+        Sprite.drawSprites(this.gl, sprites, { x: this.coords.x * 16 - 64, y: this.coords.y * 16 - 64 }, this.actorSpriteSheet);
+
+        requestAnimationFrame(this.gameLoop);
+    }
+
+    handleKeyDown = (e) => {
+        this.pressedKeys.add(e.key);
+    }
+
+    handleKeyUp = (e) => {
+        this.pressedKeys.delete(e.key);
+    }
+
+    render() {
+        return <canvas className={styles["game-screen"]} tabIndex="0" width="160" height="144" ref={this.setupCanvas} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp} />;
+    }
 }
 
 export default Game;

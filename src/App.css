@@ -21,10 +21,11 @@
 
   --m-large: 82px;
 
+  --media-query-mobile: 768px;
+
   --font-sans: 'Montserrat', sans-serif;
   --font-serif: 'Averia Serif Libre', 'Times New Roman', Serif;
 }
-
 
 * { box-sizing: border-box; color: var(--dark-1); }
 
@@ -163,34 +164,47 @@
 .text-right { text-align: right }
 .cursor-pointer { cursor: pointer; }
 
+#root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 main.container { 
   display: grid;
   grid-template-areas: 
   "game options"
   "chat chat";
-  grid-template-rows: 80% 1fr;
-  grid-template-columns: 80% 1fr;
+  grid-template-rows: 1fr minmax(0, 1fr);
+  grid-template-columns: 640px 1fr;
   grid-gap: 10px;
   height: 100vh;
   padding: 20px;
+  max-width: 1200px;
+  max-height: 900px;
+  min-height: 780px;
 }
-.game { grid-area: game; }
-.option { grid-area: options; }
+
+.game { 
+  grid-area: game;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  padding-top: 90%;
+}
+.options { grid-area: options; }
 .chat { grid-area: chat; }
 
-div.online-users { width: 270px; }
-
-main > div:nth-child(1) { background-color: #999; }
-main > div:nth-child(2) { background-color: #555; }
-main > div:nth-child(3) { background-color: #a6a6a6; }
-
 @media screen and (max-width: 768px) {
-  main.container {
+  main.container { /* Options will be fulscreen over game on start button click */
     grid-template-areas:
     "game"
-    "options"
     "chat";
-    grid-template-rows: 200px;
+    grid-template-rows: 1fr;
     grid-template-columns: 100%;
+    max-height: unset;
+    min-height: unset;
+    height: unset;
   }
+  div.options { display: none; }
 }
