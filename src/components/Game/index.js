@@ -50,7 +50,7 @@ class Game extends React.Component {
 
         this.actorSpriteSheet = new Texture(this.gl, './spritesheets/overworld-actors.png');
 
-        this.player = new Player(this.coords.x, this.coords.y, this.maps[this.currentMap], 'professor oak');
+        this.player = new Player(this.coords.x, this.coords.y, this.maps[this.currentMap]);
         this.actors = [this.player];
         this.actors.push(new Creature(13, 13, 'youngster', 'west', 'Route 1'));
 
