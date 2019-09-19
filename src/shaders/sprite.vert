@@ -14,7 +14,7 @@ varying vec2 maskOut;
 uniform vec2 inverseViewportSize;
 
 void main() {
-    maskOut = vec2(65535.0);
+    maskOut = mask;
     fTexOffset = texOffset;// * (1.0 / spriteSize);
     fSpriteSize = spriteSize;
     vflip = flip;

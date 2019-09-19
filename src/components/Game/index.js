@@ -52,7 +52,7 @@ class Game extends React.Component {
 
         this.player = new Player(this.coords.x, this.coords.y, this.maps[this.currentMap]);
         this.actors = [this.player];
-        this.actors.push(new Creature(13, 13, 'youngster', 'west', 'Route 1'));
+        this.actors.push(new Creature(13, 13, 'youngster', 'west', this.maps['Route 1']));
 
         // await Promise.all(this.maps.map(map => map.ready));
         // await actorSpritesPromise;
@@ -111,8 +111,8 @@ class Game extends React.Component {
         const sprites = [];
         for (let actor of this.actors) { //eslint-disable-line
             const update = actor.update();
-
-            sprites.push(...(Array.isArray(update) ? update : [update]));
+            sprites.push(...update);
+            // sprites.push(...(Array.isArray(update) ? update : [update]));
         }
 
         Sprite.drawSprites(this.gl, sprites, { x: this.coords.x * 16 - 64, y: this.coords.y * 16 - 64 }, this.actorSpriteSheet);
