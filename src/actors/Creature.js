@@ -87,8 +87,14 @@ class Creature extends Actor {
         }
     }
 
-    bonk() {
-        return null;
+    bonk(direction) {
+        if (direction) this.turn(direction);
+        this.walking = true;
+        // Play bonk sound
+        this.sprites[this.facing].play(1);
+        setTimeout(() => this.walking = false, 1000 / this.speed);
+
+
     }
 
     nextTile(direction, distance = 1) {
