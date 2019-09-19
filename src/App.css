@@ -160,6 +160,17 @@
   letter-spacing: 0px;
 }
 
+.gameboy-form-container {
+  background-color: var(--light-grey);
+  border-radius: 0 0 30px 0;
+  box-shadow: 12px 6px 20px rgba(0,0,0,0.2);
+}
+
+.gameboy-form-inputs-wrapper {
+  border: 12px solid var(--dark-grey);
+  background-color: var(--screen);
+}
+
 /* .button {
   cursor: pointer;
   padding: 8px 16px;

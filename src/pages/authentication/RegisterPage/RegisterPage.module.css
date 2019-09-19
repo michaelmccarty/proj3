@@ -1,36 +1,10 @@
 .register-page {
-    composes: flx flx-center-all from global;
+    composes: w-100 flx flx-center-all from global;
     height: 100vh;
-    width: 100%;
 }
-
-.register-form-container {
-    composes: p-3 from global;
-    background-color: var(--light-grey);
-    border-radius: 0 0 30px 0;
-    box-shadow: 12px 6px 20px rgba(0,0,0,0.2);
-}
-
-.register-form {
-    composes: flx flx-col flx-align-center from global;
-    color: var(--red);
-}
-
-.register-form-inputs {
-    composes: flx flx-col flx-align-center mb-5 from global;
-    border: 12px solid var(--dark-grey);
-    background-color: var(--screen);
-}
-
-.inputs {
-    composes: inputs from global;
-}
-
-.register-button {
-    composes: gameboy-start-button mb-3 from global;
-}
-
-.already-have-account {
-    composes: m-1 from global;
-    font-size: 0.7em;
-}
+.register-form-container { composes: gameboy-form-container p-3 from global; }
+.register-form { composes: flx flx-col flx-align-center from global; }
+.register-form-inputs { composes: gameboy-form-inputs-wrapper flx flx-col flx-align-center mb-5 from global; }
+.inputs { composes: inputs from global; }
+.register-button { composes: gameboy-start-button mb-3 from global; }
+.already-have-account { composes: m-1 from global; font-size: 0.7em; }
