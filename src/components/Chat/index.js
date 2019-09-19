@@ -116,7 +116,6 @@ class ChatBox extends React.Component {
     });
 
     socket.emit('chat', newMessage)
-    
 
     this.setState({
       chatInput: ""

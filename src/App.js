@@ -13,50 +13,60 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
+      onlineUsers: [],
       socket: null,
       user: null,
       endpoint: "http://localhost:3001"
     };
   }
 
-  componentWillMount(){
-    this.initSocket()
+  componentWillMount() {
+    this.initSocket();
   }
-
+  // socket connection established, and then socket listening events defined
   initSocket() {
     const { endpoint } = this.state;
     const socket = socketIOClient(endpoint);
-    socket.on("connect", () => console.log('Connected')
-    );
-    socket.on("chat", () => console.log('message received'))
-    this.setState({ socket })
+
+    socket.on("connect", data => console.log("Connected", data));
+
+    socket.on("chat", data => console.log("message received", data));
+
+    socket.on("disconnection", disconnectedUser => {
+      console.log(disconnectedUser + " disconnected");
+    });
+
+    // state is set once all the events are defined
+    this.setState({ socket });
     console.log(socket);
   }
 
   setUser = user => {
-    const {socket} = this.state;
-    socket.emit('user_connected', user)
+    const { socket } = this.state;
+    socket.emit("user_connected", user);
     // this.setState
-  }
+  };
 
   logout = () => {
-    const {socket} = this.state;
-    socket.emit('logout')
-    this.setState({user:null})
-  }
+    const { socket } = this.state;
+    socket.emit("logout");
+    this.setState({ user: null });
+  };
 
   buttonClick() {
-    this.setState({socket: "hello world"})
-    console.log(this.state.socket)
+    this.setState({ socket: "hello world" });
+    console.log(this.state.socket);
   }
-
-  
 
   render() {
     const { socket } = this.state;
     return (
       <main className="container">
-      <Button onClick={() => {this.buttonClick()}}></Button>
+        <Button
+          onClick={() => {
+            this.buttonClick();
+          }}
+        ></Button>
         <div className="game">
           <Game socket={socket} />
         </div>
