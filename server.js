@@ -34,6 +34,7 @@ io.on("connection", function(socket) {
 
   socket.on("connect", () => {
     console.log("hello");
+    
     // const packet = { socketId: socket.id, connectedUsers:connectedUsers };
     // io.sockets.emit("helloworld", packet);
   });
@@ -51,6 +52,7 @@ io.on("connection", function(socket) {
   socket.on("chat", function(data) {
     console.log(data);
     io.sockets.emit("chat", data);
+    io.sockets.emit('chat2', data);
   });
 
   socket.on("typing", function(data) {
