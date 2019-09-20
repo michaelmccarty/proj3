@@ -18,7 +18,13 @@ const UserSchema = new Schema({
   passwordhash: { type: String },
   trainerID: { type: Number },
   party: {
-    type: Array,
+    pokemon: [
+      {
+        name: { type: String },
+        level: { type: Number },
+        species: { type: Schema.Types.ObjectId, ref: "Pokemon" }
+      }
+    ],
     max: 6
   },
   inventory: {
@@ -36,7 +42,7 @@ const UserSchema = new Schema({
     volcano: { type: Boolean, default: false },
     earth: { type: Boolean, default: false }
   },
-  money: { type: Number },
+  money: { type: Number, default: 2000 },
   flags: { type: Object }
 });
 
