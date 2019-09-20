@@ -7,9 +7,9 @@ import Moment from 'moment';
 class ChatBox extends React.Component {
 
   state = {
-    socket: this.props.socket,  
+    // socket: this.props.socket,  
     chatInput: "",
-    onlineUsers: this.props.onlineUsers,
+    // onlineUsers: this.props.onlineUsers,
     messages: this.props.messages
   };
 
@@ -31,10 +31,10 @@ class ChatBox extends React.Component {
 
   handleSubmitChatMessage = event => {
     event.preventDefault();
-    const {socket} = this.state;
+    const {socket} = this.props;
     
     const newMessage = {
-      userName: this.state.socket.id,
+      userName: this.props.socket.id,
       time: Date.now(),
       message: this.state.chatInput
     };
@@ -54,7 +54,7 @@ class ChatBox extends React.Component {
     return (
       <div className={styles["chatbox"]}>
         <div className={styles["online-users"]}>
-          {this.state.onlineUsers.map((userName, i) => 
+          {this.props.onlineUsers.map((userName, i) => 
             <OnlineUser 
               key={i}
               userName={userName}
@@ -64,7 +64,7 @@ class ChatBox extends React.Component {
         </div>
         <div className={styles["chat-wrapper"]}>
           <div className={styles["chat-messages"]}>
-            {this.state.messages.map(({ userName, time, message }, i) => (
+            {this.props.messages.map(({ userName, time, message }, i) => (
               <ChatMessage
                 key={i}
                 userName={userName}

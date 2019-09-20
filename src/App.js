@@ -29,10 +29,10 @@ class App extends React.Component {
     endpoint: "http://localhost:3001"
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.initSocket();
-
   }
+
   // socket connection established, and then socket listening events defined
   initSocket() {
     const { endpoint } = this.state;
@@ -58,6 +58,12 @@ class App extends React.Component {
       console.log(data)
       this.setState({ messages: [...this.state.messages, data]})
       console.log(this.state.messages)
+    });
+
+    socket.on("chat2", data => {
+      console.log(data)
+      // this.setState({ messages: [...this.state.messages, data]})
+      // console.log(this.state.messages)
     });
 
 
@@ -114,16 +120,16 @@ class App extends React.Component {
       <Router>
         <Route
           exact path="/game"
-          component={() => 
+          render={() => 
             <main className="container">
             {/* button is for testing some sockets */}
-              <Button
+              {/* <Button
                 onClick={() => {
                   this.buttonClick();
                 }}
-              />
+              /> */}
               <div className="game">
-                {/* <Game socket={socket} /> */}
+                <Game socket={socket} />
               </div>
               <div className="options">
                 <OptionsWrapper socket={socket} pressLogout={this.logout}/>

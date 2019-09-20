@@ -12,14 +12,11 @@ import Creature from '../../actors/Creature';
 // overworld actor sprites
 // import actors from '../../actors.json';
 
-class Game extends React.Component {
+class Game extends React.PureComponent {
     // constructor(props) {
     //     super(props);
     // }
 
-    state = {
-        socket: this.props.socket,  
-    }
 
     pressedKeys = new Set();
 
@@ -36,7 +33,8 @@ class Game extends React.Component {
 
     setupCanvas = (element) => {
         this.canvas = element;
-        this.gl = element.getContext('webgl');
+        console.log(element);
+        this.gl = this.gl || element.getContext('webgl');
         this.setup();
     };
 
@@ -78,7 +76,7 @@ class Game extends React.Component {
     }
 
     bindPlayerEvents () {
-        const {socket} = this.state;
+        const {socket} = this.props;
         this.player.on('walk', (e) => {
             console.log('debug')
             console.log(socket)
@@ -116,7 +114,7 @@ class Game extends React.Component {
         // If the player moved, subtract the movement from the offset of all loaded maps
         for (let mapName in this.maps) { // eslint-disable-line
             this.maps[mapName].offset = { x: (this.coords.x - 4) * 16, y: (this.coords.y - 4) * 16 }
-            this.maps[mapName].draw();
+            this.maps[mapName].draw(this.gl);
         }
 
         const sprites = [];
@@ -141,7 +139,7 @@ class Game extends React.Component {
     }
 
     render() {
-        return <canvas className={styles["game-screen"]} tabIndex="0" width="160" height="144" ref={this.setupCanvas} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp} />;
+        return <canvas key="game-canvas" className={styles["game-screen"]} tabIndex="0" width="160" height="144" ref={this.setupCanvas} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp} />;
     }
 }
 
