@@ -6,19 +6,19 @@ function MainMenu(props) {
   switch (props.menu) {
     case "1":
       return (
-        <Submenu id={1} closeMenu={props.closeMenu}/>
+        <Submenu id={1} menuDisplayName="Pokemon" closeMenu={props.closeMenu}/>
       );
     case "2":
       return (
-        <Submenu id={2} closeMenu={props.closeMenu}/>
+        <Submenu id={2} menuDisplayName="Pokedex" closeMenu={props.closeMenu}/>
       );
     case "3":
       return (
-        <Submenu id={3} closeMenu={props.closeMenu}/>
+        <Submenu id={3} menuDisplayName="Settings" closeMenu={props.closeMenu}/>
       );
     case "4":
       return (
-        <Submenu id={4} closeMenu={props.closeMenu}/>
+        <Submenu id={4} menuDisplayName="Logout" closeMenu={props.closeMenu}/>
       );
     default:
       return (

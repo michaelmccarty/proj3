@@ -1,1 +1,18 @@
 .submenu-wrapper { composes: p-2 w-100 h-100 from global; }
+.submenu-header {
+    composes: pokemon-font from global;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--dark-grey-2);
+    border-bottom: 3px dashed var(--dark-grey-2);
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+}
+.exit-button {
+    composes: pokemon-font from global;
+    color: var(--dark-grey-2);
+    border: none;
+    background: none;
+    cursor: pointer;
+}
