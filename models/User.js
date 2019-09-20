@@ -25,7 +25,7 @@ const UserSchema = new Schema({
         species: { type: Schema.Types.ObjectId, ref: "Pokemon" }
       }
     ],
-    max: 6
+    // max: 6
   },
   inventory: {
     favoriteItem: { type: String },
