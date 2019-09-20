@@ -17,27 +17,23 @@ function Option(props) {
 }
 
 function MainMenu(props) {
-  switch (props.manu) {
-    case 1:
+  switch (props.menu) {
+    case "1":
       return (
         <div>I'm the Pokemon menu</div>
       );
-      break;
-    case 2:
+    case "2":
       return (
         <div>I'm the Pokdex menu</div>
       );
-      break;
-    case 3:
+    case "3":
       return (
         <div>I'm the Settings menu</div>
       );
-      break;
-    case 4:
+    case "4":
       return (
         <div>I'm the Logout button</div>
       );
-      break;
     default:
       return (
         <ul className={styles["options-list"]}>
@@ -68,7 +64,13 @@ class OptionsWrapper extends React.Component {
 
   state = {
     socket: this.props.socket,
-    menu: 1
+    menu: 0 // Main Menu by default
+  };
+  
+  componentDidMount = () => {
+    this.setState({ socket: this.props.socket });
+    console.log(this.props);
+    console.log(this.state);
   };
 
   handleMenuChange = event => {
@@ -79,16 +81,10 @@ class OptionsWrapper extends React.Component {
     });
   };
 
-  componentDidMount = () => {
-    this.setState({ socket: this.props.socket });
-    console.log(this.props);
-    console.log(this.state);
-  };
-
   render() {
     return (
       <div className={styles["option-wrapper"]}>
-        <MainMenu menu={this.state.showingMenu} handleMenuChange={this.handleMenuChange} />
+        <MainMenu menu={this.state.menu} handleMenuChange={this.handleMenuChange} />
       </div>
     );
   }
