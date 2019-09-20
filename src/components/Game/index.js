@@ -11,9 +11,9 @@ import Creature from '../../actors/Creature';
 import SocketEnum from '../../SocketEnum';
 
 class Game extends React.Component {
-    state = {
-        socket: this.props.socket,
-    }
+    // state = {
+    //     socket: this.props.socket,
+    // }
 
     playerAvatars = {};
 
@@ -58,7 +58,7 @@ class Game extends React.Component {
         this.bindSocketListeners();
 
         // ask the server for the other players in our map.
-        this.state.socket.emit('populate request', {
+        this.props.socket.emit('populate request', {
             [SocketEnum.MAP]: this.currentMap
         });
 
@@ -83,7 +83,7 @@ class Game extends React.Component {
     }
 
     bindPlayerEvents() {
-        const { socket } = this.state;
+        const { socket } = this.props;
         this.player.on('walk', e => {
             socket.emit('move', {
                 [SocketEnum.MOVE_TYPE]: SocketEnum.WALK,
@@ -111,7 +111,7 @@ class Game extends React.Component {
     }
 
     bindSocketListeners() {
-        const { socket } = this.state;
+        const { socket } = this.props;
         socket.on('player update', this.handlePlayerUpdate);
         socket.on('spawn', this.handlePlayerTrainerSpawn);
         socket.on('move', this.handleMove);
@@ -127,6 +127,13 @@ class Game extends React.Component {
         switch (data[SocketEnum.MOVE_TYPE]) {
             case SocketEnum.WALK:
                 player.walk(SocketEnum.directions[data[SocketEnum.DIRECTION]]);
+                break;
+            case SocketEnum.HOP:
+                player.turn('south');
+                player.hop();
+                break;
+            case SocketEnum.BONK: 
+                player.bonk(SocketEnum.directions[data[SocketEnum.DIRECTION]]);
                 break;
             default:
                 console.log('stuff');
