@@ -10,12 +10,7 @@ import styles from './Game.module.css';
 import Creature from '../../actors/Creature';
 import SocketEnum from '../../SocketEnum';
 
-class Game extends React.Component {
-    // state = {
-    //     socket: this.props.socket,
-    // }
-
-    playerAvatars = {};
+class Game extends React.PureComponent {
 
     pressedKeys = new Set();
 
@@ -32,9 +27,12 @@ class Game extends React.Component {
 
     setupCanvas = (element) => {
         this.canvas = element;
-        this.gl = element.getContext('webgl');
+        console.log(element);
+        this.gl = this.gl || element.getContext('webgl');
         this.setup();
     };
+
+    playerAvatars = {};
 
     setup = async () => {
         // Make some sprites, load a map, whatever
@@ -202,7 +200,7 @@ class Game extends React.Component {
         // If the player moved, subtract the movement from the offset of all loaded maps
         for (let mapName in this.maps) { // eslint-disable-line
             this.maps[mapName].offset = { x: (this.coords.x - 4) * 16, y: (this.coords.y - 4) * 16 }
-            this.maps[mapName].draw();
+            this.maps[mapName].draw(this.gl);
         }
 
         const sprites = [];
@@ -231,7 +229,7 @@ class Game extends React.Component {
     }
 
     render() {
-        return <canvas className={styles["game-screen"]} tabIndex="0" width="160" height="144" ref={this.setupCanvas} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp} />;
+        return <canvas key="game-canvas" className={styles["game-screen"]} tabIndex="0" width="160" height="144" ref={this.setupCanvas} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp} />;
     }
 }
 

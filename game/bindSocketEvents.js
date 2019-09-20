@@ -1,9 +1,8 @@
 const SocketEnum = require('../SocketEnum');
 
-
-module.exports = function (io, connectedUsers) {
-    return function (socket) {
-        console.log("made socket connection", socket.id);
+module.exports = function(io, connectedUsers) {
+    return function(socket) {
+        console.log('made socket connection', socket.id);
 
         // For now, create a dummy user to simulate logging them in
         let user = {
@@ -16,16 +15,15 @@ module.exports = function (io, connectedUsers) {
             facing: 'south'
         };
 
-        // Should be their user object, loaded from the database, plus the socket.  
+        // Should be their user object, loaded from the database, plus the socket.
         connectedUsers[socket.id] = user;
 
-        // For now, 
+        // For now,
 
-        console.log("======================================\nsockets online");
+        console.log('======================================\nsockets online');
         for (let property in connectedUsers) {
             console.log(property);
         }
-
 
         // socket.on("connect", () => {
         user = connectedUsers[socket.id];
@@ -46,7 +44,7 @@ module.exports = function (io, connectedUsers) {
 
         socket.on('move', data => {
             user = connectedUsers[socket.id];
-            console.log('move', socket.id, data)
+            console.log('move', socket.id, data);
             user.facing = SocketEnum.directions[data[SocketEnum.DIRECTION]];
             user.x = data[SocketEnum.X];
             user.y = data[SocketEnum.Y];
@@ -64,7 +62,11 @@ module.exports = function (io, connectedUsers) {
         socket.on('populate request', data => {
             const sender = connectedUsers[socket.id];
             const output = Object.entries(connectedUsers)
-                .filter(([_, user]) => user.map === data[SocketEnum.MAP] && user.socket.id !== sender.socket.id)
+                .filter(
+                    ([_, user]) =>
+                        user.map === data[SocketEnum.MAP] &&
+                        user.socket.id !== sender.socket.id
+                )
                 .map(([_, user]) => ({
                     [SocketEnum.MAP]: user.map,
                     [SocketEnum.DIRECTION]: SocketEnum[user.facing],
@@ -76,21 +78,31 @@ module.exports = function (io, connectedUsers) {
             socket.emit('populate', output);
         });
 
-        socket.on("disconnect", data => {
-            console.log(socket.id + "disconnected");
+        socket.on('disconnect', data => {
+            console.log(socket.id + 'disconnected');
             socket.broadcast.emit('despawn', {
                 [SocketEnum.TRAINER_ID]: connectedUsers[socket.id].trainerId
             });
             delete connectedUsers[socket.id];
         });
 
-        socket.on("chat", function (data) {
+        socket.on('chat', function(data) {
             console.log(data);
-            io.sockets.emit("chat", data);
+            io.sockets.emit('chat', data);
+            io.sockets.emit('chat2', data);
         });
 
-        socket.on("typing", function (data) {
-            socket.broadcast.emit("typing", data);
+        socket.on('typing', function(data) {
+            socket.broadcast.emit('typing', data);
         });
-    }
-}
+
+        socket.on('connectedUserCheck', data => {
+            // console.log(connectedUsers);
+
+            const srvSockets = io.sockets.sockets;
+            onlineUsers = Object.keys(srvSockets);
+            console.log(onlineUsers);
+            io.sockets.emit('connectedUserCheck', { onlineUsers });
+        });
+    };
+};

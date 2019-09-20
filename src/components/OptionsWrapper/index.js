@@ -13,16 +13,19 @@ function Option(props) {
 class OptionsWrapper extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { socket: null };
+    // this.state = { socket: null };
   }
 
-  state = {};
+  state = {
+      socket: this.props.socket
+  };
 
   
 
   componentDidMount = () => {
     this.setState({ socket: this.props.socket });
     console.log(this.props);
+    console.log(this.state);
   };
 
   render() {
