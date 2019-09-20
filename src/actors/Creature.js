@@ -103,6 +103,7 @@ class Creature extends Actor {
 
     hopFrom(x, y) {
         this.overridePosition(x, y);
+        this.turn('south');
         this.hop();
     }
 
@@ -116,7 +117,7 @@ class Creature extends Actor {
         this.walkFrom(x - dx, y - dy, direction);
     }
 
-    HopTo(x, y, direction) {
+    hopTo(x, y) {
         this.hopFrom(x, y - 2);
     }
 

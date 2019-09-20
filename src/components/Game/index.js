@@ -133,11 +133,18 @@ class Game extends React.Component {
                 );
                 break;
             case SocketEnum.HOP:
-                player.turn('south');
-                player.hop();
+                // player.turn('south');
+                player.hopTo(
+                    data[SocketEnum.X],
+                    data[SocketEnum.Y],
+                );
                 break;
             case SocketEnum.BONK:
-                player.bonk(SocketEnum.directions[data[SocketEnum.DIRECTION]]);
+                player.bonkFrom(
+                    data[SocketEnum.X],
+                    data[SocketEnum.Y],
+                    SocketEnum.directions[data[SocketEnum.DIRECTION]]
+                );
                 break;
             // TODO: add a case for turning in place
             default:
