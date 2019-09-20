@@ -240,6 +240,7 @@ main.container {
   height: 100%;
   position: relative;
   padding-top: 90%;
+  cursor: none;
 }
 .options { grid-area: options; }
 .chat { grid-area: chat; }
