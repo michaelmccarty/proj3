@@ -47,7 +47,7 @@ class App extends React.Component {
     socket.on('connectedUserCheck', data => {
       console.log(data);
       //set state with the online users
-      // this.setState({ onlineUsers: data.onlineUsers });
+      this.setState({ onlineUsers: data.onlineUsers });
       
       const {onlineUsers} = this.state;
       console.log(onlineUsers);
@@ -109,7 +109,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { socket,messages } = this.state;
+    const { socket,messages,onlineUsers } = this.state;
     return (
       <Router>
         <Route
@@ -129,7 +129,7 @@ class App extends React.Component {
                 <OptionsWrapper socket={socket} pressLogout={this.logout}/>
               </div>
               <div className="chat">
-                <ChatBox socket={socket} messages={messages} />
+                <ChatBox socket={socket} messages={messages} onlineUsers={onlineUsers} />
               </div>
             </main>
           }

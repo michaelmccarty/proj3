@@ -9,53 +9,7 @@ class ChatBox extends React.Component {
   state = {
     socket: this.props.socket,  
     chatInput: "",
-    usersOnline: [
-      {
-        userName: "Username123",
-        avatarImg: "https://via.placeholder.com/100",
-        socketId: ""
-      }, 
-      {
-        userName: "Username1234",
-        avatarImg: "https://via.placeholder.com/200",
-        socketId: ""
-      }, 
-      {
-        userName: "Username1234",
-        avatarImg: "https://via.placeholder.com/200",
-        socketId: ""
-      }, 
-      {
-        userName: "Username1234",
-        avatarImg: "https://via.placeholder.com/200",
-        socketId: ""
-      }, 
-      {
-        userName: "Username1234",
-        avatarImg: "https://via.placeholder.com/200",
-        socketId: ""
-      }, 
-      {
-        userName: "Username1234",
-        avatarImg: "https://via.placeholder.com/200",
-        socketId: ""
-      }, 
-      {
-        userName: "Username1234",
-        avatarImg: "https://via.placeholder.com/200",
-        socketId: ""
-      }, 
-      {
-        userName: "Username1234",
-        avatarImg: "https://via.placeholder.com/200",
-        socketId: ""
-      }, 
-      {
-        userName: "Username1234",
-        avatarImg: "https://via.placeholder.com/200",
-        socketId: ""
-      }
-    ],
+    onlineUsers: this.props.onlineUsers,
     messages: this.props.messages
   };
 
@@ -100,11 +54,11 @@ class ChatBox extends React.Component {
     return (
       <div className={styles["chatbox"]}>
         <div className={styles["online-users"]}>
-          {this.state.usersOnline.map(({userName, avatarImg}, i) => 
+          {this.state.onlineUsers.map((userName, i) => 
             <OnlineUser 
               key={i}
               userName={userName}
-              avatarImg={avatarImg}
+              avatarImg={"https://via.placeholder.com/200"}
             />  
           )}
         </div>
