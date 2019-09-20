@@ -27,13 +27,20 @@ io.on("connection", function(socket) {
   for (let property in connectedUsers) {
     console.log(property);
   }
+
   // connectedUsers.forEach(socket=>{
   //   console.log(socket.id)
   // })
 
   socket.on("connect", () => {
+    console.log("hello");
     // const packet = { socketId: socket.id, connectedUsers:connectedUsers };
     // io.sockets.emit("helloworld", packet);
+  });
+
+  socket.on("move", data => {
+    console.log(data);
+    io.sockets.emit("move", data);
   });
 
   socket.on("disconnect", data => {
@@ -48,5 +55,14 @@ io.on("connection", function(socket) {
 
   socket.on("typing", function(data) {
     socket.broadcast.emit("typing", data);
+  });
+
+  socket.on("connectedUserCheck", data => {
+    // console.log(connectedUsers);
+   
+    var srvSockets = io.sockets.sockets;
+    onlineUsers = Object.keys(srvSockets)
+    console.log(onlineUsers);
+    io.sockets.emit("connectedUserCheck", {onlineUsers});
   });
 });

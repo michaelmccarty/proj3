@@ -4,7 +4,7 @@ import Creature from './Creature';
 
 
 class Player extends Creature {
-    constructor(x, y, map, skin = "player_default") {
+    constructor(x, y, map, skin = "gary") {
         super(x, y, skin, 'north', map);
 
         this.setSpeed(3);
@@ -29,6 +29,7 @@ class Player extends Creature {
         if (cb === true) return; // event has taken control
 
         super.walk(direction, cb);
+        this.emit('walk')
     }
 
     hop() {
