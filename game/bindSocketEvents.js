@@ -107,24 +107,26 @@ module.exports = function(io, connectedUsers) {
 
         socket.on('battle/fight', data => {
             // game logic goes here
+
             io.sockets.emit('battle/fight', 'fight');
-          })
-      
-          socket.on('battle/bag', data => {
+        });
+
+        socket.on('battle/bag', data => {
             // game logic goes here
+
             io.sockets.emit('battle/bag', 'bag');
-          })
-      
-          socket.on('battle/run', data => {
+        });
+
+        socket.on('battle/run', data => {
             // game logic goes here
+
             io.sockets.emit('battle/run', 'run');
-          })
-      
-          socket.on('battle/switch', data => {
+        });
+
+        socket.on('battle/switch', data => {
             // game logic goes here
+
             io.sockets.emit('battle/switch', 'switch');
-          })
-
-
+        });
     };
 };
