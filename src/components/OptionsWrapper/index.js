@@ -2,12 +2,62 @@ import React from "react";
 import styles from "./OptionsWrapper.module.css";
 
 function Option(props) {
-  const { optionName, handleOpenMenu } = props;
+  const { menuDisplayName, menuId, handleMenuChange } = props;
 
   return (
     // <li onClick={}>
-    <li className={styles["option"]} onClick={handleOpenMenu} data-menu={optionName}>{optionName}</li>
+    <li
+      className={styles["option"]}
+      onClick={handleMenuChange}
+      data-menu={menuId}
+    >
+      {menuDisplayName}
+    </li>
   );
+}
+
+function MainMenu(props) {
+  switch (props.manu) {
+    case 1:
+      return (
+        <div>I'm the Pokemon menu</div>
+      );
+      break;
+    case 2:
+      return (
+        <div>I'm the Pokdex menu</div>
+      );
+      break;
+    case 3:
+      return (
+        <div>I'm the Settings menu</div>
+      );
+      break;
+    case 4:
+      return (
+        <div>I'm the Logout button</div>
+      );
+      break;
+    default:
+      return (
+        <ul className={styles["options-list"]}>
+          <Option handleMenuChange={props.handleMenuChange} menuDisplayName="Pokemon" menuId="1" />
+          <Option handleMenuChange={props.handleMenuChange} menuDisplayName="Pokedex" menuId="2" />
+          <Option handleMenuChange={props.handleMenuChange} menuDisplayName="Settings" menuId="3" />
+          <Option handleMenuChange={props.handleMenuChange} menuDisplayName="Logout" menuId="4" />
+        </ul>
+      );
+  }
+}
+
+function Submenu(props) {
+  switch (props.menu) {
+    case "Pokemon":
+      return <div>I'm a sub menu! </div>;
+      break;
+    default:
+      return;
+  }
 }
 
 class OptionsWrapper extends React.Component {
@@ -17,19 +67,17 @@ class OptionsWrapper extends React.Component {
   }
 
   state = {
-      socket: this.props.socket,
-      menuIsOpen: false,
-      showingMenu: ""
+    socket: this.props.socket,
+    menu: 1
   };
 
-  handleOpenMenu = event => {
-    if (this.state.menuIsOpen) return;
-    const menu = event.target.getAttribute('data-menu');
-    this.setState({menuIsOpen: true, showingMenu: menu}, () => {
-      console.log(this.state);
-      
+  handleMenuChange = event => {
+    const newMenu = event.target.getAttribute("data-menu");
+
+    this.setState({ menu: newMenu }, () => {
+      console.log(this.state.menu);
     });
-  }
+  };
 
   componentDidMount = () => {
     this.setState({ socket: this.props.socket });
@@ -40,12 +88,7 @@ class OptionsWrapper extends React.Component {
   render() {
     return (
       <div className={styles["option-wrapper"]}>
-        <ul className={styles["options-list"]}>
-          <Option handleOpenMenu={this.handleOpenMenu} optionName="Pokemon" />
-          <Option handleOpenMenu={this.handleOpenMenu} optionName="Pokedex" />
-          <Option handleOpenMenu={this.handleOpenMenu} optionName="Settings" />
-          <Option handleOpenMenu={this.handleOpenMenu} optionName="Logout" />
-        </ul>
+        <MainMenu menu={this.state.showingMenu} handleMenuChange={this.handleMenuChange} />
       </div>
     );
   }

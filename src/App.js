@@ -90,7 +90,6 @@ class App extends React.Component {
     const { socket } = this.state;
     socket.emit("connectedUserCheck");
     //console.log(this.state.socket);
-    
   }
 
   render() {
