@@ -5,19 +5,19 @@ function MainMenu(props) {
   switch (props.menu) {
     case "1":
       return (
-        <Submenu id={1}/>
+        <Submenu id={1} closeMenu={props.closeMenu}/>
       );
     case "2":
       return (
-        <Submenu id={2}/>
+        <Submenu id={2} closeMenu={props.closeMenu}/>
       );
     case "3":
       return (
-        <Submenu id={3}/>
+        <Submenu id={3} closeMenu={props.closeMenu}/>
       );
     case "4":
       return (
-        <Submenu id={4}/>
+        <Submenu id={4} closeMenu={props.closeMenu}/>
       );
     default:
       return (
@@ -39,8 +39,7 @@ function Option(props) {
     <li
       className={styles["option"]}
       onClick={handleMenuChange}
-      data-menu={menuId}
-    >
+      data-menu={menuId}>
       {menuDisplayName}
     </li>
   );
@@ -50,14 +49,14 @@ class Submenu extends React.Component {
   handleClose = event => {
     event.preventDefault();
     console.log("Handle close");
-    // Update options wrapper state
+    this.props.closeMenu();
   }
 
   render() {
     return (
       <div>
         <button onClick={this.handleClose}>X</button>
-        I'm div.
+        I'm div. {this.props.id}
       </div>
     )
   }
@@ -80,6 +79,10 @@ class OptionsWrapper extends React.Component {
     console.log(this.state);
   };
 
+  closeMenu = event => {
+    this.setState({ menu: "0" });
+  }
+
   handleMenuChange = event => {
     const newMenu = event.target.getAttribute("data-menu");
 
@@ -91,7 +94,10 @@ class OptionsWrapper extends React.Component {
   render() {
     return (
       <div className={styles["option-wrapper"]}>
-        <MainMenu menu={this.state.menu} handleMenuChange={this.handleMenuChange} />
+        <MainMenu
+          menu={this.state.menu}
+          handleMenuChange={this.handleMenuChange} 
+          closeMenu={this.closeMenu}/>
       </div>
     );
   }
