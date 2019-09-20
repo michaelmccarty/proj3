@@ -28,6 +28,7 @@ class App extends React.Component {
 
   componentWillMount() {
     this.initSocket();
+
   }
   // socket connection established, and then socket listening events defined
   initSocket() {
@@ -36,6 +37,7 @@ class App extends React.Component {
 
     // bread and butter connection confirmation
     socket.on("connect", data => console.log("Connected"));
+    socket.emit("connectedUserCheck");
 
     socket.on('connectedUserCheck', data => {
       console.log(data)

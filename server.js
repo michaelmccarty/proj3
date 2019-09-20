@@ -34,6 +34,7 @@ io.on("connection", function(socket) {
 
   socket.on("connect", () => {
     console.log("hello");
+    
     // const packet = { socketId: socket.id, connectedUsers:connectedUsers };
     // io.sockets.emit("helloworld", packet);
   });
