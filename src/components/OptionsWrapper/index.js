@@ -6,7 +6,7 @@ function Option(props) {
 
   return (
     // <li onClick={}>
-    <li className="cursor-pointer m-2 p-2" onClick={handleOpenMenu} data-menu={optionName}>{optionName}</li>
+    <li className={styles["option"]} onClick={handleOpenMenu} data-menu={optionName}>{optionName}</li>
   );
 }
 
@@ -18,12 +18,17 @@ class OptionsWrapper extends React.Component {
 
   state = {
       socket: this.props.socket,
-      menuIsOpen: false
+      menuIsOpen: false,
+      showingMenu: ""
   };
 
   handleOpenMenu = event => {
     if (this.state.menuIsOpen) return;
-    console.log(event.target.getAttribute('data-menu'));
+    const menu = event.target.getAttribute('data-menu');
+    this.setState({menuIsOpen: true, showingMenu: menu}, () => {
+      console.log(this.state);
+      
+    });
   }
 
   componentDidMount = () => {
@@ -34,8 +39,8 @@ class OptionsWrapper extends React.Component {
 
   render() {
     return (
-      <div className={styles["option"]}>
-        <ul>
+      <div className={styles["option-wrapper"]}>
+        <ul className={styles["options-list"]}>
           <Option handleOpenMenu={this.handleOpenMenu} optionName="Pokemon" />
           <Option handleOpenMenu={this.handleOpenMenu} optionName="Pokedex" />
           <Option handleOpenMenu={this.handleOpenMenu} optionName="Settings" />

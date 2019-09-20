@@ -1,1 +1,3 @@
-.option { composes: bg-light-2 p-2 from global; }
+.option-wrapper { composes: bg-light-2 w-100 h-100 from global; }
+.options-list { composes: p-2 from global; }
+.option { composes: p-2 m-1 cursor-pointer bg-light-1 from global; }
