@@ -1,7 +1,8 @@
 import Actor from './Actor';
 import creatureSprites from './actors.json';
 import shadowSprite from './shadow.json';
-import {Sprite, AlternatingSprite} from '../Sprite';
+import grassOverlay from './grass.json';
+import { Sprite, AlternatingSprite } from '../Sprite';
 import directions from '../directions';
 
 import hopAnimation from './animations/hop';
@@ -14,7 +15,7 @@ class Creature extends Actor {
             north: new AlternatingSprite(creatureSprites[skin].north),
             east: new Sprite(creatureSprites[skin].east),
             west: new Sprite(creatureSprites[skin].west),
-            shadow: new Sprite(shadowSprite)
+            shadow: new Sprite(shadowSprite),
         }
         super(x, y, sprites);
 
@@ -113,22 +114,76 @@ class Creature extends Actor {
         }
     }
 
+    // returns an array of every tile the 
+    standingOn() {
+        // console.log(this.map);
+        // return;
+        if (this.x - Math.floor(this.x)) {            return [
+                { ...this.map.getTile(Math.floor(this.x), this.y), x: Math.floor(this.x), y: this.y },
+                { ...this.map.getTile(Math.ceil(this.x), this.y), x: Math.ceil(this.x), y: this.y }
+            ];
+        } else if (this.y - Math.floor(this.y)) {
+            return [
+                { ...this.map.getTile(this.x, Math.floor(this.y)), x: this.x, y: Math.floor(this.y) },
+                { ...this.map.getTile(this.x, Math.ceil(this.y)), x: this.x, y: Math.ceil(this.y) }
+            ];
+        }
+        return [{...this.map.getTile(this.x, this.y), x: this.x, y: this.y}];
+    }
+
+    generateGrassEffects() {
+        const tiles = this.standingOn();
+        return tiles.map( tile => {
+            // console.log(tile);
+            if (tile.flags.grass) {
+                let mask_h = 0x7FFE;
+                let mask_v = 0x0FF0;
+                if (this.x > tile.x) {
+                    mask_h = 0x7FFE << (this.x - tile.x) * 16;
+                } else if (this.x < tile.x) {
+                    mask_h = 0x7FFE >> (tile.x - this.x) * 16; // Maybe shift left?
+                } else if (this.y > tile.y ) { 
+                    mask_v = 0x0FF0 << (this.y - tile.y) * 16;
+                } else if (this.y < tile.y) {
+                    mask_v = 0x0FF0 >> (tile.y - this.y) * 16;
+                }
+                const sprite = new Sprite(grassOverlay);
+                sprite.mask = [mask_h, mask_v];
+                sprite.x = tile.x * 16;
+                sprite.y = tile.y * 16;
+                return sprite;
+            }
+            return null;
+        });
+    }
+
     toggleShadow() {
         this.shadow = !this.shadow;
     }
+
 
     update() {
         const sprite = this.sprites[this.facing];
         sprite.framerate = this.speed * 2;
         sprite.x = Math.floor(this.x * 16); // multiply by 16 to translate from actor coords to world coords
         sprite.y = Math.floor(this.y * 16 - this.vOffset);
+
+        const grass = [];
+        for (let tile of this.generateGrassEffects()) {
+            if (tile) {
+                grass.push(tile);
+            }
+        }
+
+        let shadows = [];
         if (this.shadow) {
             const shadow = this.sprites.shadow;
             shadow.x = Math.floor(this.x * 16);
             shadow.y = Math.floor(this.y * 16 + 4);
-            return [shadow, sprite];
+            shadows = [shadow];
         }
-        return sprite;
+
+        return [...shadows, sprite, ...grass];
     }
 }
 
