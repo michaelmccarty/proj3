@@ -99,7 +99,7 @@ class App extends React.Component {
       <Router>
         <Route
           exact path="/game"
-          component={() => 
+          render={() => 
             <main className="container">
             {/* button is for testing some sockets */}
               <Button
