@@ -8,18 +8,14 @@ import "./App.css";
 import socketIOClient from "socket.io-client";
 import {BrowserRouter as Router, Route } from 'react-router-dom';
 
-function Button(props) {
-  return <button id="button" onClick={(e)=> {
-    e.preventDefault();
-    props.onClick();
-  }}>Click me</button>;
-}
+// function Button(props) {
+//   return <button id="button" onClick={(e)=> {
+//     e.preventDefault();
+//     props.onClick();
+//   }}>Click me</button>;
+// }
 
 class App extends React.Component {
-  constructor() {
-    super();
-
-  }
 
   state = {
     onlineUsers: [],
@@ -55,22 +51,18 @@ class App extends React.Component {
 
     // allows messages to be passed back and forth from client to server
     socket.on("chat", data => {
-      console.log(data)
       this.setState({ messages: [...this.state.messages, data]})
-      console.log(this.state.messages)
     });
 
-    socket.on("chat2", data => {
-      console.log(data)
-      // this.setState({ messages: [...this.state.messages, data]})
-      // console.log(this.state.messages)
-    });
-
-
+    // socket.on("chat2", data => {
+    //   console.log(data)
+    //   // this.setState({ messages: [...this.state.messages, data]})
+    //   // console.log(this.state.messages)
+    // });
 
     socket.on("disconnection", disconnectedUser => {
       console.log(disconnectedUser + " disconnected");
-      const index = this.state.onlineUsers.find(user => {
+      const index = this.state.onlineUsers.find(user => { //eslint-disable-line
         console.log(user);
         console.log(user===disconnectedUser);
       })
@@ -105,15 +97,6 @@ class App extends React.Component {
     this.setState({ user: null });
   };
 
-
-  //eventually we wanna do this without a button
-  buttonClick() {
-    const { socket } = this.state;
-    socket.emit("connectedUserCheck");
-    //console.log(this.state.socket);
-    
-  }
-
   render() {
     const { socket,messages,onlineUsers } = this.state;
     return (
@@ -122,12 +105,6 @@ class App extends React.Component {
           exact path="/game"
           render={() => 
             <main className="container">
-            {/* button is for testing some sockets */}
-              {/* <Button
-                onClick={() => {
-                  this.buttonClick();
-                }}
-              /> */}
               <div className="game">
                 <Game socket={socket} />
               </div>
