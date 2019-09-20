@@ -1,0 +1,1 @@
+.submenu-wrapper { composes: p-2 w-100 h-100 from global; }

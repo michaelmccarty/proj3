@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./OptionsWrapper.module.css";
+import Submenu from "./Submenu"
 
 function MainMenu(props) {
   switch (props.menu) {
@@ -43,23 +44,6 @@ function Option(props) {
       {menuDisplayName}
     </li>
   );
-}
-
-class Submenu extends React.Component {
-  handleClose = event => {
-    event.preventDefault();
-    console.log("Handle close");
-    this.props.closeMenu();
-  }
-
-  render() {
-    return (
-      <div>
-        <button onClick={this.handleClose}>X</button>
-        I'm div. {this.props.id}
-      </div>
-    )
-  }
 }
 
 class OptionsWrapper extends React.Component {
