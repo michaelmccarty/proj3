@@ -1,6 +1,36 @@
 import React from "react";
 import styles from "./OptionsWrapper.module.css";
 
+function MainMenu(props) {
+  switch (props.menu) {
+    case "1":
+      return (
+        <Submenu id={1}/>
+      );
+    case "2":
+      return (
+        <Submenu id={2}/>
+      );
+    case "3":
+      return (
+        <Submenu id={3}/>
+      );
+    case "4":
+      return (
+        <Submenu id={4}/>
+      );
+    default:
+      return (
+        <ul className={styles["options-list"]}>
+          <Option handleMenuChange={props.handleMenuChange} menuDisplayName="Pokemon" menuId="1" />
+          <Option handleMenuChange={props.handleMenuChange} menuDisplayName="Pokedex" menuId="2" />
+          <Option handleMenuChange={props.handleMenuChange} menuDisplayName="Settings" menuId="3" />
+          <Option handleMenuChange={props.handleMenuChange} menuDisplayName="Logout" menuId="4" />
+        </ul>
+      );
+  }
+}
+
 function Option(props) {
   const { menuDisplayName, menuId, handleMenuChange } = props;
 
@@ -16,43 +46,20 @@ function Option(props) {
   );
 }
 
-function MainMenu(props) {
-  switch (props.menu) {
-    case "1":
-      return (
-        <div>I'm the Pokemon menu</div>
-      );
-    case "2":
-      return (
-        <div>I'm the Pokdex menu</div>
-      );
-    case "3":
-      return (
-        <div>I'm the Settings menu</div>
-      );
-    case "4":
-      return (
-        <div>I'm the Logout button</div>
-      );
-    default:
-      return (
-        <ul className={styles["options-list"]}>
-          <Option handleMenuChange={props.handleMenuChange} menuDisplayName="Pokemon" menuId="1" />
-          <Option handleMenuChange={props.handleMenuChange} menuDisplayName="Pokedex" menuId="2" />
-          <Option handleMenuChange={props.handleMenuChange} menuDisplayName="Settings" menuId="3" />
-          <Option handleMenuChange={props.handleMenuChange} menuDisplayName="Logout" menuId="4" />
-        </ul>
-      );
+class Submenu extends React.Component {
+  handleClose = event => {
+    event.preventDefault();
+    console.log("Handle close");
+    // Update options wrapper state
   }
-}
 
-function Submenu(props) {
-  switch (props.menu) {
-    case "Pokemon":
-      return <div>I'm a sub menu! </div>;
-      break;
-    default:
-      return;
+  render() {
+    return (
+      <div>
+        <button onClick={this.handleClose}>X</button>
+        I'm div.
+      </div>
+    )
   }
 }
 
