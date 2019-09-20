@@ -8,8 +8,11 @@ import "./App.css";
 import socketIOClient from "socket.io-client";
 import {BrowserRouter as Router, Route } from 'react-router-dom';
 
-function Button() {
-  return <button id="button">Click me</button>;
+function Button(props) {
+  return <button id="button" onClick={(e)=> {
+    e.preventDefault();
+    props.onClick();
+  }}>Click me</button>;
 }
 
 class App extends React.Component {
@@ -31,14 +34,39 @@ class App extends React.Component {
     const { endpoint } = this.state;
     const socket = socketIOClient(endpoint);
 
-    socket.on("connect", data => console.log("Connected", data));
+    // bread and butter connection confirmation
+    socket.on("connect", data => console.log("Connected"));
 
+    socket.on('connectedUserCheck', data => {
+      console.log(data)
+    })
+
+    // allows messages to be passed back and forth from client to server
     socket.on("chat", data => console.log("message received", data));
+
+
 
     socket.on("disconnection", disconnectedUser => {
       console.log(disconnectedUser + " disconnected");
+      const index = this.state.onlineUsers.find(user => {
+        console.log(user);
+        console.log(user===disconnectedUser);
+        return 
+      })
+
     });
 
+    socket.on('poke', data => {
+      
+    })
+
+    socket.on('move', data => {
+      console.log('user is moving ', data);
+    })
+
+    socket.on('', data => {
+
+    })
     // state is set once all the events are defined
     this.setState({ socket });
     console.log(socket);
@@ -56,9 +84,13 @@ class App extends React.Component {
     this.setState({ user: null });
   };
 
+
+  //eventually we wanna do this without a button
   buttonClick() {
-    this.setState({ socket: "hello world" });
-    console.log(this.state.socket);
+    const { socket } = this.state;
+    socket.emit("connectedUserCheck");
+    //console.log(this.state.socket);
+    
   }
 
   render() {
@@ -69,6 +101,7 @@ class App extends React.Component {
           exact path="/game"
           component={() => 
             <main className="container">
+            {/* button is for testing some sockets */}
               <Button
                 onClick={() => {
                   this.buttonClick();
@@ -78,7 +111,7 @@ class App extends React.Component {
                 <Game socket={socket} />
               </div>
               <div className="options">
-                <OptionsWrapper socket={socket} />
+                <OptionsWrapper socket={socket} pressLogout={this.logout}/>
               </div>
               <div className="chat">
                 <ChatBox socket={socket} />
