@@ -126,6 +126,7 @@ class Creature extends Actor {
             clearTimeout(this.moveTimeout);
             this.walking = false;
         }
+        this.shadow = false;
         this.x = x;
         this.y = y;
     }

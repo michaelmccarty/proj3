@@ -49,6 +49,7 @@ io.on("connection", function (socket) {
   console.log('spawning ' + user.trainerId);
   socket.join(user.map); // Need to join adjacent maps as well
   socket.to(user.map).broadcast.emit('spawn', {
+    //TODO broadcast name
     [SocketEnum.MAP]: user.map,
     [SocketEnum.DIRECTION]: SocketEnum[user.facing],
     [SocketEnum.SKIN]: user.skin,
