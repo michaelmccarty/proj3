@@ -1,0 +1,14 @@
+{
+    "x": 0,
+    "y": 0,
+    "size": 16,
+    "framerate": 1,
+    "frames": [
+        {
+            "x": 96,
+            "y": 32,
+            "flip_h": false,
+            "flip_v": false
+        }
+    ]
+}
