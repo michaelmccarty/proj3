@@ -55,6 +55,8 @@ class Game extends React.Component {
         this.actors = [this.player];
         this.actors.push(new Creature(13, 13, 'youngster', 'west', this.maps['Route 1']));
 
+
+        this.bindPlayerEvents();
         // await Promise.all(this.maps.map(map => map.ready));
         // await actorSpritesPromise;
     }
@@ -75,6 +77,16 @@ class Game extends React.Component {
 
     unloadMap(name) {
         delete this.maps[name];
+    }
+
+    bindPlayerEvents () {
+        const {socket} = this.state;
+        this.player.on('walk', (e) => {
+            console.log('debug')
+            console.log(socket)
+            const message= "hello world we are moving"
+            socket.emit('move', message);
+        });
     }
 
     gameLoop = (delta) => {
