@@ -18,13 +18,16 @@ function Button(props) {
 class App extends React.Component {
   constructor() {
     super();
-    this.state = {
-      onlineUsers: [],
-      socket: null,
-      user: null,
-      endpoint: "http://localhost:3001"
-    };
+
   }
+
+  state = {
+    onlineUsers: [],
+    socket: null,
+    user: null,
+    messages: [],
+    endpoint: "http://localhost:3001"
+  };
 
   componentWillMount() {
     this.initSocket();
@@ -37,14 +40,25 @@ class App extends React.Component {
 
     // bread and butter connection confirmation
     socket.on("connect", data => console.log("Connected"));
+    
+    // asks for the online users
     socket.emit("connectedUserCheck");
-
+    // then listens for online users from server
     socket.on('connectedUserCheck', data => {
-      console.log(data)
+      console.log(data);
+      //set state with the online users
+      // this.setState({ onlineUsers: data.onlineUsers });
+      
+      const {onlineUsers} = this.state;
+      console.log(onlineUsers);
     })
 
     // allows messages to be passed back and forth from client to server
-    socket.on("chat", data => console.log("message received", data));
+    socket.on("chat", data => {
+      console.log(data)
+      this.setState({ messages: [...this.state.messages, data]})
+      console.log(this.state.messages)
+    });
 
 
 
@@ -53,7 +67,6 @@ class App extends React.Component {
       const index = this.state.onlineUsers.find(user => {
         console.log(user);
         console.log(user===disconnectedUser);
-        return 
       })
 
     });
@@ -96,7 +109,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { socket } = this.state;
+    const { socket,messages } = this.state;
     return (
       <Router>
         <Route
@@ -110,13 +123,13 @@ class App extends React.Component {
                 }}
               />
               <div className="game">
-                <Game socket={socket} />
+                {/* <Game socket={socket} /> */}
               </div>
               <div className="options">
                 <OptionsWrapper socket={socket} pressLogout={this.logout}/>
               </div>
               <div className="chat">
-                <ChatBox socket={socket} />
+                <ChatBox socket={socket} messages={messages} />
               </div>
             </main>
           }

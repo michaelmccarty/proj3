@@ -56,40 +56,14 @@ class ChatBox extends React.Component {
         socketId: ""
       }
     ],
-    messages: []
+    messages: this.props.messages
   };
 
   componentDidMount = () => {
     // Get the chat messages from the database as axios
     // For now, dummy messages.
     this.setState({
-      messages: [
-        {
-          userName: "Username123",
-          time: Date.now(),
-          message: "Here's my message to the chat box."
-        },
-        {
-          userName: "Username1234",
-          time: Date.now(),
-          message: "Here's my message to the chat box."
-        },
-        {
-          userName: "Username1234",
-          time: Date.now(),
-          message: "Here's my message to the chat box."
-        },
-        {
-          userName: "Username1234",
-          time: Date.now(),
-          message: "Here's my message to the chat box."
-        },
-        {
-          userName: "Username1234",
-          time: Date.now(),
-          message: "Here's my message to the chat box."
-        }
-      ]
+      messages: this.state.messages
     });
   };
 
@@ -106,7 +80,7 @@ class ChatBox extends React.Component {
     const {socket} = this.state;
     
     const newMessage = {
-      userName: "Pass Username here",
+      userName: this.state.socket.id,
       time: Date.now(),
       message: this.state.chatInput
     };
