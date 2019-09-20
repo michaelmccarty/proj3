@@ -41,14 +41,12 @@ class Creature extends Actor {
     }
 
     hop(cb) {
-        console.log('hop');
         this.walking = true;
         this.sprites.south.play(2);
         let counter = 16;
 
         const hopFrame = () => {
             const frameData = hopAnimation[16 - counter];
-            // console.log(frameData);
             if (frameData.shadow) this.toggleShadow();
             this.y += frameData.south * 0.0625;
             this.vOffset += frameData.offset || 0;
@@ -71,19 +69,24 @@ class Creature extends Actor {
         };
     }
 
+    // TODO: have walks go to a queue, to prevent weird latency issues
     walk(direction, cb) {
         if (this.walking) return;
         this.turn(direction);
 
         const collision = this.checkCollision(direction);
 
+        const event = {x: this.x, y: this.y}
         if (collision === true) {
+            this.emit('move', {type: 'bonk', ...event});
             this.bonk();
         } else if (collision === 'hop') {
+            this.emit('move', {type: 'hop', ...event});
             this.hop();
         } else {
             this.sprites[this.facing].play(1);
             this.walking = true;
+            this.emit('move', {type: 'walk', ...event});
             this.step(16, cb || (() => { }));
         }
     }
@@ -114,10 +117,8 @@ class Creature extends Actor {
         }
     }
 
-    // returns an array of every tile the 
+    // returns an array of every tile the player is on
     standingOn() {
-        // console.log(this.map);
-        // return;
         if (this.x - Math.floor(this.x)) {            return [
                 { ...this.map.getTile(Math.floor(this.x), this.y), x: Math.floor(this.x), y: this.y },
                 { ...this.map.getTile(Math.ceil(this.x), this.y), x: Math.ceil(this.x), y: this.y }
@@ -169,7 +170,7 @@ class Creature extends Actor {
         sprite.y = Math.floor(this.y * 16 - this.vOffset);
 
         const grass = [];
-        for (let tile of this.generateGrassEffects()) {
+        for (let tile of this.generateGrassEffects()) {//eslint-disable-line
             if (tile) {
                 grass.push(tile);
             }

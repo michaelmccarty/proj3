@@ -1,14 +1,15 @@
 
 // import directions from '../directions';
 import Creature from './Creature';
-
+import directions from '../directions';
 
 class Player extends Creature {
-    constructor(x, y, map, skin = "gary") {
+    constructor(x, y, map, skin = "player_default") {
         super(x, y, skin, 'north', map);
 
         this.setSpeed(3);
         //need to adjust sprites framerate to 4 * this.speed
+        this.on('move', this.handleMove);
     }
 
     getEvent(direction, distance = 1) {
@@ -25,16 +26,38 @@ class Player extends Creature {
 
     walk(direction) {
         if (this.walking) return;
-        const cb = this.getEvent(direction) || (() => {});
+        const cb = this.getEvent(direction) || (() => { });
         if (cb === true) return; // event has taken control
 
         super.walk(direction, cb);
-        this.emit('walk')
     }
 
     hop() {
-        const cb = this.getEvent('south' , 2) || (() => {});
+        const cb = this.getEvent('south', 2) || (() => { });
         super.hop(cb);
+    }
+
+    handleMove = (e) => {
+        let dx, dy;
+        switch (e.type) {
+            case 'bonk':
+                [dx, dy] = [0, 0];
+                break;
+            case 'walk':
+                [dx, dy] = directions[this.facing];
+                break;
+            case 'hop':
+                [dx, dy] = [0, 2];
+                break;
+            default:
+                console.log('If you\'re reading this, something has gone horribly wrong');
+        }
+        const [x, y] = [e.x + dx, e.y + dy];
+        this.emit(e.type, {
+            x: x,
+            y: y,
+            facing: this.facing
+        });
     }
 }
 

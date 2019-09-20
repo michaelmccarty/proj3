@@ -2,24 +2,20 @@ import React from 'react';
 import maps from '../../maps';
 import Spritesheet from '../../Spritesheet';
 import Tilemap from '../../Tilemap';
-import {Sprite} from '../../Sprite';
+import { Sprite } from '../../Sprite';
 import Texture from '../../Texture';
 import Player from '../../actors/Player';
 // import directions from '../../directions';
 import styles from './Game.module.css';
 import Creature from '../../actors/Creature';
-
-// overworld actor sprites
-// import actors from '../../actors.json';
+import SocketEnum from '../../SocketEnum';
 
 class Game extends React.Component {
-    // constructor(props) {
-    //     super(props);
-    // }
-
     state = {
-        socket: this.props.socket,  
+        socket: this.props.socket,
     }
+
+    playerAvatars = {};
 
     pressedKeys = new Set();
 
@@ -32,7 +28,7 @@ class Game extends React.Component {
             }
             return Reflect.get(target, key, ...rest);
         }
-    })
+    });
 
     setupCanvas = (element) => {
         this.canvas = element;
@@ -58,6 +54,14 @@ class Game extends React.Component {
         this.bindPlayerEvents();
         // await Promise.all(this.maps.map(map => map.ready));
         // await actorSpritesPromise;
+
+        this.bindSocketListeners();
+
+        // ask the server for the other players in our map.
+        this.state.socket.emit('populate request', {
+            [SocketEnum.MAP]: this.currentMap
+        });
+
     }
 
     async loadMap(name, relX, relY) {
@@ -78,15 +82,79 @@ class Game extends React.Component {
         delete this.maps[name];
     }
 
-    bindPlayerEvents () {
-        const {socket} = this.state;
-        this.player.on('walk', (e) => {
-            const message= "hello world we are moving"
-            socket.emit('move', message);
+    bindPlayerEvents() {
+        const { socket } = this.state;
+        this.player.on('walk', e => {
+            socket.emit('move', {
+                [SocketEnum.MOVE_TYPE]: SocketEnum.WALK,
+                [SocketEnum.DIRECTION]: SocketEnum[e.facing],
+                [SocketEnum.X]: e.x,
+                [SocketEnum.Y]: e.y
+            });
+        });
+        this.player.on('hop', e => {
+            socket.emit('move', {
+                [SocketEnum.MOVE_TYPE]: SocketEnum.HOP,
+                [SocketEnum.DIRECTION]: SocketEnum[e.facing],
+                [SocketEnum.X]: e.x,
+                [SocketEnum.Y]: e.y,
+            });
+        });
+        this.player.on('bonk', e => {
+            socket.emit('move', {
+                [SocketEnum.MOVE_TYPE]: SocketEnum.BONK,
+                [SocketEnum.DIRECTION]: SocketEnum[e.facing],
+                [SocketEnum.X]: e.x,
+                [SocketEnum.Y]: e.y,
+            });
         });
     }
 
-    gameLoop = (delta) => {
+    bindSocketListeners() {
+        const { socket } = this.state;
+        socket.on('player update', this.handlePlayerUpdate);
+        socket.on('spawn', this.handlePlayerTrainerSpawn);
+        socket.on('move', this.handleMove);
+        socket.on('populate', this.handlePopulate);
+        socket.on('despawn', this.handleDespawn);
+    }
+
+    handleMove = (data) => {
+        const player = this.playerAvatars[data[SocketEnum.TRAINER_ID]];
+        if (!player) {
+            return; // can ask the server to do a mass spawn event here
+        }
+        switch (data[SocketEnum.MOVE_TYPE]) {
+            case SocketEnum.WALK:
+                player.walk(SocketEnum.directions[data[SocketEnum.DIRECTION]]);
+                break;
+            default:
+                console.log('stuff');
+        }
+    }
+
+    handlePlayerTrainerSpawn = (player) => {
+        const newPlayer = new Creature(
+            player[SocketEnum.X],
+            player[SocketEnum.Y],
+            player[SocketEnum.SKIN],
+            SocketEnum.directions[player[SocketEnum.DIRECTION]],
+            this.maps[player[SocketEnum.MAP]]);
+        newPlayer.setSpeed(4);
+        this.playerAvatars[player[SocketEnum.TRAINER_ID]] = newPlayer;
+    }
+
+    handlePopulate = (data) => {
+        this.playerAvatars = {};
+        data.forEach(this.handlePlayerTrainerSpawn);
+    }
+
+    handleDespawn = (player) => {
+        // Despawn animation?
+        delete this.playerAvatars[player[SocketEnum.TRAINER_ID]];
+    }
+
+    gameLoop = () => {
         const keys = this.pressedKeys;
         if (Date.now() > this.movementDelay) {
             if (keys.has('ArrowUp') || keys.has('w') || keys.has('W')) {
@@ -119,6 +187,10 @@ class Game extends React.Component {
         }
 
         const sprites = [];
+        for (let [_, value] of Object.entries(this.playerAvatars)) {
+            sprites.push(...value.update());
+        }
+
         for (let actor of this.actors) { //eslint-disable-line
             const update = actor.update();
             sprites.push(...update);
