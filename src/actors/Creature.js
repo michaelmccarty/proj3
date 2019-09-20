@@ -35,7 +35,7 @@ class Creature extends Actor {
         const [dx, dy] = directions[this.facing].map(n => n * this.stepDistance);
         this.x += dx;
         this.y += dy;
-        if (--steps) return setTimeout(() => this.step(steps, cb), this.stepPeriod);
+        if (--steps) return this.moveTimeout = setTimeout(() => this.step(steps, cb), this.stepPeriod);
         this.walking = false;
         cb && cb();
     }
@@ -51,7 +51,7 @@ class Creature extends Actor {
             this.y += frameData.south * 0.0625;
             this.vOffset += frameData.offset || 0;
 
-            if (--counter) return setTimeout(hopFrame, this.stepPeriod * 2);
+            if (--counter) return this.moveTimeout = setTimeout(hopFrame, this.stepPeriod * 2);
             this.walking = false;
             cb && cb();
         }
@@ -69,6 +69,11 @@ class Creature extends Actor {
         };
     }
 
+    turnInPlace(direction) {
+        this.turn(direction);
+        this.emit('move', { type: 'hop', x: this.x, y: this.y });
+    }
+
     // TODO: have walks go to a queue, to prevent weird latency issues
     walk(direction, cb) {
         if (this.walking) return;
@@ -76,19 +81,52 @@ class Creature extends Actor {
 
         const collision = this.checkCollision(direction);
 
-        const event = {x: this.x, y: this.y}
+        const event = { x: this.x, y: this.y }
         if (collision === true) {
-            this.emit('move', {type: 'bonk', ...event});
+            this.emit('move', { type: 'bonk', ...event });
             this.bonk();
         } else if (collision === 'hop') {
-            this.emit('move', {type: 'hop', ...event});
+            this.emit('move', { type: 'hop', ...event });
             this.hop();
         } else {
             this.sprites[this.facing].play(1);
             this.walking = true;
-            this.emit('move', {type: 'walk', ...event});
+            this.emit('move', { type: 'walk', ...event });
             this.step(16, cb || (() => { }));
         }
+    }
+
+    walkFrom(x, y, direction) {
+        this.overridePosition(x, y);
+        this.walk(direction);
+    }
+
+    hopFrom(x, y) {
+        this.overridePosition(x, y);
+        this.hop();
+    }
+
+    bonkFrom(x, y, direction) {
+        this.overridePosition(x, y);
+        this.bonk(direction);
+    }
+
+    walkTo(x, y, direction) {
+        const [dx, dy] = directions[direction];
+        this.walkFrom(x - dx, y - dy, direction);
+    }
+
+    HopTo(x, y, direction) {
+        this.hopFrom(x, y - 2);
+    }
+
+    overridePosition(x, y) {
+        if (this.walking) {
+            clearTimeout(this.moveTimeout);
+            this.walking = false;
+        }
+        this.x = x;
+        this.y = y;
     }
 
     bonk(direction) {
@@ -119,7 +157,8 @@ class Creature extends Actor {
 
     // returns an array of every tile the player is on
     standingOn() {
-        if (this.x - Math.floor(this.x)) {            return [
+        if (this.x - Math.floor(this.x)) {
+            return [
                 { ...this.map.getTile(Math.floor(this.x), this.y), x: Math.floor(this.x), y: this.y },
                 { ...this.map.getTile(Math.ceil(this.x), this.y), x: Math.ceil(this.x), y: this.y }
             ];
@@ -129,12 +168,12 @@ class Creature extends Actor {
                 { ...this.map.getTile(this.x, Math.ceil(this.y)), x: this.x, y: Math.ceil(this.y) }
             ];
         }
-        return [{...this.map.getTile(this.x, this.y), x: this.x, y: this.y}];
+        return [{ ...this.map.getTile(this.x, this.y), x: this.x, y: this.y }];
     }
 
     generateGrassEffects() {
         const tiles = this.standingOn();
-        return tiles.map( tile => {
+        return tiles.map(tile => {
             // console.log(tile);
             if (tile.flags.grass) {
                 let mask_h = 0x7FFE;
@@ -142,8 +181,8 @@ class Creature extends Actor {
                 if (this.x > tile.x) {
                     mask_h = 0x7FFE << (this.x - tile.x) * 16;
                 } else if (this.x < tile.x) {
-                    mask_h = 0x7FFE >> (tile.x - this.x) * 16; // Maybe shift left?
-                } else if (this.y > tile.y ) { 
+                    mask_h = 0x7FFE >> (tile.x - this.x) * 16;
+                } else if (this.y > tile.y) {
                     mask_v = 0x0FF0 << (this.y - tile.y) * 16;
                 } else if (this.y < tile.y) {
                     mask_v = 0x0FF0 >> (tile.y - this.y) * 16;
@@ -169,12 +208,7 @@ class Creature extends Actor {
         sprite.x = Math.floor(this.x * 16); // multiply by 16 to translate from actor coords to world coords
         sprite.y = Math.floor(this.y * 16 - this.vOffset);
 
-        const grass = [];
-        for (let tile of this.generateGrassEffects()) {//eslint-disable-line
-            if (tile) {
-                grass.push(tile);
-            }
-        }
+        const grass = this.generateGrassEffects().filter(x => x);
 
         let shadows = [];
         if (this.shadow) {

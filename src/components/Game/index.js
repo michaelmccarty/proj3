@@ -126,15 +126,20 @@ class Game extends React.Component {
         }
         switch (data[SocketEnum.MOVE_TYPE]) {
             case SocketEnum.WALK:
-                player.walk(SocketEnum.directions[data[SocketEnum.DIRECTION]]);
+                player.walkTo(
+                    data[SocketEnum.X],
+                    data[SocketEnum.Y],
+                    SocketEnum.directions[data[SocketEnum.DIRECTION]]
+                );
                 break;
             case SocketEnum.HOP:
                 player.turn('south');
                 player.hop();
                 break;
-            case SocketEnum.BONK: 
+            case SocketEnum.BONK:
                 player.bonk(SocketEnum.directions[data[SocketEnum.DIRECTION]]);
                 break;
+            // TODO: add a case for turning in place
             default:
                 console.log('stuff');
         }
@@ -147,7 +152,7 @@ class Game extends React.Component {
             player[SocketEnum.SKIN],
             SocketEnum.directions[player[SocketEnum.DIRECTION]],
             this.maps[player[SocketEnum.MAP]]);
-        newPlayer.setSpeed(4);
+        newPlayer.setSpeed(3);
         this.playerAvatars[player[SocketEnum.TRAINER_ID]] = newPlayer;
     }
 
