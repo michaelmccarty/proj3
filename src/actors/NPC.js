@@ -1,8 +1,8 @@
-import Creature from './Creature';
+import CollidableCreature from './CollidableCreature';
 
-class NPC extends Creature {
-    constructor(id, x, y, skin, facing = 'north', map, isTrainer=false, sightRange=5) {
-        super(x, y, skin, facing, map)
+class NPC extends CollidableCreature {
+    constructor(id, x, y, skin, facing = 'north', map, siblings, isTrainer=false, sightRange=5) {
+        super(x, y, skin, facing, map, siblings);
         this.id = id;
         this.isTrainer = isTrainer;
         this.sightRange = sightRange;

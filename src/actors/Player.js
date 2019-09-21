@@ -1,11 +1,11 @@
 
 // import directions from '../directions';
-import Creature from './Creature';
+import CollidableCreature from './CollidableCreature';
 import directions from '../directions';
 
-class Player extends Creature {
-    constructor(x, y, map, skin = "player_default") {
-        super(x, y, skin, 'north', map);
+class Player extends CollidableCreature {
+    constructor(x, y, map, skin = "player_default", siblings) {
+        super(x, y, skin, 'north', map, siblings);
 
         this.setSpeed(3);
         //need to adjust sprites framerate to 4 * this.speed

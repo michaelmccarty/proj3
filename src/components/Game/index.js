@@ -51,10 +51,8 @@ class Game extends React.PureComponent {
         }
     });
 
-
     setup = async () => {
         // Make some sprites, load a map, whatever
-        // const actorSpritesPromise = new Promise(resolve => PIXI.Loader.shared.add('./spritesheets/overworld-actors.json').load(resolve));
         this.coords = { x: 4, y: 4 };
         this.currentMap = 'Route 1';
         await this.loadMap('Route 1', (this.coords.x - 4) * 16, (this.coords.y - 4) * 16);
@@ -63,23 +61,23 @@ class Game extends React.PureComponent {
 
         this.actorSpriteSheet = new Texture(this.gl, './spritesheets/overworld-actors.png');
 
-        this.player = new Player(this.coords.x, this.coords.y, this.maps[this.currentMap]);
+        this.player = new Player(this.coords.x, this.coords.y, this.maps[this.currentMap], 'player_default', this.getCollidables);
         this.actors = [this.player];
 
         {
-            const youngster = new NPC(1, 13, 13, 'youngster', 'west', this.maps['Route 1']);
+            const youngster = new NPC(1, 13, 13, 'youngster', 'west', this.maps['Route 1'], this.getCollidables);
             youngster.setAI(
                 youngster.wanderAI(
-                    youngster.uniformInterval(3000, 7000),
+                    youngster.uniformInterval(2000, 6000),
                     12, 12,
-                    14, 14
+                    15, 15
                 )
-            )
+            );
             youngster.setSpeed(1.5);
             this.NPCs['Route 1'].push(youngster);
         }
 
-        // this.actors.push(new Creature(13, 13, 'youngster', 'west', this.maps['Route 1']));
+        this.collidables = [this.player, ...this.NPCs[this.currentMap]];
 
         this.bindPlayerEvents();
         // await Promise.all(this.maps.map(map => map.ready));
@@ -92,6 +90,10 @@ class Game extends React.PureComponent {
             [SocketEnum.MAP]: this.currentMap
         });
 
+    }
+
+    getCollidables = () => {
+        return this.collidables;
     }
 
     async loadMap(name, relX, relY) {
