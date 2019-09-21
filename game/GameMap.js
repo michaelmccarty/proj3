@@ -1,5 +1,3 @@
-import map from "../src/maps/Route1";
-
 class GameMap {
     constructor(connections, width, height, tiles, mapDictionary) {
         this.connections = connections;
@@ -18,7 +16,7 @@ class GameMap {
         } else if (y < 0) {
             map = this.connections['north'];
         } else if (y > this.height) {
-            map = this.connectoins['south'];
+            map = this.connections['south'];
         } else {
             return this.tiles[this.width * y + x];
         }

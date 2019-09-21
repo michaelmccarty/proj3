@@ -12,6 +12,8 @@ class Player extends Creature {
         this.on('move', this.handleMove);
     }
 
+    stepNumber = 0;
+
     getEvent(direction, distance = 1) {
         const nextTile = this.nextTile(direction, distance);
         //eslint-disable-next-line
@@ -54,6 +56,8 @@ class Player extends Creature {
         }
         const [x, y] = [e.x + dx, e.y + dy];
         this.emit(e.type, {
+            step: ++this.stepNumber,
+            map: e.map,
             x: x,
             y: y,
             facing: this.facing

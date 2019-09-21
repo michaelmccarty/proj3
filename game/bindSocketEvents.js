@@ -1,4 +1,5 @@
-const SocketEnum = require('../SocketEnum');
+const $$ = require('../SocketEnum');
+const processMove = require('./processMove');
 
 module.exports = function (io, connectedUsers) {
     return function (socket) {
@@ -13,16 +14,19 @@ module.exports = function (io, connectedUsers) {
             y: 4,
             socket: socket,
             skin: 'player_default',
-            facing: 'south'
+            facing: 'south',
+            previousMove: {
+                x: 4,
+                y: 4,
+                facing: 'south',
+                stepNumber: 0,
+                type: 'walk',
+                map: 'Route 1',
+            }
         };
 
         // Should be their user object, loaded from the database, plus the socket.
         connectedUsers[socket.id] = user;
-
-        // console.log('======================================\nsockets online');
-        // for (let property in connectedUsers) {
-        //     console.log(property);
-        // }
 
         // socket.on("connect", () => {
         user = connectedUsers[socket.id];
@@ -30,30 +34,31 @@ module.exports = function (io, connectedUsers) {
         socket.join(user.map); // Need to join adjacent maps as well
         socket.to(user.map).broadcast.emit('spawn', {
             //TODO broadcast name
-            [SocketEnum.MAP]: user.map,
-            [SocketEnum.DIRECTION]: SocketEnum[user.facing],
-            [SocketEnum.SKIN]: user.skin,
-            [SocketEnum.X]: user.x,
-            [SocketEnum.Y]: user.y,
-            [SocketEnum.TRAINER_ID]: user.trainerId
+            [$$.MAP]: user.map,
+            [$$.DIRECTION]: $$[user.facing],
+            [$$.SKIN]: user.skin,
+            [$$.X]: user.x,
+            [$$.Y]: user.y,
+            [$$.TRAINER_ID]: user.trainerId
         });
-        // });
-
-        // console.log(user);
 
         socket.on('move', data => {
             user = connectedUsers[socket.id];
-            console.log('move', socket.id, data);
-            user.facing = SocketEnum.directions[data[SocketEnum.DIRECTION]];
-            user.x = data[SocketEnum.X];
-            user.y = data[SocketEnum.Y];
+            // console.log('move', socket.id, data);
+            if (processMove(user, data)) return; // return if move is rejected;
+
+            // user.facing = $$.directions[data[$$.DIRECTION]];
+            // user.x = data[$$.X];
+            // user.y = data[$$.Y];
+
+            console.log(user.facing);
 
             socket.to(user.map).broadcast.emit('move', {
-                [SocketEnum.MOVE_TYPE]: data[SocketEnum.MOVE_TYPE],
-                [SocketEnum.DIRECTION]: SocketEnum[user.facing],
-                [SocketEnum.X]: user.x,
-                [SocketEnum.Y]: user.y,
-                [SocketEnum.TRAINER_ID]: user.trainerId
+                [$$.MOVE_TYPE]: data[$$.MOVE_TYPE],
+                [$$.DIRECTION]: $$[user.facing],
+                [$$.X]: user.x,
+                [$$.Y]: user.y,
+                [$$.TRAINER_ID]: user.trainerId
             });
             // io.sockets.emit('move', data);
         });
@@ -63,16 +68,16 @@ module.exports = function (io, connectedUsers) {
             const output = Object.entries(connectedUsers)
                 .filter(
                     ([_, user]) =>
-                        user.map === data[SocketEnum.MAP] &&
+                        user.map === data[$$.MAP] &&
                         user.socket.id !== sender.socket.id
                 )
                 .map(([_, user]) => ({
-                    [SocketEnum.MAP]: user.map,
-                    [SocketEnum.DIRECTION]: SocketEnum[user.facing],
-                    [SocketEnum.SKIN]: user.skin,
-                    [SocketEnum.X]: user.x,
-                    [SocketEnum.Y]: user.y,
-                    [SocketEnum.TRAINER_ID]: user.trainerId
+                    [$$.MAP]: user.map,
+                    [$$.DIRECTION]: $$[user.facing],
+                    [$$.SKIN]: user.skin,
+                    [$$.X]: user.x,
+                    [$$.Y]: user.y,
+                    [$$.TRAINER_ID]: user.trainerId
                 }));
             socket.emit('populate', output);
         });
@@ -80,7 +85,7 @@ module.exports = function (io, connectedUsers) {
         socket.on('disconnect', data => {
             console.log(socket.id + 'disconnected');
             socket.broadcast.emit('despawn', {
-                [SocketEnum.TRAINER_ID]: connectedUsers[socket.id].trainerId
+                [$$.TRAINER_ID]: connectedUsers[socket.id].trainerId
             });
             delete connectedUsers[socket.id];
         });
@@ -110,7 +115,7 @@ module.exports = function (io, connectedUsers) {
                     trainerId: user.trainerId
                 }));
 
-            io.sockets.emit('connectedUserCheck', {onlineUsers} );
+            io.sockets.emit('connectedUserCheck', { onlineUsers });
         });
     };
 };

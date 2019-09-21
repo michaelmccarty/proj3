@@ -38,8 +38,8 @@ class Game extends React.PureComponent {
         // Make some sprites, load a map, whatever
         // const actorSpritesPromise = new Promise(resolve => PIXI.Loader.shared.add('./spritesheets/overworld-actors.json').load(resolve));
         this.coords = { x: 4, y: 4 };
-        await this.loadMap('Route 1', (this.coords.x - 4) * 16, (this.coords.y - 4) * 16);
         this.currentMap = 'Route 1';
+        await this.loadMap('Route 1', (this.coords.x - 4) * 16, (this.coords.y - 4) * 16);
 
         requestAnimationFrame(this.gameLoop);
 
@@ -69,7 +69,8 @@ class Game extends React.PureComponent {
             width: map.width,
             height: map.height,
             tiles: map.tiles,
-            spritesheet
+            spritesheet,
+            mapName: name
         });
 
         this.maps[name].offset = { x: relX, y: relY }
@@ -85,7 +86,9 @@ class Game extends React.PureComponent {
         this.player.on('walk', e => {
             socket.emit('move', {
                 [SocketEnum.MOVE_TYPE]: SocketEnum.WALK,
+                [SocketEnum.STEP]: e.step,
                 [SocketEnum.DIRECTION]: SocketEnum[e.facing],
+                [SocketEnum.MAP]: e.map,
                 [SocketEnum.X]: e.x,
                 [SocketEnum.Y]: e.y
             });
@@ -93,7 +96,9 @@ class Game extends React.PureComponent {
         this.player.on('hop', e => {
             socket.emit('move', {
                 [SocketEnum.MOVE_TYPE]: SocketEnum.HOP,
+                [SocketEnum.STEP]: e.step,
                 [SocketEnum.DIRECTION]: SocketEnum[e.facing],
+                [SocketEnum.MAP]: e.map,
                 [SocketEnum.X]: e.x,
                 [SocketEnum.Y]: e.y,
             });
@@ -101,7 +106,9 @@ class Game extends React.PureComponent {
         this.player.on('bonk', e => {
             socket.emit('move', {
                 [SocketEnum.MOVE_TYPE]: SocketEnum.BONK,
+                [SocketEnum.STEP]: e.step,
                 [SocketEnum.DIRECTION]: SocketEnum[e.facing],
+                [SocketEnum.MAP]: e.map,
                 [SocketEnum.X]: e.x,
                 [SocketEnum.Y]: e.y,
             });
@@ -122,6 +129,7 @@ class Game extends React.PureComponent {
         if (!player) {
             return; // can ask the server to do a mass spawn event here
         }
+
         switch (data[SocketEnum.MOVE_TYPE]) {
             case SocketEnum.WALK:
                 player.walkTo(
