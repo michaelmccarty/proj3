@@ -23,16 +23,35 @@ function Button(props) {
 }
 
 class App extends React.Component {
-    constructor() {
-        super();
-    }
+    // constructor() {
+    //     super();
+    // }
 
     state = {
         onlineUsers: [],
         socket: null,
         user: null,
         messages: [],
-        endpoint: 'http://localhost:3001'
+        endpoint: 'http://localhost:3001',
+        yourPokemon: {
+          name: 'charmander',
+          level: 5,
+          hp: 39,
+          attack: 52,
+          defense: 43,
+          special: 50,
+          speed: 65
+      },
+        theirPokemon: {
+          name: 'bulbasaur',
+          level: 5,
+          hp: 45,
+          attack: 49,
+          defense: 49,
+          special: 65,
+          speed: 45
+      }
+
     };
 
     componentDidMount() {
@@ -74,10 +93,10 @@ class App extends React.Component {
 
         socket.on('disconnection', disconnectedUser => {
             console.log(disconnectedUser + ' disconnected');
-            const index = this.state.onlineUsers.find(user => {
-                console.log(user);
-                console.log(user === disconnectedUser);
-            });
+            // const index = this.state.onlineUsers.find(user => {
+            //     console.log(user);
+            //     console.log(user === disconnectedUser);
+            // });
         });
 
         socket.on('poke', data => {});
@@ -89,7 +108,13 @@ class App extends React.Component {
         // })
 
         socket.on('battle/fight', data => {
-            console.log(data);
+          const {yourPokemon, theirPokemon} =data
+          this.setState({
+            yourPokemon: yourPokemon,
+            theirPokemon: theirPokemon
+          })
+          console.log(data);
+
         });
 
         socket.on('battle/bag', data => {
@@ -129,8 +154,31 @@ class App extends React.Component {
     }
 
     battleFightHandler() {
-        const { socket } = this.state;
-        socket.emit('battle/fight');
+        const { socket, yourPokemon, theirPokemon } = this.state;
+
+      //   const charmander = {
+      //     name: 'charmander',
+      //     level: 5,
+      //     hp: 39,
+      //     attack: 52,
+      //     defense: 43,
+      //     special: 50,
+      //     speed: 65
+      // };
+      // const bulbasaur = {
+      //     name: 'bulbasaur',
+      //     level: 5,
+      //     hp: 45,
+      //     attack: 49,
+      //     defense: 49,
+      //     special: 65,
+      //     speed: 45
+      // };
+      const data= {
+        yourPokemon: yourPokemon,
+        theirPokemon: theirPokemon
+      }
+        socket.emit('battle/fight', data);
     }
     battleSwitchHandler() {
         const { socket } = this.state;

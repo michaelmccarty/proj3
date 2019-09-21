@@ -1,12 +1,14 @@
 const SocketEnum = require('../SocketEnum');
+const attackPhase = require('../battle/attack-phase');
 
-module.exports = function(io, connectedUsers) {
-    return function(socket) {
+module.exports = function (io, connectedUsers) {
+    return function (socket) {
         console.log('made socket connection', socket.id);
 
         // For now, create a dummy user to simulate logging them in
         let user = {
             trainerId: Math.floor(100000000000000 * Math.random()),
+            name: 'Ash',
             map: 'Route 1',
             x: 4,
             y: 4,
@@ -18,12 +20,10 @@ module.exports = function(io, connectedUsers) {
         // Should be their user object, loaded from the database, plus the socket.
         connectedUsers[socket.id] = user;
 
-        // For now,
-
-        console.log('======================================\nsockets online');
-        for (let property in connectedUsers) {
-            console.log(property);
-        }
+        // console.log('======================================\nsockets online');
+        // for (let property in connectedUsers) {
+        //     console.log(property);
+        // }
 
         // socket.on("connect", () => {
         user = connectedUsers[socket.id];
@@ -86,13 +86,14 @@ module.exports = function(io, connectedUsers) {
             delete connectedUsers[socket.id];
         });
 
-        socket.on('chat', function(data) {
-            console.log(data);
+        socket.on('chat', function (data) {
+            const user = connectedUsers[socket.id];
+            data.userName = getDisplayName(user);
             io.sockets.emit('chat', data);
             io.sockets.emit('chat2', data);
         });
 
-        socket.on('typing', function(data) {
+        socket.on('typing', function (data) {
             socket.broadcast.emit('typing', data);
         });
 
@@ -100,15 +101,23 @@ module.exports = function(io, connectedUsers) {
             // console.log(connectedUsers);
 
             const srvSockets = io.sockets.sockets;
-            onlineUsers = Object.keys(srvSockets);
-            console.log(onlineUsers);
-            io.sockets.emit('connectedUserCheck', { onlineUsers });
+            // const onlineUsers = 
+            // console.log(srvSockets);
+            const onlineUsers = Object.entries(srvSockets)
+                .map(([socketId]) => connectedUsers[socketId])
+                .map(user => ({
+                    name: user.name,
+                    userName: getDisplayName(user),
+                    trainerId: user.trainerId
+                }));
+
+            io.sockets.emit('connectedUserCheck', {onlineUsers} );
         });
 
         socket.on('battle/fight', data => {
             // game logic goes here
-
-            socket.emit('battle/fight', 'fight');
+            data = attackPhase(data.yourPokemon, data.theirPokemon);
+            socket.emit('battle/fight', data);
         });
 
         socket.on('battle/bag', data => {
@@ -130,3 +139,7 @@ module.exports = function(io, connectedUsers) {
         });
     };
 };
+
+function getDisplayName(user) {
+    return displayName = user.name + '@' + user.trainerId.toString().padStart(15, '0').substring(0, 5)
+}

@@ -4,9 +4,14 @@ const attackPhase = (sel1, sel2) => {
     }
     console.log("helloworld")
 }
+
 //damage function takes in two pokemon objects
-damage = (pokemon1, pokemon2) => {
-    
+damage = (attack, defense, level) => {
+    const power = 50;
+    return Math.floor((((2*level/5)*(power)*(attack/defense))/50)+2)
 }
 
-module.exports = attackPhase;
+damageMod = () => {}
+
+
+module.exports = {damage, damageMod};
