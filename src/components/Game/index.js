@@ -122,6 +122,7 @@ class Game extends React.PureComponent {
         socket.on('move', this.handleMove);
         socket.on('populate', this.handlePopulate);
         socket.on('despawn', this.handleDespawn);
+        socket.on('move response', this.handleMoveResponse);
     }
 
     handleMove = (data) => {
@@ -178,6 +179,22 @@ class Game extends React.PureComponent {
     handleDespawn = (player) => {
         // Despawn animation?
         delete this.playerAvatars[player[SocketEnum.TRAINER_ID]];
+    }
+
+    handleMoveResponse = (data) => {
+        if (!data[SocketEnum.REJECTED]) return; // everything is daijoubu
+
+        // We're not where we should be.  Revert the state given by the server.
+        const response = {
+            rejected: data[SocketEnum.REJECTED],
+            x: data[SocketEnum.X],
+            y: data[SocketEnum.Y],
+            facing: data[SocketEnum.DIRECTION],
+            step: data[SocketEnum.STEP]
+        };
+        this.player.stepNumber = response.step;
+
+        this.player.overridePosition(response.x, response.y);
     }
 
     gameLoop = () => {

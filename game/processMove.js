@@ -9,6 +9,7 @@ function processMove(user, data) {
         const reject = { ...packData(user.previousMove), [$$.REJECTED]: true };
         user.socket.emit('move response', reject)
         // Send rejection chunk to client
+        console.log('rejected');
         return true;
     };
 
@@ -55,7 +56,7 @@ function packData(data) {
         [$$.Y]: data.y,
         [$$.DIRECTION]: data.facing,
         [$$.MAP]: data.map,
-        [$$.STEPNUMBER]: data.stepNumber
+        [$$.STEP]: data.stepNumber
     }
 }
 
