@@ -2,7 +2,7 @@ import React from "react";
 import ChatMessage from "./ChatMessage";
 import OnlineUser from "./OnlineUser";
 import styles from "./ChatBox.module.css";
-import Moment from 'moment';
+import Moment from 'moment'; //eslint-disable-line
 
 class ChatBox extends React.Component {
 
@@ -10,15 +10,15 @@ class ChatBox extends React.Component {
     // socket: this.props.socket,  
     chatInput: "",
     // onlineUsers: this.props.onlineUsers,
-    messages: this.props.messages
+    // messages: this.props.messages
   };
 
   componentDidMount = () => {
     // Get the chat messages from the database as axios
     // For now, dummy messages.
-    this.setState({
-      messages: this.state.messages
-    });
+    // this.setState({
+    //   messages: this.state.messages
+    // });
   };
 
   handleInputChange = event => {
@@ -39,9 +39,9 @@ class ChatBox extends React.Component {
       message: this.state.chatInput
     };
 
-    this.setState({
-      messages: [...this.state.messages, newMessage] // Must match the objects in this.state.messages
-    });
+    // this.setState({
+    //   messages: [...this.props.messages, newMessage] // Must match the objects in this.state.messages
+    // });
 
     socket.emit('chat', newMessage)
 
@@ -54,7 +54,7 @@ class ChatBox extends React.Component {
     return (
       <div className={styles["chatbox"]}>
         <div className={styles["online-users"]}>
-          {this.props.onlineUsers.map((userName, i) => 
+          {this.props.onlineUsers.map(({userName}, i) => 
             <OnlineUser 
               key={i}
               userName={userName}

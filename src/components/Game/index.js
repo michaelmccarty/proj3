@@ -162,6 +162,7 @@ class Game extends React.PureComponent {
     }
 
     handlePopulate = (data) => {
+        // TODO: only clear out avatars in the route we're populating;
         this.playerAvatars = {};
         data.forEach(this.handlePlayerTrainerSpawn);
     }
@@ -204,7 +205,7 @@ class Game extends React.PureComponent {
         }
 
         const sprites = [];
-        for (let [_, value] of Object.entries(this.playerAvatars)) {
+        for (let [_, value] of Object.entries(this.playerAvatars)) { //eslint-disable-line
             sprites.push(...value.update());
         }
 
