@@ -9,6 +9,7 @@ import Player from '../../actors/Player';
 import styles from './Game.module.css';
 import Creature from '../../actors/Creature';
 import SocketEnum from '../../SocketEnum';
+import NPC from '../../actors/NPC';
 
 class Game extends React.PureComponent {
 
@@ -33,6 +34,23 @@ class Game extends React.PureComponent {
     };
 
     playerAvatars = {};
+    _NPCs = {};
+    NPCs = new Proxy(this._NPCs, {
+        get: function(target, prop, receiver) {
+            if (!target[prop]) {
+                target[prop] = [];
+            }
+            return Reflect.get(...arguments);
+        },
+
+        set: function(target, prop, receiver) {
+            if (!target[prop]) {
+                target[prop] = [];
+            }
+            return Reflect.set(...arguments);
+        }
+    });
+
 
     setup = async () => {
         // Make some sprites, load a map, whatever
@@ -47,7 +65,21 @@ class Game extends React.PureComponent {
 
         this.player = new Player(this.coords.x, this.coords.y, this.maps[this.currentMap]);
         this.actors = [this.player];
-        this.actors.push(new Creature(13, 13, 'youngster', 'west', this.maps['Route 1']));
+
+        {
+            const youngster = new NPC(1, 13, 13, 'youngster', 'west', this.maps['Route 1']);
+            youngster.setAI(
+                youngster.wanderAI(
+                    youngster.uniformInterval(3000, 7000),
+                    12, 12,
+                    14, 14
+                )
+            )
+            youngster.setSpeed(1.5);
+            this.NPCs['Route 1'].push(youngster);
+        }
+
+        // this.actors.push(new Creature(13, 13, 'youngster', 'west', this.maps['Route 1']));
 
         this.bindPlayerEvents();
         // await Promise.all(this.maps.map(map => map.ready));
@@ -234,6 +266,14 @@ class Game extends React.PureComponent {
             sprites.push(...value.update());
         }
 
+        // extend logic to adjacent maps
+
+        const npcs = this.getVisibleMaps().flatMap(map => this.NPCs[map]);
+        for (let npc of npcs) { //eslint-disable-line
+            npc.AI();
+            sprites.push(...npc.update());
+        }
+
         for (let actor of this.actors) { //eslint-disable-line
             const update = actor.update();
             sprites.push(...update);
@@ -256,6 +296,10 @@ class Game extends React.PureComponent {
 
     render() {
         return <canvas key="game-canvas" className={styles["game-screen"]} tabIndex="0" width="160" height="144" ref={this.setupCanvas} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp} />;
+    }
+
+    getVisibleMaps() {
+        return [this.currentMap];
     }
 }
 

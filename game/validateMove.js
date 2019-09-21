@@ -9,9 +9,11 @@ function validate(user, pendingMove, previousMove) {
 
     const dMove = pendingMove.stepNumber - previousMove.stepNumber;
 
-    console.log('dmove: ' +dMove);
+    console.log('dmove: ' + dMove);
     // Moves are consecutive
-    if (dMove === 1) {
+    if (dMove < 1) {
+        return true;
+    } else if (dMove === 1) {
         // Normalize coordinates
         // convert pending move coords to the map of previous move
 
