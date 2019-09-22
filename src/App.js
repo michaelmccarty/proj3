@@ -9,17 +9,19 @@ import socketIOClient from 'socket.io-client';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 function Button(props) {
-    return (
-        <button
-            id="button"
-            onClick={e => {
-                e.preventDefault();
-                props.onClick();
-            }}
-        >
-            Click me
-        </button>
-    );
+    if (props.ready) {
+        return (
+            <button
+                id="button"
+                onClick={e => {
+                    e.preventDefault();
+                    props.onClick();
+                }}
+            >
+                {props.text}
+            </button>
+        );
+    } else return <></>;
 }
 
 class App extends React.Component {
@@ -28,30 +30,30 @@ class App extends React.Component {
     // }
 
     state = {
+        ready: false,
         onlineUsers: [],
         socket: null,
         user: null,
         messages: [],
         endpoint: 'http://localhost:3001',
         yourPokemon: {
-          name: 'charmander',
-          level: 5,
-          hp: 39,
-          attack: 52,
-          defense: 43,
-          special: 50,
-          speed: 65
-      },
+            name: 'charmander',
+            level: 5,
+            hp: 39,
+            attack: 52,
+            defense: 43,
+            special: 50,
+            speed: 65
+        },
         theirPokemon: {
-          name: 'bulbasaur',
-          level: 5,
-          hp: 45,
-          attack: 49,
-          defense: 49,
-          special: 65,
-          speed: 45
-      }
-
+            name: 'bulbasaur',
+            level: 5,
+            hp: 45,
+            attack: 49,
+            defense: 49,
+            special: 65,
+            speed: 45
+        }
     };
 
     componentDidMount() {
@@ -108,13 +110,12 @@ class App extends React.Component {
         // })
 
         socket.on('battle/fight', data => {
-          const {yourPokemon, theirPokemon} =data
-          this.setState({
-            yourPokemon: yourPokemon,
-            theirPokemon: theirPokemon
-          })
-          console.log(data);
-
+            const { yourPokemon, theirPokemon } = data;
+            this.setState({
+                yourPokemon: yourPokemon,
+                theirPokemon: theirPokemon
+            });
+            console.log(data);
         });
 
         socket.on('battle/bag', data => {
@@ -127,6 +128,24 @@ class App extends React.Component {
 
         socket.on('battle/switch', data => {
             console.log(data);
+        });
+
+        socket.on('battleplayer', data => {
+            console.log(data);
+        });
+
+        socket.on('askotherplayers', data => {
+            console.log(data);
+            socket.emit('creategameroom', data);
+            if (data.room) {
+                socket.emit('formalinvite', data);
+            }
+        });
+
+        socket.on('assign room', room => {
+            console.log('room number is:', room);
+            this.setState({ room: room, ready: true });
+            socket.emit('start battle', room);
         });
 
         // state is set once all the events are defined
@@ -155,29 +174,10 @@ class App extends React.Component {
 
     battleFightHandler() {
         const { socket, yourPokemon, theirPokemon } = this.state;
-
-      //   const charmander = {
-      //     name: 'charmander',
-      //     level: 5,
-      //     hp: 39,
-      //     attack: 52,
-      //     defense: 43,
-      //     special: 50,
-      //     speed: 65
-      // };
-      // const bulbasaur = {
-      //     name: 'bulbasaur',
-      //     level: 5,
-      //     hp: 45,
-      //     attack: 49,
-      //     defense: 49,
-      //     special: 65,
-      //     speed: 45
-      // };
-      const data= {
-        yourPokemon: yourPokemon,
-        theirPokemon: theirPokemon
-      }
+        const data = {
+            yourPokemon: yourPokemon,
+            theirPokemon: theirPokemon
+        };
         socket.emit('battle/fight', data);
     }
     battleSwitchHandler() {
@@ -193,8 +193,13 @@ class App extends React.Component {
         socket.emit('battle/run');
     }
 
+    battleRoomOnly() {
+        const { socket, room } = this.state;
+        socket.emit('which room am i in', room);
+    }
+
     render() {
-        const { socket, messages, onlineUsers } = this.state;
+        const { socket, messages, onlineUsers, ready } = this.state;
         return (
             <Router>
                 <Route
@@ -204,23 +209,38 @@ class App extends React.Component {
                         <main className="container">
                             {/* button is for testing some sockets */}
                             <Button
+                                ready={ready}
+                                text="Fight"
                                 onClick={() => {
                                     this.battleFightHandler();
                                 }}
                             />
                             <Button
+                                ready={ready}
+                                text="Switch"
                                 onClick={() => {
                                     this.battleSwitchHandler();
                                 }}
                             />
                             <Button
+                                ready={ready}
+                                text="Bag"
                                 onClick={() => {
                                     this.battleBagHandler();
                                 }}
                             />
                             <Button
+                                ready={ready}
+                                text="Run"
                                 onClick={() => {
                                     this.battleRunHandler();
+                                }}
+                            />
+                            <Button
+                                ready={ready}
+                                text="Send to room"
+                                onClick={() => {
+                                    this.battleRoomOnly();
                                 }}
                             />
                             <div className="game">

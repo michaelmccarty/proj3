@@ -20,10 +20,10 @@ module.exports = function (io, connectedUsers) {
         // Should be their user object, loaded from the database, plus the socket.
         connectedUsers[socket.id] = user;
 
-        // console.log('======================================\nsockets online');
-        // for (let property in connectedUsers) {
-        //     console.log(property);
-        // }
+        console.log('======================================\nsockets online');
+        for (let property in connectedUsers) {
+            console.log(property);
+        }
 
         // socket.on("connect", () => {
         user = connectedUsers[socket.id];
@@ -108,7 +108,8 @@ module.exports = function (io, connectedUsers) {
                 .map(user => ({
                     name: user.name,
                     userName: getDisplayName(user),
-                    trainerId: user.trainerId
+                    trainerId: user.trainerId,
+                    socket: user.socket.id
                 }));
 
             io.sockets.emit('connectedUserCheck', {onlineUsers} );
@@ -137,6 +138,40 @@ module.exports = function (io, connectedUsers) {
             
             socket.emit('battle/switch', 'switch');
         });
+        
+        socket.on('battleplayer', trainerId => {
+            // game logic goes here
+            console.log(trainerId)
+            let room = "";
+            for(let i = 0; i<10; i++) {
+                room += Math.floor(Math.random() *10)
+            }
+            dataToSend= {
+                player1: socket.id,
+                player2: trainerId,
+                room: room
+            }
+            socket.to(`${trainerId}`).emit('askotherplayers', dataToSend)
+
+            io.sockets.emit('battleplayer', trainerId);
+ 
+        });
+
+        socket.on('formalinvite', data => {
+            socket.to(`${data.player1}`).emit('assign room', data.room)
+            socket.emit('assign room', data.room)
+        })
+    
+        socket.on('start battle', room =>{
+            console.log("we assigned " + socket.id + " to room", room)
+            socket.join(room)
+            // socket.emit()
+        })
+
+        socket.on('which room am i in', room => {
+            console.log("I am in this room", room)
+        })
+
     };
 };
 
