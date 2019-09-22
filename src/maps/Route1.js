@@ -1,10 +1,24 @@
 // import {} from '../events';
-import {tallGrass} from './tiles'
+import { tallGrass } from './tiles'
 
 const map = {
   width: 18,
   height: 36,
   spritesheet: '../spritesheets/overworld.png',
+  name: 'Route 1',
+  connections: {
+    'south': {
+      name: 'Pallet Town',
+      offset: { x: -4, y: 36 }
+    },
+    'north': {
+      name: 'Viridian City',
+      offset: { x: -13, y: -36 }
+    }
+  },
+  encounterParams: {
+    density: 25 // out of 256
+  },
   tiles: [
     {
       id: 23,

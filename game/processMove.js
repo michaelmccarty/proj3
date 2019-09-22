@@ -1,6 +1,7 @@
 const maps = require('./maps');
 const $$ = require('../SocketEnum');
 const validateMove = require('./validateMove');
+const encounterTable = require('./encounterTable');
 
 function processMove(user, data) {
     const nextMove = unpackData(data);
@@ -25,7 +26,20 @@ function processMove(user, data) {
     // calculate trainer line of sight
 
     // check random encounters
-    console.log(user.encounterGenerator(nextMove.stepNumber));
+    // console.log(user.encounterGenerator(nextMove.stepNumber));
+    // console.log(maps[user.map]);
+    user.stepsSinceLastEncounter++;
+    const rand = user.encounterGenerator(nextMove.stepNumber);
+    const currentMap = maps[user.map]
+
+    if ( currentMap.getTile(user.x, user.y).flags.encounter && rand < currentMap.encounterParams.density && 
+        user.stepsSinceLastEncounter > 2) {
+            console.log(user.previousMove.stepNumber, 'encounter!');
+            const slot = 9 - encounterTable.findIndex(a => a > Math.floor(Math.random() * 256));
+            const encounter = currentMap.encounterParams.encounters[slot]
+            console.log(`Encountered a level ${encounter.lvl} ${encounter.species}`)
+
+    }
 
     /* 
         event {

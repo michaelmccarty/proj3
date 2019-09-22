@@ -13,6 +13,7 @@ class Player extends CollidableCreature {
     }
 
     stepNumber = 0;
+    stepsSinceLastEncounter = 0;
 
     getEvent(direction, distance = 1) {
         const nextTile = this.nextTile(direction, distance);
@@ -29,11 +30,15 @@ class Player extends CollidableCreature {
     checkEncounter(direction, distance = 1, offset = 1) {
         const rand = this.encounterGenerator(this.stepNumber + offset)
         if (this.nextTile(direction, distance).flags.encounter) {
-            console.log(rand);
+            // console.log(rand, this.map.encounterParams.density)
+            if (rand < this.map.encounterParams.density && this.stepsSinceLastEncounter > 2) {
+                return () => console.log('encounter!');
+            }
         }
     }
 
     walk(direction) {
+        this.stepsSinceLastEncounter ++;
         if (this.walking) return;
         const cb = this.getEvent(direction) || this.checkEncounter(direction) || (() => { });
         if (cb === true) return; // event has taken control

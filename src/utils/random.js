@@ -12,7 +12,7 @@ function random(seed, socket, offset = 0) {
 
     const coefficient = 256 / 233280;
     const generator256 = function(step) {
-        return generator(step) * coefficient;
+        return Math.floor(generator(step) * coefficient);
     }
 
     if (socket) {

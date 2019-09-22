@@ -104,11 +104,9 @@ class Game extends React.PureComponent {
         const map = maps[name];
         const spritesheet = this.spritesheetCache[map.spritesheet];
         this.maps[name] = new Tilemap(this.gl, {
-            width: map.width,
-            height: map.height,
-            tiles: map.tiles,
+            mapName: name,
+            ...map,
             spritesheet,
-            mapName: name
         });
 
         this.maps[name].offset = { x: relX, y: relY }

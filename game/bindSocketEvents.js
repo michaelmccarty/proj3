@@ -26,8 +26,10 @@ module.exports = function (io, connectedUsers) {
                 type: 'walk',
                 map: 'Route 1',
             },
+            // Parameters for random encounters
             seed: Math.random(),
-            rngOffset: Math.floor(Math.random() * 233280)
+            rngOffset: Math.floor(Math.random() * 233280),
+            stepsSinceLastEncounter: 0
         };
 
         user.encounterGenerator = makeEncounterGenerator(user.seed, null, user.rngOffset);

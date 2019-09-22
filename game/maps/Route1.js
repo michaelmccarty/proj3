@@ -35,7 +35,7 @@ module.exports = {
         }
     },
     encounterParams: {
-        density: 25 / 256,
+        density: 25,
         encounters: [
             { species: 16, lvl: 3 }, // 51/256 (20%) 
             { species: 19, lvl: 3 }, // 51/256 (20%) 

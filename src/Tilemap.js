@@ -12,13 +12,16 @@ import GLUtil from './utils/gl-utils';
 // When the fragment shader goes to color in that texture, instead of using its RGBA channels for color, it uses them to look up the sprites in the spritesheet
 
 class Tilemap {
-    constructor(gl, { width, height, tiles, spritesheet, mapName}) {
+    constructor(gl, { width, height, tiles, spritesheet, mapName, encounterParams, connections}) {
         // super((x, y) => {console.log(this.tiles[y * this.width + x]); return this.tiles[y * this.width + x]});
         this.width = width;
         this.height = height;
         this.tiles = tiles;
         this.spritesheet = spritesheet; //spritesheet object
         this.mapName = mapName;
+        this.encounterParams = encounterParams;
+        this.connections = connections;
+
 
         this.gl = gl;
         this.viewportSize = vec2.create();
