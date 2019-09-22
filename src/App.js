@@ -21,6 +21,7 @@ class App extends React.Component {
         socket: null,
         user: null,
         messages: [],
+        room: 'testingroom',
         endpoint: 'http://localhost:3001',
         yourPokemon: {
             name: 'charmander',
@@ -120,18 +121,33 @@ class App extends React.Component {
             console.log(data);
         });
 
-        socket.on('askotherplayers', data => {
+        socket.on('askotherplayer', data => {
             console.log(data);
-            socket.emit('creategameroom', data);
+            //TODO confirm that the receiving player wants to play
+            // socket.emit('creategameroom', data);
             if (data.room) {
                 socket.emit('formalinvite', data);
             }
         });
 
         socket.on('assign room', room => {
-            console.log('room number is:', room);
             this.setState({ room: room, ready: true });
+            console.log('room number is:', this.state.room);
             socket.emit('start battle', room);
+        });
+
+        socket.on('choose your pokemon', (data, room) => {
+            console.log(data);
+            console.log(room);
+            socket.emit('pokemon chosen', this.state.yourPokemon, room);
+            // TODO put in another socket that will initiate a pokemon to choose
+            // socket.emit()
+        });
+
+        // this needs to reset when the state is set i think
+        socket.on(this.state.room, data => {
+            console.log(data);
+            console.log(this.state.room);
         });
 
         // state is set once all the events are defined
@@ -152,11 +168,11 @@ class App extends React.Component {
     };
 
     //eventually we wanna do this without a button
-    buttonClick() {
-        const { socket } = this.state;
-        socket.emit('connectedUserCheck');
-        //console.log(this.state.socket);
-    }
+    // buttonClick() {
+    //     const { socket } = this.state;
+    //     socket.emit('connectedUserCheck');
+    //     //console.log(this.state.socket);
+    // }
 
     battleFightHandler() {
         const { socket, yourPokemon, theirPokemon } = this.state;
@@ -178,12 +194,11 @@ class App extends React.Component {
         const { socket } = this.state;
         socket.emit('battle/run');
     }
-
     battleRoomOnly() {
         const { socket, room } = this.state;
+        console.log(room);
         socket.emit('which room am i in', room);
     }
-
     render() {
         const {
             socket,
@@ -199,85 +214,87 @@ class App extends React.Component {
                     exact
                     path="/game"
                     render={() => (
-<>
-                        <main className="container">
-                            <div className="game">
-                                <Game socket={socket} />
-                            </div>
-                            <div className="options">
-                                <OptionsWrapper
-                                    socket={socket}
-                                    pressLogout={this.logout}
+                        <>
+                            <main className="container">
+                                <div className="game">
+                                    <Game socket={socket} />
+                                </div>
+                                <div className="options">
+                                    <OptionsWrapper
+                                        socket={socket}
+                                        pressLogout={this.logout}
+                                    />
+                                </div>
+                                <div className="chat">
+                                    <ChatBox
+                                        socket={socket}
+                                        messages={messages}
+                                        onlineUsers={onlineUsers}
+                                    />
+                                </div>
+                            </main>
+                            <main className="container">
+                                {/* button is for testing some sockets */}
+                                <TestButton
+                                    ready={ready}
+                                    text="Fight"
+                                    onClick={() => {
+                                        this.battleFightHandler();
+                                    }}
                                 />
-                            </div>
-                            <div className="chat">
-                                <ChatBox
-                                    socket={socket}
-                                    messages={messages}
-                                    onlineUsers={onlineUsers}
+                                <TestButton
+                                    ready={ready}
+                                    text="Switch"
+                                    onClick={() => {
+                                        this.battleSwitchHandler();
+                                    }}
                                 />
-                            </div>
-                        </main>
-                        <main className="container">
-                          {/* button is for testing some sockets */}
-                          <TestButton
-                                ready={ready}
-                                text="Fight"
-                                onClick={() => {
-                                    this.battleFightHandler();
-                                }}
-                            />
-                            <TestButton
-                                ready={ready}
-                                text="Switch"
-                                onClick={() => {
-                                    this.battleSwitchHandler();
-                                }}
-                            />
-                            <TestButton
-                                ready={ready}
-                                text="Bag"
-                                onClick={() => {
-                                    this.battleBagHandler();
-                                }}
-                            />
-                            <TestButton
-                                ready={ready}
-                                text="Run"
-                                onClick={() => {
-                                    this.battleRunHandler();
-                                }}
-                            />
-                            <TestPokemon
-                                ready={ready}
-                                name={yourPokemon.name}
-                                alt={yourPokemon.name}
-                                src={'http://via.placeholder.com/200'}
-                                hp={yourPokemon.hp}
-                                attack={yourPokemon.attack}
-                                defense={yourPokemon.defense}
-                                special={yourPokemon.special}
-                                speed={yourPokemon.speed}
-                            />
-                            <TestPokemon
-                                ready={ready}
-                                name={theirPokemon.name}
-                                alt={theirPokemon.name}
-                                src={'http://via.placeholder.com/200'}
-                                hp={theirPokemon.hp}
-                                attack={theirPokemon.attack}
-                                defense={theirPokemon.defense}
-                                special={theirPokemon.special}
-                                speed={theirPokemon.speed}
-                            />
-                            <TestButton
-                                ready={ready}
-                                text="Send to room"
-                                onClick={() => {
-                                    this.battleRoomOnly();
-                                }}
-                            />
-                        </main>
+                                <TestButton
+                                    ready={ready}
+                                    text="Bag"
+                                    onClick={() => {
+                                        this.battleBagHandler();
+                                    }}
+                                />
+                                <TestButton
+                                    ready={ready}
+                                    text="Run"
+                                    onClick={() => {
+                                        this.battleRunHandler();
+                                    }}
+                                />
+                                <TestPokemon
+                                    ready={ready}
+                                    name={yourPokemon.name}
+                                    src={'http://via.placeholder.com/200'}
+                                    alt={yourPokemon.name}
+                                    level={yourPokemon.level}
+                                    hp={yourPokemon.hp}
+                                    attack={yourPokemon.attack}
+                                    defense={yourPokemon.defense}
+                                    special={yourPokemon.special}
+                                    speed={yourPokemon.speed}
+                                />
+                                <TestPokemon
+                                    ready={ready}
+                                    name={theirPokemon.name}
+                                    src={'http://via.placeholder.com/200'}
+                                    alt={theirPokemon.name}
+                                    level={theirPokemon.level}
+                                    hp={theirPokemon.hp}
+                                    attack={theirPokemon.attack}
+                                    defense={theirPokemon.defense}
+                                    special={theirPokemon.special}
+                                    speed={theirPokemon.speed}
+                                />
+                                <TestButton
+                                    ready={ready}
+                                    text="Send to room"
+                                    onClick={() => {
+                                        this.battleRoomOnly();
+                                    }}
+                                />
+                            </main>
                         </>
                     )}
                 />

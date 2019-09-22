@@ -1,8 +1,8 @@
 const SocketEnum = require('../SocketEnum');
 const attackPhase = require('../battle/attack-phase');
 
-module.exports = function (io, connectedUsers) {
-    return function (socket) {
+module.exports = function(io, connectedUsers) {
+    return function(socket) {
         console.log('made socket connection', socket.id);
 
         // For now, create a dummy user to simulate logging them in
@@ -86,14 +86,14 @@ module.exports = function (io, connectedUsers) {
             delete connectedUsers[socket.id];
         });
 
-        socket.on('chat', function (data) {
+        socket.on('chat', function(data) {
             const user = connectedUsers[socket.id];
             data.userName = getDisplayName(user);
             io.sockets.emit('chat', data);
             io.sockets.emit('chat2', data);
         });
 
-        socket.on('typing', function (data) {
+        socket.on('typing', function(data) {
             socket.broadcast.emit('typing', data);
         });
 
@@ -101,7 +101,7 @@ module.exports = function (io, connectedUsers) {
             // console.log(connectedUsers);
 
             const srvSockets = io.sockets.sockets;
-            // const onlineUsers = 
+            // const onlineUsers =
             // console.log(srvSockets);
             const onlineUsers = Object.entries(srvSockets)
                 .map(([socketId]) => connectedUsers[socketId])
@@ -112,7 +112,7 @@ module.exports = function (io, connectedUsers) {
                     socket: user.socket.id
                 }));
 
-            io.sockets.emit('connectedUserCheck', {onlineUsers} );
+            io.sockets.emit('connectedUserCheck', { onlineUsers });
         });
 
         socket.on('battle/fight', data => {
@@ -135,46 +135,62 @@ module.exports = function (io, connectedUsers) {
 
         socket.on('battle/switch', data => {
             // game logic goes here
-            
+
             socket.emit('battle/switch', 'switch');
         });
-        
+
         socket.on('battleplayer', trainerId => {
             // game logic goes here
-            console.log(trainerId)
-            let room = "";
-            for(let i = 0; i<10; i++) {
-                room += Math.floor(Math.random() *10)
+            console.log(trainerId);
+            let room = '';
+            for (let i = 0; i < 10; i++) {
+                room += Math.floor(Math.random() * 10);
             }
-            dataToSend= {
+            dataToSend = {
                 player1: socket.id,
                 player2: trainerId,
                 room: room
-            }
-            socket.to(`${trainerId}`).emit('askotherplayers', dataToSend)
+            };
+            socket.to(`${trainerId}`).emit('askotherplayer', dataToSend);
 
             io.sockets.emit('battleplayer', trainerId);
- 
         });
 
         socket.on('formalinvite', data => {
-            socket.to(`${data.player1}`).emit('assign room', data.room)
-            socket.emit('assign room', data.room)
-        })
-    
-        socket.on('start battle', room =>{
-            console.log("we assigned " + socket.id + " to room", room)
-            socket.join(room)
+            socket.to(`${data.player1}`).emit('assign room', data.room);
+            socket.emit('assign room', data.room);
+        });
+
+        socket.on('start battle', room => {
+            console.log('we assigned ' + socket.id + ' to room', room);
+            socket.join(room);
+            // console.log(io)
+            // console.log(socket)
+            socket.emit('choose your pokemon', 'CHOOSE YOUR POKEMON', room);
             // socket.emit()
-        })
+        });
+
+        socket.on('pokemon chosen', (data, room) => {
+            console.log('pokemon chosen', data);
+            console.log('pokemon chosen', room);
+            socket.to(room).emit(data);
+            io.sockets
+                .in('testingroom')
+                .emit('message', 'what is going on, party people?');
+        });
 
         socket.on('which room am i in', room => {
-            console.log("I am in this room", room)
-        })
-
+            console.log('I am in this room', room);
+        });
     };
 };
 
 function getDisplayName(user) {
-    return displayName = user.name + '@' + user.trainerId.toString().padStart(15, '0').substring(0, 5)
+    return (displayName =
+        user.name +
+        '@' +
+        user.trainerId
+            .toString()
+            .padStart(15, '0')
+            .substring(0, 5));
 }

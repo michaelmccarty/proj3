@@ -52,7 +52,7 @@ class ChatBox extends React.Component {
     pokeTrainer(socket, trainerId) {
         
         console.log("hey",socket)
-        socket.emit("battleplayer",trainerId)
+        socket.emit("battleplayer", trainerId)
     }
 
     render() {
