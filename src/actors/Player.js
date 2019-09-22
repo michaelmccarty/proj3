@@ -26,16 +26,23 @@ class Player extends CollidableCreature {
         }
     }
 
+    checkEncounter(direction, distance = 1, offset = 1) {
+        const rand = this.encounterGenerator(this.stepNumber + offset)
+        if (this.nextTile(direction, distance).flags.encounter) {
+            console.log(rand);
+        }
+    }
+
     walk(direction) {
         if (this.walking) return;
-        const cb = this.getEvent(direction) || (() => { });
+        const cb = this.getEvent(direction) || this.checkEncounter(direction) || (() => { });
         if (cb === true) return; // event has taken control
 
         super.walk(direction, cb);
     }
 
     hop() {
-        const cb = this.getEvent('south', 2) || (() => { });
+        const cb = this.getEvent('south', 2) || this.checkEncounter('south', 2, 0) || (() => { });
         super.hop(cb);
     }
 

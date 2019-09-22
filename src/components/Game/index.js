@@ -10,6 +10,7 @@ import styles from './Game.module.css';
 import Creature from '../../actors/Creature';
 import SocketEnum from '../../SocketEnum';
 import NPC from '../../actors/NPC';
+import makeEncounterGenerator from '../../utils/random';
 
 class Game extends React.PureComponent {
 
@@ -90,10 +91,13 @@ class Game extends React.PureComponent {
             [SocketEnum.MAP]: this.currentMap
         });
 
+        this.player.encounterGenerator = makeEncounterGenerator(0, this.props.socket);
+
     }
 
     getCollidables = () => {
-        return this.collidables;
+        // Need to get item balls and stuff in here too
+        return [this.player, ...this.NPCs[this.currentMap]];
     }
 
     async loadMap(name, relX, relY) {

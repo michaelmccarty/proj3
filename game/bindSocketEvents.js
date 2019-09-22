@@ -1,7 +1,10 @@
 const $$ = require('../SocketEnum');
 const processMove = require('./processMove');
+const makeEncounterGenerator = require( '../utils/random');
+
 
 module.exports = function (io, connectedUsers) {
+    const trainerMap = {};
     return function (socket) {
         console.log('made socket connection', socket.id);
 
@@ -22,8 +25,16 @@ module.exports = function (io, connectedUsers) {
                 stepNumber: 0,
                 type: 'walk',
                 map: 'Route 1',
-            }
+            },
+            seed: Math.random(),
+            rngOffset: Math.floor(Math.random() * 233280)
         };
+
+        user.encounterGenerator = makeEncounterGenerator(user.seed, null, user.rngOffset);
+
+        trainerMap[user.trainerId] = socket.id;
+
+
 
         // Should be their user object, loaded from the database, plus the socket.
         connectedUsers[socket.id] = user;
@@ -51,7 +62,7 @@ module.exports = function (io, connectedUsers) {
             // user.x = data[$$.X];
             // user.y = data[$$.Y];
 
-            console.log(user.facing);
+            // console.log(user.facing);
 
             socket.to(user.map).broadcast.emit('move', {
                 [$$.MOVE_TYPE]: data[$$.MOVE_TYPE],
@@ -59,7 +70,7 @@ module.exports = function (io, connectedUsers) {
                 [$$.X]: user.x,
                 [$$.Y]: user.y,
                 [$$.TRAINER_ID]: user.trainerId
-            });
+            }); 
             // io.sockets.emit('move', data);
         });
 
@@ -80,6 +91,13 @@ module.exports = function (io, connectedUsers) {
                     [$$.TRAINER_ID]: user.trainerId
                 }));
             socket.emit('populate', output);
+        });
+
+        socket.on('seed me', data => {
+            socket.emit('reseed', {
+                seed: user.seed,
+                offset: user.rngOffset
+            });
         });
 
         socket.on('disconnect', data => {

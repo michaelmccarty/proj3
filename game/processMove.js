@@ -25,6 +25,7 @@ function processMove(user, data) {
     // calculate trainer line of sight
 
     // check random encounters
+    console.log(user.encounterGenerator(nextMove.stepNumber));
 
     /* 
         event {
@@ -33,7 +34,6 @@ function processMove(user, data) {
             response: socket chunk
         }
     */
-    console.log('move validated');
 
     return false;
 }

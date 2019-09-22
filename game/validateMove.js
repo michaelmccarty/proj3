@@ -9,7 +9,7 @@ function validate(user, pendingMove, previousMove) {
 
     const dMove = pendingMove.stepNumber - previousMove.stepNumber;
 
-    console.log('dmove: ' + dMove);
+    // console.log('dmove: ' + dMove);
     // Moves are consecutive
     if (dMove < 1) {
         return true;
@@ -21,7 +21,7 @@ function validate(user, pendingMove, previousMove) {
         const [dx, dy] = [newx - previousMove.x, newy - previousMove.y];
 
         const collision = maps[pendingMove.map].getTile(pendingMove.x, pendingMove.y).collision;
-        console.log('collision:', collision)
+        // console.log('collision:', collision)
         switch (collision) {
             case true:
                 return false;
