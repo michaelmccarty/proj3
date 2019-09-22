@@ -7,22 +7,8 @@ import ChatBox from './components/Chat';
 import './App.css';
 import socketIOClient from 'socket.io-client';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-
-function Button(props) {
-    if (props.ready) {
-        return (
-            <button
-                id="button"
-                onClick={e => {
-                    e.preventDefault();
-                    props.onClick();
-                }}
-            >
-                {props.text}
-            </button>
-        );
-    } else return <></>;
-}
+import TestButton from './components/TestButton';
+import TestPokemon from './components/TestPokemon';
 
 class App extends React.Component {
     // constructor() {
@@ -199,50 +185,22 @@ class App extends React.Component {
     }
 
     render() {
-        const { socket, messages, onlineUsers, ready } = this.state;
+        const {
+            socket,
+            messages,
+            onlineUsers,
+            ready,
+            yourPokemon,
+            theirPokemon
+        } = this.state;
         return (
             <Router>
                 <Route
                     exact
                     path="/game"
                     render={() => (
+<>
                         <main className="container">
-                            {/* button is for testing some sockets */}
-                            <Button
-                                ready={ready}
-                                text="Fight"
-                                onClick={() => {
-                                    this.battleFightHandler();
-                                }}
-                            />
-                            <Button
-                                ready={ready}
-                                text="Switch"
-                                onClick={() => {
-                                    this.battleSwitchHandler();
-                                }}
-                            />
-                            <Button
-                                ready={ready}
-                                text="Bag"
-                                onClick={() => {
-                                    this.battleBagHandler();
-                                }}
-                            />
-                            <Button
-                                ready={ready}
-                                text="Run"
-                                onClick={() => {
-                                    this.battleRunHandler();
-                                }}
-                            />
-                            <Button
-                                ready={ready}
-                                text="Send to room"
-                                onClick={() => {
-                                    this.battleRoomOnly();
-                                }}
-                            />
                             <div className="game">
                                 <Game socket={socket} />
                             </div>
@@ -260,6 +218,67 @@ class App extends React.Component {
                                 />
                             </div>
                         </main>
+                        <main className="container">
+                          {/* button is for testing some sockets */}
+                          <TestButton
+                                ready={ready}
+                                text="Fight"
+                                onClick={() => {
+                                    this.battleFightHandler();
+                                }}
+                            />
+                            <TestButton
+                                ready={ready}
+                                text="Switch"
+                                onClick={() => {
+                                    this.battleSwitchHandler();
+                                }}
+                            />
+                            <TestButton
+                                ready={ready}
+                                text="Bag"
+                                onClick={() => {
+                                    this.battleBagHandler();
+                                }}
+                            />
+                            <TestButton
+                                ready={ready}
+                                text="Run"
+                                onClick={() => {
+                                    this.battleRunHandler();
+                                }}
+                            />
+                            <TestPokemon
+                                ready={ready}
+                                name={yourPokemon.name}
+                                alt={yourPokemon.name}
+                                src={'http://via.placeholder.com/200'}
+                                hp={yourPokemon.hp}
+                                attack={yourPokemon.attack}
+                                defense={yourPokemon.defense}
+                                special={yourPokemon.special}
+                                speed={yourPokemon.speed}
+                            />
+                            <TestPokemon
+                                ready={ready}
+                                name={theirPokemon.name}
+                                alt={theirPokemon.name}
+                                src={'http://via.placeholder.com/200'}
+                                hp={theirPokemon.hp}
+                                attack={theirPokemon.attack}
+                                defense={theirPokemon.defense}
+                                special={theirPokemon.special}
+                                speed={theirPokemon.speed}
+                            />
+                            <TestButton
+                                ready={ready}
+                                text="Send to room"
+                                onClick={() => {
+                                    this.battleRoomOnly();
+                                }}
+                            />
+                        </main>
+                        </>
                     )}
                 />
                 <Route exact path="/" component={LoginPage} />
