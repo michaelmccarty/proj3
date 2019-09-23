@@ -69,17 +69,6 @@ class App extends React.Component {
 
     });
 
-    socket.on('poke', data => {
-      
-    })
-
-    // socket.on('move', data => {
-    //   console.log('user is moving ', data);
-    // })
-
-    // socket.on('', data => {
-
-    // })
     // state is set once all the events are defined
     this.setState({ socket });
     console.log(socket);
