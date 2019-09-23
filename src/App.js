@@ -23,7 +23,63 @@ class App extends React.Component {
     socket: null,
     user: null,
     messages: [],
-    endpoint: "http://localhost:3001"
+    endpoint: "/", //change to /socket when it is time
+    party: [{
+      image: "https://www.serebii.net/pokearth/sprites/green/001.png",
+      name: "Bulbasaur"
+    },{
+      image: "https://www.serebii.net/pokearth/sprites/green/002.png",
+      name: "Ivysaur"
+    },{
+      image: "https://www.serebii.net/pokearth/sprites/green/003.png",
+      name: "Venusaur"
+    },{
+      image: "https://www.serebii.net/pokearth/sprites/green/004.png",
+      name: "Charmander"
+    },{
+      image: "https://www.serebii.net/pokearth/sprites/green/005.png",
+      name: "Charmeleon"
+    },{
+      image: "https://www.serebii.net/pokearth/sprites/green/006.png",
+      name: "Charizard"
+    },{
+      image: "https://www.serebii.net/pokearth/sprites/green/007.png",
+      name: "Squirtle"
+    },{
+      image: "https://www.serebii.net/pokearth/sprites/green/002.png",
+      name: "Ivysaur"
+    },{
+      image: "https://www.serebii.net/pokearth/sprites/green/003.png",
+      name: "Venusaur"
+    },{
+      image: "https://www.serebii.net/pokearth/sprites/green/004.png",
+      name: "Charmander"
+    },{
+      image: "https://www.serebii.net/pokearth/sprites/green/005.png",
+      name: "Charmeleon"
+    },{
+      image: "https://www.serebii.net/pokearth/sprites/green/006.png",
+      name: "Charizard"
+    }],
+    pokedex: [{
+      image: "https://www.serebii.net/pokearth/sprites/green/001.png",
+      name: "Bulbasaur"
+    },{
+      image: "https://www.serebii.net/pokearth/sprites/green/002.png",
+      name: "Ivysaur"
+    },{
+      image: "https://www.serebii.net/pokearth/sprites/green/003.png",
+      name: "Venusaur"
+    },{
+      image: "https://www.serebii.net/pokearth/sprites/green/004.png",
+      name: "Charmander"
+    },{
+      image: "https://www.serebii.net/pokearth/sprites/green/005.png",
+      name: "Charmeleon"
+    },{
+      image: "https://www.serebii.net/pokearth/sprites/green/006.png",
+      name: "Charizard"
+    }]
   };
 
   componentDidMount() {
@@ -88,7 +144,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { socket,messages,onlineUsers } = this.state;
+    const { socket,messages,onlineUsers, party, pokedex } = this.state;
     // console.log(socket)
     return (
       <Router>
@@ -107,7 +163,7 @@ class App extends React.Component {
                   <Game socket={socket} />
                 </div>
                 <div className="options">
-                  <OptionsWrapper socket={socket} pressLogout={this.logout}/>
+                  <OptionsWrapper socket={socket} pressLogout={this.logout} party={party} pokedex={pokedex} />
                 </div>
                 <div className="chat">
                   <ChatBox socket={socket} messages={messages} onlineUsers={onlineUsers} />
