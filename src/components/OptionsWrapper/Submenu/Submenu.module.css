@@ -2,6 +2,7 @@
     composes: p-2 w-100 h-100 from global; 
     display: flex;
     flex-flow: column nowrap;
+    background-color: var(--light-1)
 }
 .submenu-header {
     composes: pokemon-font from global;
