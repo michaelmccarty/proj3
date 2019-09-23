@@ -9,6 +9,9 @@ import Player from '../../actors/Player';
 import styles from './Game.module.css';
 import Creature from '../../actors/Creature';
 import SocketEnum from '../../SocketEnum';
+import NPC from '../../actors/NPC';
+import makeEncounterGenerator from '../../utils/random';
+import * as battleTransitions from '../../battle transitions';
 
 class Game extends React.PureComponent {
 
@@ -33,21 +36,50 @@ class Game extends React.PureComponent {
     };
 
     playerAvatars = {};
+    _NPCs = {};
+    NPCs = new Proxy(this._NPCs, {
+        get: function (target, prop, receiver) {
+            if (!target[prop]) {
+                target[prop] = [];
+            }
+            return Reflect.get(...arguments);
+        },
+
+        set: function (target, prop, receiver) {
+            if (!target[prop]) {
+                target[prop] = [];
+            }
+            return Reflect.set(...arguments);
+        }
+    });
 
     setup = async () => {
         // Make some sprites, load a map, whatever
-        // const actorSpritesPromise = new Promise(resolve => PIXI.Loader.shared.add('./spritesheets/overworld-actors.json').load(resolve));
         this.coords = { x: 4, y: 4 };
-        await this.loadMap('Route 1', (this.coords.x - 4) * 16, (this.coords.y - 4) * 16);
         this.currentMap = 'Route 1';
+        await this.loadMap('Route 1', (this.coords.x - 4) * 16, (this.coords.y - 4) * 16);
 
         requestAnimationFrame(this.gameLoop);
 
         this.actorSpriteSheet = new Texture(this.gl, './spritesheets/overworld-actors.png');
 
-        this.player = new Player(this.coords.x, this.coords.y, this.maps[this.currentMap]);
+        this.player = new Player(this.coords.x, this.coords.y, this.maps[this.currentMap], 'player_default', this.getCollidables);
         this.actors = [this.player];
-        this.actors.push(new Creature(13, 13, 'youngster', 'west', this.maps['Route 1']));
+
+        {
+            const youngster = new NPC(1, 13, 13, 'youngster', 'west', this.maps['Route 1'], this.getCollidables);
+            youngster.setAI(
+                youngster.wanderAI(
+                    youngster.uniformInterval(2000, 6000),
+                    12, 12,
+                    15, 15
+                )
+            );
+            youngster.setSpeed(1.5);
+            this.NPCs['Route 1'].push(youngster);
+        }
+
+        this.collidables = [this.player, ...this.NPCs[this.currentMap]];
 
         this.bindPlayerEvents();
         // await Promise.all(this.maps.map(map => map.ready));
@@ -60,16 +92,21 @@ class Game extends React.PureComponent {
             [SocketEnum.MAP]: this.currentMap
         });
 
+        this.player.encounterGenerator = makeEncounterGenerator(0, this.props.socket);
+    }
+
+    getCollidables = () => {
+        // Need to get item balls and stuff in here too
+        return [this.player, ...this.NPCs[this.currentMap]];
     }
 
     async loadMap(name, relX, relY) {
         const map = maps[name];
         const spritesheet = this.spritesheetCache[map.spritesheet];
         this.maps[name] = new Tilemap(this.gl, {
-            width: map.width,
-            height: map.height,
-            tiles: map.tiles,
-            spritesheet
+            mapName: name,
+            ...map,
+            spritesheet,
         });
 
         this.maps[name].offset = { x: relX, y: relY }
@@ -85,7 +122,9 @@ class Game extends React.PureComponent {
         this.player.on('walk', e => {
             socket.emit('move', {
                 [SocketEnum.MOVE_TYPE]: SocketEnum.WALK,
+                [SocketEnum.STEP]: e.step,
                 [SocketEnum.DIRECTION]: SocketEnum[e.facing],
+                [SocketEnum.MAP]: e.map,
                 [SocketEnum.X]: e.x,
                 [SocketEnum.Y]: e.y
             });
@@ -93,7 +132,9 @@ class Game extends React.PureComponent {
         this.player.on('hop', e => {
             socket.emit('move', {
                 [SocketEnum.MOVE_TYPE]: SocketEnum.HOP,
+                [SocketEnum.STEP]: e.step,
                 [SocketEnum.DIRECTION]: SocketEnum[e.facing],
+                [SocketEnum.MAP]: e.map,
                 [SocketEnum.X]: e.x,
                 [SocketEnum.Y]: e.y,
             });
@@ -101,10 +142,20 @@ class Game extends React.PureComponent {
         this.player.on('bonk', e => {
             socket.emit('move', {
                 [SocketEnum.MOVE_TYPE]: SocketEnum.BONK,
+                [SocketEnum.STEP]: e.step,
                 [SocketEnum.DIRECTION]: SocketEnum[e.facing],
+                [SocketEnum.MAP]: e.map,
                 [SocketEnum.X]: e.x,
                 [SocketEnum.Y]: e.y,
             });
+        });
+        this.player.on('random encounter', e => {
+            if (!this.transitionAnimation) {
+                this.determineEncounterAnimation();
+            }
+            console.log(this.transitionAnimation, battleTransitions)
+            this.maps[this.currentMap].playAnimation(battleTransitions[this.transitionAnimation]);
+            // Play encounter animation
         });
     }
 
@@ -115,6 +166,38 @@ class Game extends React.PureComponent {
         socket.on('move', this.handleMove);
         socket.on('populate', this.handlePopulate);
         socket.on('despawn', this.handleDespawn);
+        socket.on('move response', this.handleMoveResponse);
+        this.listenForEncounters();
+        // socket.on('random encounter', this.handleEncounter);
+    }
+
+    listenForEncounters() {
+        const serverEncounterEvent = new Promise(resolve =>
+            this.props.socket.once('random encounter', resolve));
+        const clientEncounterEvent = new Promise(resolve =>
+            this.player.once('random encounter', resolve));
+
+            // serverEncounterEvent.catch(() => {});
+            // clientEncounterEvent.catch(() => {});
+
+
+        Promise.race([serverEncounterEvent, clientEncounterEvent])
+            .then(this.determineEncounterAnimation);
+
+        Promise.all([serverEncounterEvent, clientEncounterEvent])
+            .then(this.handleEncounter);
+    }
+
+    determineEncounterAnimation = (data) => {
+        console.log('debug');
+        if (data) console.log(data);
+        if (this.player.map.type === 'field') {
+            // if (data.lvl && this.player.pokemon[0].lvl + 3 <= data.lvl) {
+            this.transitionAnimation = 'wildFieldWeak';
+            // }
+        } else {
+            this.transitionAnimation = 'wildFieldWeak';
+        }
     }
 
     handleMove = (data) => {
@@ -122,6 +205,7 @@ class Game extends React.PureComponent {
         if (!player) {
             return; // can ask the server to do a mass spawn event here
         }
+
         switch (data[SocketEnum.MOVE_TYPE]) {
             case SocketEnum.WALK:
                 player.walkTo(
@@ -172,6 +256,29 @@ class Game extends React.PureComponent {
         delete this.playerAvatars[player[SocketEnum.TRAINER_ID]];
     }
 
+    handleMoveResponse = (data) => {
+        if (!data[SocketEnum.REJECTED]) return; // everything is daijoubu
+
+        // We're not where we should be.  Revert the state given by the server.
+        const response = {
+            rejected: data[SocketEnum.REJECTED],
+            x: data[SocketEnum.X],
+            y: data[SocketEnum.Y],
+            facing: data[SocketEnum.DIRECTION],
+            step: data[SocketEnum.STEP]
+        };
+        this.player.stepNumber = response.step;
+
+        this.player.overridePosition(response.x, response.y);
+    }
+
+    handleEncounter = ([data]) => {
+        this.listenForEncounters(); // set up the listeners again
+        // go into battle context
+        console.log(data);
+
+    }
+
     gameLoop = () => {
         const keys = this.pressedKeys;
         if (Date.now() > this.movementDelay) {
@@ -209,6 +316,14 @@ class Game extends React.PureComponent {
             sprites.push(...value.update());
         }
 
+        // extend logic to adjacent maps
+
+        const npcs = this.getVisibleMaps().flatMap(map => this.NPCs[map]);
+        for (let npc of npcs) { //eslint-disable-line
+            npc.AI();
+            sprites.push(...npc.update());
+        }
+
         for (let actor of this.actors) { //eslint-disable-line
             const update = actor.update();
             sprites.push(...update);
@@ -231,6 +346,10 @@ class Game extends React.PureComponent {
 
     render() {
         return <canvas key="game-canvas" className={styles["game-screen"]} tabIndex="0" width="160" height="144" ref={this.setupCanvas} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp} />;
+    }
+
+    getVisibleMaps() {
+        return [this.currentMap];
     }
 }
 
