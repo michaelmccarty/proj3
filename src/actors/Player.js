@@ -1,16 +1,19 @@
 
 // import directions from '../directions';
-import Creature from './Creature';
+import CollidableCreature from './CollidableCreature';
 import directions from '../directions';
 
-class Player extends Creature {
-    constructor(x, y, map, skin = "player_default") {
-        super(x, y, skin, 'north', map);
+class Player extends CollidableCreature {
+    constructor(x, y, map, skin = "player_default", siblings) {
+        super(x, y, skin, 'north', map, siblings);
 
         this.setSpeed(3);
         //need to adjust sprites framerate to 4 * this.speed
         this.on('move', this.handleMove);
     }
+
+    stepNumber = 0;
+    stepsSinceLastEncounter = 0;
 
     getEvent(direction, distance = 1) {
         const nextTile = this.nextTile(direction, distance);
@@ -24,17 +27,34 @@ class Player extends Creature {
         }
     }
 
+    checkEncounter(direction, distance = 1, offset = 1) {
+        const rand = this.encounterGenerator(this.stepNumber + offset)
+        if (this.nextTile(direction, distance).flags.encounter) {
+            // console.log(rand, this.map.encounterParams.density)
+            if (rand < this.map.encounterParams.density && this.stepsSinceLastEncounter > 2) {
+                return this.startEncounter;
+            }
+        }
+    }
+
     walk(direction) {
-        if (this.walking) return;
-        const cb = this.getEvent(direction) || (() => { });
+        this.stepsSinceLastEncounter++;
+        if (this.walking || this.inBattle) return;
+        const cb = this.getEvent(direction) || this.checkEncounter(direction) || (() => { });
         if (cb === true) return; // event has taken control
 
         super.walk(direction, cb);
     }
 
     hop() {
-        const cb = this.getEvent('south', 2) || (() => { });
+        const cb = this.getEvent('south', 2) || this.checkEncounter('south', 2, 0) || (() => { });
         super.hop(cb);
+    }
+
+    startEncounter = () => {
+        // enter event mode
+        this.inBattle = true;
+        this.emit('random encounter');
     }
 
     handleMove = (e) => {
@@ -54,6 +74,8 @@ class Player extends Creature {
         }
         const [x, y] = [e.x + dx, e.y + dy];
         this.emit(e.type, {
+            step: ++this.stepNumber,
+            map: e.map,
             x: x,
             y: y,
             facing: this.facing
