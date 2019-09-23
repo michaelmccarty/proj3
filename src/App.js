@@ -1,12 +1,13 @@
 import React from "react";
 import Game from "./components/Game";
+import NoMatch from "./pages/NoMatch";
 import LoginPage from "./pages/authentication/LoginPage";
 import RegisterPage from "./pages/authentication/RegisterPage";
 import OptionsWrapper from "./components/OptionsWrapper";
 import ChatBox from "./components/Chat";
 import "./App.css";
 import socketIOClient from "socket.io-client";
-import {BrowserRouter as Router, Route } from 'react-router-dom';
+import {BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 // function Button(props) {
 //   return <button id="button" onClick={(e)=> {
@@ -101,24 +102,33 @@ class App extends React.Component {
     const { socket,messages,onlineUsers } = this.state;
     return (
       <Router>
-        <Route
-          exact path="/game"
-          render={() => 
-            <main className="container">
-              <div className="game">
-                <Game socket={socket} />
-              </div>
-              <div className="options">
-                <OptionsWrapper socket={socket} pressLogout={this.logout}/>
-              </div>
-              <div className="chat">
-                <ChatBox socket={socket} messages={messages} onlineUsers={onlineUsers} />
-              </div>
-            </main>
-          }
-        />
-        <Route exact path="/" component={LoginPage} />
-        <Route exact path="/register" component={RegisterPage} />
+        <Switch>
+          <Route
+            exact path="/game"
+            component={() => 
+              <main className="container">
+              {/* button is for testing some sockets */}
+                <Button
+                  onClick={() => {
+                    this.buttonClick();
+                  }}
+                />
+                <div className="game">
+                  <Game socket={socket} />
+                </div>
+                <div className="options">
+                  <OptionsWrapper socket={socket} pressLogout={this.logout}/>
+                </div>
+                <div className="chat">
+                  <ChatBox socket={socket} />
+                </div>
+              </main>
+            }
+          />
+          <Route exact path="/" component={LoginPage} />
+          <Route exact path="/register" component={RegisterPage} />
+          <Route component={NoMatch} />
+        </Switch>
       </Router>
     );
   }
