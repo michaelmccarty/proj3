@@ -266,7 +266,10 @@ main.container {
   padding-top: 90%;
   cursor: none;
 }
-.options { grid-area: options; }
+.options { 
+  grid-area: options;
+  min-height: 0;
+}
 .chat { grid-area: chat; }
 
 .flash {
