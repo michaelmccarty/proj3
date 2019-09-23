@@ -5,7 +5,26 @@ class Combatant {
         // A wild ${something} has appeared
         // ${class} ${name} wants to battle!
         // Will be overridden by descendents.
-        // Returns a string.
+        // Returns an object :
+        /* 
+            {
+                introText: string
+
+                isTrainer: bool
+                // These only exist if isTrainer is true
+                trainerSprite: string
+                trainerName: string
+                numPokemon: string
+
+                // if isTrainer is false
+                species: number
+            }
+        */
+    }
+
+    nextPokemon() {
+        // called by Battle
+        // returns a promise of an object with the full data for the next pokemon
     }
 
     send() {
