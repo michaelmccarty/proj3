@@ -1,4 +1,4 @@
-module.exports = (app, db) => {
+module.exports = (app, passport, db) => {
   // const url = 'localhost:3001'
   app.post('/login', (req, res) =>{
     // console.log(req);
