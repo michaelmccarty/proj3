@@ -1,10 +1,10 @@
-.chat-message-container { composes: flash pokemon-font flx flx-row p-2 from global; }
+.chat-message-container { composes: flash pokemon-font flx flx-row from global; padding: 12px 12px 12px 12px; }
 .chat-avatar-wrapper {
   border-radius: 31px;
   overflow: hidden;
-  width: 62px;
-  min-width: 62px;
-  height: 62px;
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
 }
 .chat-avatar { composes: w-100 h-100 from global; }
 .chat-message-content { 
