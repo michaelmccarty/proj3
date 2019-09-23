@@ -141,5 +141,5 @@ module.exports = function (io, connectedUsers) {
 };
 
 function getDisplayName(user) {
-    return displayName = user.name + '@' + user.trainerId.toString().padStart(15, '0').substring(0, 5)
+    return displayName = user.name + '&' + user.trainerId.toString().padStart(15, '0').substring(0, 5)
 }

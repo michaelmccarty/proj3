@@ -246,7 +246,7 @@ main.container {
   grid-template-areas: 
   "game options"
   "chat chat";
-  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-rows: 1fr minmax(0, 1fr);
   grid-template-columns: 640px 1fr;
   grid-gap: 16px;
   padding: 16px;
