@@ -32,6 +32,12 @@ const directions = {
     [west]: 'west'
 }
 
+const types = {
+    [HOP]: 'hop',
+    [BONK]: 'bonk',
+    [WALK]: 'walk'
+}
+
 module.exports = {
     STEP,
     DIRECTION,
@@ -50,5 +56,6 @@ module.exports = {
     north,
     east,
     west,
-    directions
+    directions,
+    types
 }

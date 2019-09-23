@@ -71,7 +71,7 @@ class Creature extends Actor {
 
     turnInPlace(direction) {
         this.turn(direction);
-        this.emit('move', { type: 'hop', x: this.x, y: this.y });
+        this.emit('move', { type: 'turn', x: this.x, y: this.y, map: this.map.mapName });
     }
 
     // TODO: have walks go to a queue, to prevent weird latency issues
@@ -81,7 +81,7 @@ class Creature extends Actor {
 
         const collision = this.checkCollision(direction);
 
-        const event = { x: this.x, y: this.y }
+        const event = { x: this.x, y: this.y, map: this.map.mapName }
         if (collision === true) {
             this.emit('move', { type: 'bonk', ...event });
             this.bonk();

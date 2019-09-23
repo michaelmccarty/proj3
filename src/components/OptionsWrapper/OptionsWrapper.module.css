@@ -1,3 +1,9 @@
-.option-wrapper { composes: bg-light-2 h-100 from global; width: 216px;}
-.options-list { composes: p-2 from global; }
-.option { composes: p-2 m-1 cursor-pointer bg-light-1 from global; }
+.option-wrapper { 
+    composes: h-100 from global;
+    width: 216px;
+}
+.options-list { }
+.option { composes: pokemon-font p-2 mb-1 cursor-pointer bg-light-2 from global; }
+.option:hover {
+    font-weight: bold;
+}

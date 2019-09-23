@@ -154,7 +154,6 @@ class AlternatingSprite extends Sprite {
         this.frameGen = (function* (sprite) {
             restingFrame:
             while (true) {
-                console.log('flip');
                 sprite.frames[0].flip_h = !sprite.frames[0].flip_h;
                 while (!sprite._playing) {
                     yield sprite.frames[sprite.defaultFrame && sprite.frames.length - 1];
