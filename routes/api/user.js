@@ -1,7 +1,19 @@
-const db = require("../../models");
+module.exports = (app, db) => {
+  // const url = 'localhost:3001'
+  app.post('/login', (req, res) =>{
+    // console.log(req);
+    console.log(req.body);
+    res.json(req.body);
+  })
 
-module.exports = app => {
-  app.get("/api/users", (req, res) => {
-    db.User.find().then(data => {res.json(data)});
+
+
+
+  app.post("/api/users", (req, res) => {
+    // console.log(req);
+    console.log(req)
+    console.log(req.body);
+    res.json(req.body);
+    db.User.create(req.body).then(data => {res.json(data)});
   });
 };
