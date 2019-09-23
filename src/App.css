@@ -269,6 +269,17 @@ main.container {
 .options { grid-area: options; }
 .chat { grid-area: chat; }
 
+.flash {
+  animation-name: flash;
+  animation-duration: 2s;
+  animation-iteration-count: 1;
+}
+
+@keyframes flash {
+  0% { background-color: rgba(0, 0, 0, 0.25); border-radius: 16px; }
+  100% { background-color: unset; border-radius: 0; }
+}
+
 @media screen and (max-width: 768px) {
   main.container { /* Options will be fulscreen over game on start button click */
     grid-template-areas:

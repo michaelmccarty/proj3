@@ -24,6 +24,8 @@ class ChatBox extends React.Component {
   handleInputChange = event => {
     const { value } = event.target;
 
+    if (value.length > 50) return; 
+
     this.setState({
       chatInput: value
     });
@@ -74,14 +76,14 @@ class ChatBox extends React.Component {
             ))}
           </div>
           <form className={styles["chat-form"]}>
-            <input
+            <input className={styles["chat-input"]}
               onChange={this.handleInputChange}
               name="chatInput"
               value={this.state.chatInput}
               type="text"
               placeholder="Your message here"
             />
-            <button onClick={this.handleSubmitChatMessage}>Send</button>
+            <button className={styles["chat-submit"]} onClick={this.handleSubmitChatMessage}>Send</button>
           </form>
         </div>
       </div>

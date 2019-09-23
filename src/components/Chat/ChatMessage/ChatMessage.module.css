@@ -1,4 +1,4 @@
-.chat-message-container { composes: pokemon-font flx flx-row m-2 from global; }
+.chat-message-container { composes: flash pokemon-font flx flx-row p-2 from global; }
 .chat-avatar-wrapper {
   border-radius: 31px;
   overflow: hidden;
@@ -10,6 +10,8 @@
 .chat-message-content { 
   composes: ml-2 from global; 
   font-size: 0.9em;
+  border-bottom: 2px dotted var(--dark-2);
+  width: 100%;
 }
 .chat-message-info { 
   composes: mb-1 from global; 
