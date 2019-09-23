@@ -40,7 +40,28 @@ function Pokemon(props) {
                 </>
             );
         case 2:
-            return <div>These will be the Pokemon from the Pokedex</div>;
+            // return <div>These will be the Pokemon from the Pokedex</div>;
+            return (
+              <>
+                  {props.party.map(({ name, image }, i) => {
+                      return (
+                          <div key={i} className={styles['pokemon-wrapper']}>
+                              <img
+                                  className={styles['pokemon-image']}
+                                  src={
+                                      image ||
+                                      'https://via.placeholder.com/50'
+                                  }
+                                  alt="pokemon"
+                              />
+                              <span className={styles['pokemon-name']}>
+                                  {name}
+                              </span>
+                          </div>
+                      );
+                  })}
+              </>
+          );
         case 3:
             return <div>These are the settings (icebox)</div>;
         case 4:

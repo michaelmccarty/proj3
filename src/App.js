@@ -46,20 +46,20 @@ class App extends React.Component {
       image: "https://www.serebii.net/pokearth/sprites/green/007.png",
       name: "Squirtle"
     },{
-      image: "https://www.serebii.net/pokearth/sprites/green/002.png",
-      name: "Ivysaur"
+      image: "https://www.serebii.net/pokearth/sprites/green/008.png",
+      name: "Wartortle"
     },{
-      image: "https://www.serebii.net/pokearth/sprites/green/003.png",
-      name: "Venusaur"
+      image: "https://www.serebii.net/pokearth/sprites/green/009.png",
+      name: "Blastoise"
     },{
-      image: "https://www.serebii.net/pokearth/sprites/green/004.png",
-      name: "Charmander"
+      image: "https://www.serebii.net/pokearth/sprites/green/010.png",
+      name: "Caterpie"
     },{
-      image: "https://www.serebii.net/pokearth/sprites/green/005.png",
-      name: "Charmeleon"
+      image: "https://www.serebii.net/pokearth/sprites/green/011.png",
+      name: "Metapod"
     },{
-      image: "https://www.serebii.net/pokearth/sprites/green/006.png",
-      name: "Charizard"
+      image: "https://www.serebii.net/pokearth/sprites/green/012.png",
+      name: "Butterfree"
     }],
     pokedex: [{
       image: "https://www.serebii.net/pokearth/sprites/green/001.png",
