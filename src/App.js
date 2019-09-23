@@ -89,19 +89,20 @@ class App extends React.Component {
 
   render() {
     const { socket,messages,onlineUsers } = this.state;
+    // console.log(socket)
     return (
       <Router>
         <Switch>
           <Route
             exact path="/game"
-            component={() => 
+            render={() => 
               <main className="container">
               {/* button is for testing some sockets */}
-                <Button
+                {/* <Button
                   onClick={() => {
                     this.buttonClick();
                   }}
-                />
+                /> */}
                 <div className="game">
                   <Game socket={socket} />
                 </div>
@@ -109,7 +110,7 @@ class App extends React.Component {
                   <OptionsWrapper socket={socket} pressLogout={this.logout}/>
                 </div>
                 <div className="chat">
-                  <ChatBox socket={socket} />
+                  <ChatBox socket={socket} messages={messages} onlineUsers={onlineUsers} />
                 </div>
               </main>
             }
