@@ -2,95 +2,23 @@ import React from "react";
 import ChatMessage from "./ChatMessage";
 import OnlineUser from "./OnlineUser";
 import styles from "./ChatBox.module.css";
-import Moment from 'moment';
+import Moment from 'moment'; //eslint-disable-line
 
 class ChatBox extends React.Component {
 
   state = {
-    socket: this.props.socket,  
+    // socket: this.props.socket,  
     chatInput: "",
-    usersOnline: [
-      {
-        userName: "Username123",
-        avatarImg: "https://via.placeholder.com/100",
-        socketId: ""
-      }, 
-      {
-        userName: "Username1234",
-        avatarImg: "https://via.placeholder.com/200",
-        socketId: ""
-      }, 
-      {
-        userName: "Username1234",
-        avatarImg: "https://via.placeholder.com/200",
-        socketId: ""
-      }, 
-      {
-        userName: "Username1234",
-        avatarImg: "https://via.placeholder.com/200",
-        socketId: ""
-      }, 
-      {
-        userName: "Username1234",
-        avatarImg: "https://via.placeholder.com/200",
-        socketId: ""
-      }, 
-      {
-        userName: "Username1234",
-        avatarImg: "https://via.placeholder.com/200",
-        socketId: ""
-      }, 
-      {
-        userName: "Username1234",
-        avatarImg: "https://via.placeholder.com/200",
-        socketId: ""
-      }, 
-      {
-        userName: "Username1234",
-        avatarImg: "https://via.placeholder.com/200",
-        socketId: ""
-      }, 
-      {
-        userName: "Username1234",
-        avatarImg: "https://via.placeholder.com/200",
-        socketId: ""
-      }
-    ],
-    messages: []
+    // onlineUsers: this.props.onlineUsers,
+    // messages: this.props.messages
   };
 
   componentDidMount = () => {
     // Get the chat messages from the database as axios
     // For now, dummy messages.
-    this.setState({
-      messages: [
-        {
-          userName: "Username123",
-          time: Date.now(),
-          message: "Here's my message to the chat box."
-        },
-        {
-          userName: "Username1234",
-          time: Date.now(),
-          message: "Here's my message to the chat box."
-        },
-        {
-          userName: "Username1234",
-          time: Date.now(),
-          message: "Here's my message to the chat box."
-        },
-        {
-          userName: "Username1234",
-          time: Date.now(),
-          message: "Here's my message to the chat box."
-        },
-        {
-          userName: "Username1234",
-          time: Date.now(),
-          message: "Here's my message to the chat box."
-        }
-      ]
-    });
+    // this.setState({
+    //   messages: this.state.messages
+    // });
   };
 
   handleInputChange = event => {
@@ -103,17 +31,17 @@ class ChatBox extends React.Component {
 
   handleSubmitChatMessage = event => {
     event.preventDefault();
-    const {socket} = this.state;
+    const {socket} = this.props;
     
     const newMessage = {
-      userName: "Pass Username here",
+      userName: this.props.socket.id,
       time: Date.now(),
       message: this.state.chatInput
     };
 
-    this.setState({
-      messages: [...this.state.messages, newMessage] // Must match the objects in this.state.messages
-    });
+    // this.setState({
+    //   messages: [...this.props.messages, newMessage] // Must match the objects in this.state.messages
+    // });
 
     socket.emit('chat', newMessage)
 
@@ -126,17 +54,17 @@ class ChatBox extends React.Component {
     return (
       <div className={styles["chatbox"]}>
         <div className={styles["online-users"]}>
-          {this.state.usersOnline.map(({userName, avatarImg}, i) => 
+          {this.props.onlineUsers.map(({userName}, i) => 
             <OnlineUser 
               key={i}
               userName={userName}
-              avatarImg={avatarImg}
+              avatarImg={"https://via.placeholder.com/200"}
             />  
           )}
         </div>
         <div className={styles["chat-wrapper"]}>
           <div className={styles["chat-messages"]}>
-            {this.state.messages.map(({ userName, time, message }, i) => (
+            {this.props.messages.map(({ userName, time, message }, i) => (
               <ChatMessage
                 key={i}
                 userName={userName}

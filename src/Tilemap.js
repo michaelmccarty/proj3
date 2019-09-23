@@ -138,9 +138,9 @@ class Tilemap {
         console.log('map loaded');
     }
 
-    draw() {
+    draw(gl) {
         const { x, y } = this.offset;
-        const gl = this.gl;
+        // const gl = this.gl;
         const shader = Tilemap.shader;
 
         gl.enable(gl.BLEND);
