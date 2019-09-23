@@ -1,4 +1,4 @@
-.online-user-wrapper { composes: flx flx-center m-2 from global; }
+.online-user-wrapper { composes: flx flx-center flx-align-center m-2 from global; }
 .online-user-img-wrapper {
     width: 32px;
     height: 32px;
@@ -6,4 +6,7 @@
     overflow: hidden;
 }
 .online-user-img { composes: w-100 h-100 from global; }
-.online-user-username { composes: ml-2 flx-grow-1 from global; }
+.online-user-username { 
+    composes: pokemon-font ml-2 flx-grow-1 from global;
+    font-size: 0.8em;
+}
