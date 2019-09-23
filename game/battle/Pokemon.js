@@ -103,7 +103,7 @@ Pokemon.calculateHPIV = function(ivs) {
     return ivs.attack % 2 * 8 + ivs.defense % 2 * 4 + ivs.speed % 2 * 2 + ivs.special % 2;
 }
 
-Pokemon.calculateStat(base, iv, ev, level) = function {
+Pokemon.calculateStat = function (base, iv, ev, level) {
     return Math.floor(
         (
             (base + iv) * 2 + Math.floor(

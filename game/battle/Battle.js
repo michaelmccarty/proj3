@@ -10,11 +10,11 @@ class Battle extends EventEmitter {
     }
 
     async initialize() {
-        this.combatant1.send('battle start'); // Trainer will wait to send this to the client until it gets the intro
-        this.combatant2.send('battle start');
+        // this.combatant1.send('battle start'); // Trainer will wait to send this to the client until it gets the intro
+        // this.combatant2.send('battle start');
 
-        this.combatant1.send(combatant2.intro());
-        this.combatant2.send(combatant1.intro());
+        this.combatant1.send('intro', combatant2.intro());
+        this.combatant2.send('intro', combatant1.intro());
 
         const inBattle = true;
 
@@ -24,8 +24,8 @@ class Battle extends EventEmitter {
         ]);
 
         // send pokemon species, name, level, %hp, and status
-        this.combatant1.send(pokemon2.publicStats());
-        this.combatant2.send(pokemon1.publicStats());
+        this.combatant1.send('updateOpponent', pokemon2.publicStats());
+        this.combatant2.send('updateOpponent', pokemon1.publicStats());
 
         while (inBattle) {
 
@@ -43,6 +43,7 @@ class Battle extends EventEmitter {
                 this.combatant1,
                 this.combatant2
             );
+            // This function can also do exp gain.
 
             pokemon1 = results.pokemon1;
             pokemon2 = results.pokemon2;
@@ -61,8 +62,8 @@ class Battle extends EventEmitter {
                 script: results.script,
             }
 
-            this.combatant1.send(message1);
-            this.combatant2.send(message2);
+            this.combatant1.send('turn results', message1);
+            this.combatant2.send('turn results', message2);
 
             // determine if either pokemon fainted
             // if so, determine if the battle is over
