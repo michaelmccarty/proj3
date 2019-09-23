@@ -41,17 +41,14 @@ passport.use(
             db.User.findOne({
                 email: email
             }).then(function(user) {
-                if (!user) {
+                if (!user) 
                     console.log('\n\nuser not found. login failed');
-                } else if (user) {
-                    // if user is found, check against PW and log in or fail
 
-                    db.User.findOne({}).then(function(user) {
-                        console.log(
-                            '\n\nsuccessful login, ' + user.username + '\n\n'
-                        );
+                else if (user) {
+                    if (password == user.password){
+                        console.log('\n\nsuccessful login, ' + user.username + '\n\n');
                         return done(null, user);
-                    });
+                    }
 
                     console.log('\n\nbad password. login failed');
                 }
