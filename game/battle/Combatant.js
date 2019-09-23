@@ -1,5 +1,4 @@
 class Combatant {
-
     intro() {
         // This is what will appear when fighting
         // A wild ${something} has appeared
@@ -8,6 +7,7 @@ class Combatant {
         // Returns an object :
         /* 
             {
+                type: intro
                 introText: string
 
                 isTrainer: bool
@@ -22,6 +22,10 @@ class Combatant {
         */
     }
 
+    chooseAction() {
+        // returns a promise of the action they will execute;
+    }
+
     nextPokemon() {
         // called by Battle
         // returns a promise of an object with the full data for the next pokemon
@@ -32,4 +36,10 @@ class Combatant {
         // Will socket.emit if combatant is human.
         // Stored in state and used by the AI if not
     }
+
+    hasUsablePokemon() {
+        // returns if the combatant can still fight
+    }
 }
+
+module.exports = Combatant;
