@@ -58,7 +58,7 @@ module.exports = function (io, connectedUsers) {
         socket.on('move', data => {
             user = connectedUsers[socket.id];
             // console.log('move', socket.id, data);
-            if (processMove(user, data)) return; // return if move is rejected;
+            if (processMove(user, data, socket)) return; // return if move is rejected;
 
             // user.facing = $$.directions[data[$$.DIRECTION]];
             // user.x = data[$$.X];

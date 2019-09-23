@@ -19,6 +19,7 @@ const map = {
   encounterParams: {
     density: 25 // out of 256
   },
+  type: 'field',
   tiles: [
     {
       id: 23,

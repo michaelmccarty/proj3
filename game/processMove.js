@@ -3,7 +3,7 @@ const $$ = require('../SocketEnum');
 const validateMove = require('./validateMove');
 const encounterTable = require('./encounterTable');
 
-function processMove(user, data) {
+function processMove(user, data, socket) {
     const nextMove = unpackData(data);
     const validate = validateMove(user, nextMove, user.previousMove);
     if (!validate) {
@@ -34,11 +34,17 @@ function processMove(user, data) {
 
     if ( currentMap.getTile(user.x, user.y).flags.encounter && rand < currentMap.encounterParams.density && 
         user.stepsSinceLastEncounter > 2) {
-            console.log(user.previousMove.stepNumber, 'encounter!');
-            const slot = 9 - encounterTable.findIndex(a => a > Math.floor(Math.random() * 256));
-            const encounter = currentMap.encounterParams.encounters[slot]
-            console.log(`Encountered a level ${encounter.lvl} ${encounter.species}`)
+            user.stepsSinceLastEncounter = 0;
+            const roll = Math.floor(Math.random() * 256);
+            const slot = 9 - encounterTable.findIndex(a => a < roll );
+            const encounter = currentMap.encounterParams.encounters[slot];
+            console.log(`Encountered a level ${encounter.lvl} ${encounter.species}`);
 
+            // Create a room name for the random battle
+            // send 'random encounter' event to the socket
+            // initialize a server side battle with the room name
+
+            socket.emit('random encounter', encounter);
     }
 
     /* 

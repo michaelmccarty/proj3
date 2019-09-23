@@ -12,7 +12,7 @@ import GLUtil from './utils/gl-utils';
 // When the fragment shader goes to color in that texture, instead of using its RGBA channels for color, it uses them to look up the sprites in the spritesheet
 
 class Tilemap {
-    constructor(gl, { width, height, tiles, spritesheet, mapName, encounterParams, connections}) {
+    constructor(gl, { width, height, tiles, spritesheet, mapName, encounterParams, connections, type }) {
         // super((x, y) => {console.log(this.tiles[y * this.width + x]); return this.tiles[y * this.width + x]});
         this.width = width;
         this.height = height;
@@ -21,6 +21,7 @@ class Tilemap {
         this.mapName = mapName;
         this.encounterParams = encounterParams;
         this.connections = connections;
+        this.type = type;
 
 
         this.gl = gl;
@@ -29,6 +30,16 @@ class Tilemap {
         this.inverseTileTextureSize = vec2.create();
         this.inverseSpriteTextureSize = vec2.create();
 
+        // field, wild, strong
+        // this.effectFlags = [
+        //     false,
+        //     false,
+        //     true,
+        //     false
+        // ];
+        this.effectFlags = Tilemap.doubleSwipe;
+
+        this.effectAnimationFrame = 32 * Math.PI / 256;
 
         this.viewportSize[0] = 160;
         this.viewportSize[1] = 144;
@@ -47,20 +58,20 @@ class Tilemap {
 
         // this.spriteSheet = gl.createTexture();
 
-        
+
         this.quadVerts = [
             //x  y  u  v
             -1, -1, 0, 1,
             1, -1, 1, 1,
             1, 1, 1, 0,
-            
+
             -1, -1, 0, 1,
             1, 1, 1, 0,
             -1, 1, 0, 0
         ];
-        
+
         this.quadVertBuffer = gl.createBuffer();
-        
+
         gl.bindBuffer(gl.ARRAY_BUFFER, this.quadVertBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.quadVerts), gl.STATIC_DRAW);
 
@@ -71,6 +82,12 @@ class Tilemap {
         Tilemap.shader = Tilemap.shader || GLUtil.createProgram(gl, tilemapVS, tilemapFS);
 
         this.ready = this.prerender(this.gl);
+
+        this.animationFunction = this.defaultAnimationFunction;
+    }
+
+    defaultAnimationFunction() {
+        return 0;
     }
 
 
@@ -165,6 +182,16 @@ class Tilemap {
         gl.uniform1f(shader.uniform.tileSize, this.tileSize);
         gl.uniform1f(shader.uniform.inverseTileSize, 1 / this.tileSize);
 
+        // Transition effects
+        // field
+        // trainer
+        // strong
+
+        this.effectAnimationFrame = this.animationFunction();
+
+        gl.uniform4fv(shader.uniform.effectFlags, this.effectFlags);
+        gl.uniform1f(shader.uniform.effectAnimationFrame, this.effectAnimationFrame);
+
         gl.activeTexture(gl.TEXTURE0);
         gl.uniform1i(shader.uniform.sprites, 0);
         gl.bindTexture(gl.TEXTURE_2D, this.spritesheet.texture);
@@ -182,7 +209,17 @@ class Tilemap {
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     }
+
+    playAnimation(animationFunctionFactory) {
+        this.animationFunction = animationFunctionFactory();
+    }
 }
+
+Tilemap.flash = [0, 0, 0, 1];
+Tilemap.singleSwipe = [0, 0, 1, 0];
+Tilemap.doubleSwipe = [0, 0, 0, 0];
+Tilemap.horizontalBars = [1, 0, 0, 0];
+Tilemap.verticalBars = [1, 0, 1, 0];
 
 // Euclid's algorithm
 const gcd = (a, b) => {

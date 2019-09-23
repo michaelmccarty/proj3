@@ -32,14 +32,14 @@ class Player extends CollidableCreature {
         if (this.nextTile(direction, distance).flags.encounter) {
             // console.log(rand, this.map.encounterParams.density)
             if (rand < this.map.encounterParams.density && this.stepsSinceLastEncounter > 2) {
-                return () => console.log('encounter!');
+                return this.startEncounter;
             }
         }
     }
 
     walk(direction) {
-        this.stepsSinceLastEncounter ++;
-        if (this.walking) return;
+        this.stepsSinceLastEncounter++;
+        if (this.walking || this.inBattle) return;
         const cb = this.getEvent(direction) || this.checkEncounter(direction) || (() => { });
         if (cb === true) return; // event has taken control
 
@@ -49,6 +49,12 @@ class Player extends CollidableCreature {
     hop() {
         const cb = this.getEvent('south', 2) || this.checkEncounter('south', 2, 0) || (() => { });
         super.hop(cb);
+    }
+
+    startEncounter = () => {
+        // enter event mode
+        this.inBattle = true;
+        this.emit('random encounter');
     }
 
     handleMove = (e) => {

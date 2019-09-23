@@ -11,6 +11,7 @@ import Creature from '../../actors/Creature';
 import SocketEnum from '../../SocketEnum';
 import NPC from '../../actors/NPC';
 import makeEncounterGenerator from '../../utils/random';
+import * as battleTransitions from '../../battle transitions';
 
 class Game extends React.PureComponent {
 
@@ -37,14 +38,14 @@ class Game extends React.PureComponent {
     playerAvatars = {};
     _NPCs = {};
     NPCs = new Proxy(this._NPCs, {
-        get: function(target, prop, receiver) {
+        get: function (target, prop, receiver) {
             if (!target[prop]) {
                 target[prop] = [];
             }
             return Reflect.get(...arguments);
         },
 
-        set: function(target, prop, receiver) {
+        set: function (target, prop, receiver) {
             if (!target[prop]) {
                 target[prop] = [];
             }
@@ -92,7 +93,6 @@ class Game extends React.PureComponent {
         });
 
         this.player.encounterGenerator = makeEncounterGenerator(0, this.props.socket);
-
     }
 
     getCollidables = () => {
@@ -149,6 +149,14 @@ class Game extends React.PureComponent {
                 [SocketEnum.Y]: e.y,
             });
         });
+        this.player.on('random encounter', e => {
+            if (!this.transitionAnimation) {
+                this.determineEncounterAnimation();
+            }
+            console.log(this.transitionAnimation, battleTransitions)
+            this.maps[this.currentMap].playAnimation(battleTransitions[this.transitionAnimation]);
+            // Play encounter animation
+        });
     }
 
     bindSocketListeners() {
@@ -159,6 +167,37 @@ class Game extends React.PureComponent {
         socket.on('populate', this.handlePopulate);
         socket.on('despawn', this.handleDespawn);
         socket.on('move response', this.handleMoveResponse);
+        this.listenForEncounters();
+        // socket.on('random encounter', this.handleEncounter);
+    }
+
+    listenForEncounters() {
+        const serverEncounterEvent = new Promise(resolve =>
+            this.props.socket.once('random encounter', resolve));
+        const clientEncounterEvent = new Promise(resolve =>
+            this.player.once('random encounter', resolve));
+
+            // serverEncounterEvent.catch(() => {});
+            // clientEncounterEvent.catch(() => {});
+
+
+        Promise.race([serverEncounterEvent, clientEncounterEvent])
+            .then(this.determineEncounterAnimation);
+
+        Promise.all([serverEncounterEvent, clientEncounterEvent])
+            .then(this.handleEncounter);
+    }
+
+    determineEncounterAnimation = (data) => {
+        console.log('debug');
+        if (data) console.log(data);
+        if (this.player.map.type === 'field') {
+            // if (data.lvl && this.player.pokemon[0].lvl + 3 <= data.lvl) {
+            this.transitionAnimation = 'wildFieldWeak';
+            // }
+        } else {
+            this.transitionAnimation = 'wildFieldWeak';
+        }
     }
 
     handleMove = (data) => {
@@ -231,6 +270,13 @@ class Game extends React.PureComponent {
         this.player.stepNumber = response.step;
 
         this.player.overridePosition(response.x, response.y);
+    }
+
+    handleEncounter = ([data]) => {
+        this.listenForEncounters(); // set up the listeners again
+        // go into battle context
+        console.log(data);
+
     }
 
     gameLoop = () => {
