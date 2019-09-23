@@ -20,10 +20,11 @@ class RegisterPage extends React.Component {
         const { username, email, password } = this.state;
         console.log(username, email, password);
         const body = {
-            username,
-            email,
-            password
+            username: username,
+            email: email,
+            password: password
         };
+        console.log(body)
         API.register(body);
     };
 
