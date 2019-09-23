@@ -8,27 +8,27 @@ import "./App.css";
 import socketIOClient from "socket.io-client";
 import {BrowserRouter as Router, Route } from 'react-router-dom';
 
-function Button(props) {
-  return <button id="button" onClick={(e)=> {
-    e.preventDefault();
-    props.onClick();
-  }}>Click me</button>;
-}
+// function Button(props) {
+//   return <button id="button" onClick={(e)=> {
+//     e.preventDefault();
+//     props.onClick();
+//   }}>Click me</button>;
+// }
 
 class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      onlineUsers: [],
-      socket: null,
-      user: null,
-      endpoint: "http://localhost:3001"
-    };
-  }
 
-  componentWillMount() {
+  state = {
+    onlineUsers: [],
+    socket: null,
+    user: null,
+    messages: [],
+    endpoint: "http://localhost:3001"
+  };
+
+  componentDidMount() {
     this.initSocket();
   }
+
   // socket connection established, and then socket listening events defined
   initSocket() {
     const { endpoint } = this.state;
@@ -36,22 +36,35 @@ class App extends React.Component {
 
     // bread and butter connection confirmation
     socket.on("connect", data => console.log("Connected"));
-
+    
+    // asks for the online users
+    socket.emit("connectedUserCheck");
+    // then listens for online users from server
     socket.on('connectedUserCheck', data => {
-      console.log(data)
+      console.log(data);
+      //set state with the online users
+      this.setState({ onlineUsers: data.onlineUsers });
+      
+      const {onlineUsers} = this.state;
+      console.log(onlineUsers);
     })
 
     // allows messages to be passed back and forth from client to server
-    socket.on("chat", data => console.log("message received", data));
+    socket.on("chat", data => {
+      this.setState({ messages: [...this.state.messages, data]})
+    });
 
-
+    // socket.on("chat2", data => {
+    //   console.log(data)
+    //   // this.setState({ messages: [...this.state.messages, data]})
+    //   // console.log(this.state.messages)
+    // });
 
     socket.on("disconnection", disconnectedUser => {
       console.log(disconnectedUser + " disconnected");
-      const index = this.state.onlineUsers.find(user => {
+      const index = this.state.onlineUsers.find(user => { //eslint-disable-line
         console.log(user);
         console.log(user===disconnectedUser);
-        return 
       })
 
     });
@@ -60,13 +73,13 @@ class App extends React.Component {
       
     })
 
-    socket.on('move', data => {
-      console.log('user is moving ', data);
-    })
+    // socket.on('move', data => {
+    //   console.log('user is moving ', data);
+    // })
 
-    socket.on('', data => {
+    // socket.on('', data => {
 
-    })
+    // })
     // state is set once all the events are defined
     this.setState({ socket });
     console.log(socket);
@@ -84,28 +97,14 @@ class App extends React.Component {
     this.setState({ user: null });
   };
 
-
-  //eventually we wanna do this without a button
-  buttonClick() {
-    const { socket } = this.state;
-    socket.emit("connectedUserCheck");
-    //console.log(this.state.socket);
-  }
-
   render() {
-    const { socket } = this.state;
+    const { socket,messages,onlineUsers } = this.state;
     return (
       <Router>
         <Route
           exact path="/game"
           render={() => 
             <main className="container">
-            {/* button is for testing some sockets */}
-              <Button
-                onClick={() => {
-                  this.buttonClick();
-                }}
-              />
               <div className="game">
                 <Game socket={socket} />
               </div>
@@ -113,7 +112,7 @@ class App extends React.Component {
                 <OptionsWrapper socket={socket} pressLogout={this.logout}/>
               </div>
               <div className="chat">
-                <ChatBox socket={socket} />
+                <ChatBox socket={socket} messages={messages} onlineUsers={onlineUsers} />
               </div>
             </main>
           }

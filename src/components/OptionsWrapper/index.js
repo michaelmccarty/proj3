@@ -47,10 +47,10 @@ function Option(props) {
 }
 
 class OptionsWrapper extends React.Component {
-  constructor(props) {
-    super(props);
-    // this.state = { socket: null };
-  }
+  // constructor(props) {
+  //   super(props);
+  //   // this.state = { socket: null };
+  // }
 
   state = {
     socket: this.props.socket,
