@@ -33,26 +33,18 @@ class ChatBox extends React.Component {
 
   handleSubmitChatMessage = event => {
     event.preventDefault();
+
     const {socket} = this.props;
-    
     const newMessage = {
       userName: this.props.socket.id,
       time: Date.now(),
       message: this.state.chatInput
     };
 
-    // this.setState({
-    //   messages: [...this.props.messages, newMessage] // Must match the objects in this.state.messages
-    // });
-
     socket.emit('chat', newMessage)
 
     this.setState({
       chatInput: ""
-    }, () => {
-      setTimeout(() => {
-        document.querySelector("#chat-box").scrollTo(0,document.querySelector("#chat-box").scrollHeight);
-      }, 20);
     });
   };
 
