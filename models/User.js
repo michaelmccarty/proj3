@@ -14,8 +14,6 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  salt: { type: String },
-  passwordhash: { type: String },
   trainerID: { type: Number },
   party: {
     pokemon: [
