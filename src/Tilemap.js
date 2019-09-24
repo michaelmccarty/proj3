@@ -58,7 +58,6 @@ class Tilemap {
 
         // this.spriteSheet = gl.createTexture();
 
-
         this.quadVerts = [
             //x  y  u  v
             -1, -1, 0, 1,
@@ -79,12 +78,13 @@ class Tilemap {
         this.scrollScaleY = 1;
         this.inverseTextureSize = vec2.create();
 
-        Tilemap.shader = Tilemap.shader || GLUtil.createProgram(gl, tilemapVS, tilemapFS);
+        // Tilemap.shader = Tilemap.shader || GLUtil.createProgram(gl, tilemapVS, tilemapFS);
 
         this.ready = this.prerender(this.gl);
 
         this.animationFunction = this.defaultAnimationFunction;
     }
+
 
     defaultAnimationFunction() {
         return 0;
@@ -167,7 +167,7 @@ class Tilemap {
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-        gl.useProgram(shader.program);
+        // gl.useProgram(shader.program);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.quadVertBuffer);
         // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.quadVerts), gl.STATIC_DRAW);
@@ -212,6 +212,17 @@ class Tilemap {
 
     playAnimation(animationFunctionFactory) {
         this.animationFunction = animationFunctionFactory();
+    }
+}
+
+Tilemap.useShader = function(gl) {
+    if (!Tilemap.shader) Tilemap.shader = GLUtil.createProgram(gl, tilemapVS, tilemapFS);
+    try {
+        gl.useProgram(Tilemap.shader.program);
+        // console.log(Tilemap.shader);
+    } catch {
+        Tilemap.shader = GLUtil.createProgram(gl, tilemapVS, tilemapFS);
+        gl.useProgram(Tilemap.shader.program);
     }
 }
 

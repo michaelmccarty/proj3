@@ -8,6 +8,7 @@ import ChatBox from "./components/Chat";
 import "./App.css";
 import socketIOClient from "socket.io-client";
 import {BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Battle from './components/Battle';
 
 // function Button(props) {
 //   return <button id="button" onClick={(e)=> {
@@ -106,6 +107,7 @@ class App extends React.Component {
                 <div className="game">
                   <Game socket={socket} />
                 </div>
+                <Battle socket={socket} />
                 <div className="options">
                   <OptionsWrapper socket={socket} pressLogout={this.logout}/>
                 </div>

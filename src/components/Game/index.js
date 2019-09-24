@@ -69,6 +69,8 @@ class Game extends React.PureComponent {
             './spritesheets/overworld-actors.png'
         );
 
+        this.drawSprites = Sprite.drawSpritesFactory();
+
         this.player = new Player(
             this.coords.x,
             this.coords.y,
@@ -178,7 +180,7 @@ class Game extends React.PureComponent {
             if (!this.transitionAnimation) {
                 this.determineEncounterAnimation();
             }
-            console.log(this.transitionAnimation, battleTransitions);
+            // console.log(this.transitionAnimation, battleTransitions);
             this.maps[this.currentMap].playAnimation(
                 battleTransitions[this.transitionAnimation]
             );
@@ -219,7 +221,6 @@ class Game extends React.PureComponent {
     }
 
     determineEncounterAnimation = data => {
-        console.log('debug');
         if (data) console.log(data);
         if (this.player.map.type === 'field') {
             // if (data.lvl && this.player.pokemon[0].lvl + 3 <= data.lvl) {
@@ -356,6 +357,8 @@ class Game extends React.PureComponent {
 
         [this.coords.x, this.coords.y] = [this.player.x, this.player.y];
 
+
+        Tilemap.useShader(this.gl);
         // If the player moved, subtract the movement from the offset of all loaded maps
         for (let mapName in this.maps) {
             // eslint-disable-line
@@ -388,7 +391,7 @@ class Game extends React.PureComponent {
             // sprites.push(...(Array.isArray(update) ? update : [update]));
         }
 
-        Sprite.drawSprites(
+        this.drawSprites(
             this.gl,
             sprites,
             { x: this.coords.x * 16 - 64, y: this.coords.y * 16 - 64 },
