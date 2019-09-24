@@ -48,11 +48,17 @@ passport.use(
                 } else if (user) {
 
                     //hash here
-
-                    if (password === user.password){
+                    bcrypt.compare(password, user.password, function (req, res){
+                        if (res){
                         console.log('\n\nsuccessful login, ' + user.username + '\n\n');
                         return done(null, user);
-                    }
+                        }
+                    });
+
+                    // if (password === user.password){
+                    //     console.log('\n\nsuccessful login, ' + user.username + '\n\n');
+                    //     return done(null, user);
+                    // }
 
                     console.log('\n\nbad password. login failed');
                 }

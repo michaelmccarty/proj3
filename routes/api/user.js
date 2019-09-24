@@ -1,15 +1,6 @@
 const bcrypt = require('bcrypt');
 
 module.exports = (app, passport, db) => {
-  // const url = 'localhost:3001'
-
-
-  // app.post('/login', (req, res) =>{
-  //   // console.log(req);
-  //   console.log(req.body);
-  //   res.json(req.body);
-  // })
-
 
   app.post('/login', passport.authenticate('local', {
       // successRedirect: '/game',
@@ -29,10 +20,14 @@ module.exports = (app, passport, db) => {
 
 
     bcrypt.hash(unhashedpw, 10, function(err, hash) {
+
       db.User.create({
         email: req.body.email,
         password: hash
-      }).then(data => {res.json({message: "registration successful"})});
+      }).then(data => {
+        res.json({message: "registration successful"})}).catch(function (err){
+          console.log("registration error: "+err);
+        });
     });
 
 
