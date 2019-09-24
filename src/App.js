@@ -74,7 +74,9 @@ class App extends React.Component {
     
     // allows messages to be passed back and forth from client to server
     socket.on("chat", data => {
-      this.setState({ messages: [...this.state.messages, data]})
+      this.setState({ messages: [...this.state.messages, data]}, () => {
+        document.querySelector("#chat-box").scrollTo(0,document.querySelector("#chat-box").scrollHeight);
+      })
     });
 
     // socket.on("chat2", data => {
