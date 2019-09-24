@@ -17,3 +17,19 @@
     height: 100%;
     width: 100%;
 }
+
+.left-controls, .right-controls {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+}
+
+.left-controls {
+    left: 0;
+    bottom: 0;
+}
+
+.right-controls {
+    right: 0;
+    bottom: 0;
+}

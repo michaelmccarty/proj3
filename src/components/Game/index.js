@@ -360,7 +360,20 @@ class Game extends React.PureComponent {
             <div
                 className={styles["game-mobile-controls"]}
             >
-                On-screen-controls    
+                <div
+                    className={styles["left-controls"]}
+                >
+                    <button onClick={this.handleKeyDown}>Up</button>    
+                    <button onClick={this.handleKeyDown}>Down</button>    
+                    <button onClick={this.handleKeyDown}>Left</button>    
+                    <button onClick={this.handleKeyDown}>Right</button>    
+                </div> 
+                <div
+                    className={styles["right-controls"]}
+                >
+                    <button>A</button>
+                    <button>B</button>
+                </div>
             </div> 
         </div>
         );
