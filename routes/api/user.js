@@ -22,6 +22,7 @@ module.exports = (app, passport, db) => {
     bcrypt.hash(unhashedpw, 10, function(err, hash) {
 
       db.User.create({
+        username: req.body.username,
         email: req.body.email,
         password: hash
       }).then(data => {
