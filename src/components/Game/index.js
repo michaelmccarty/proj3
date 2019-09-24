@@ -14,6 +14,8 @@ import makeEncounterGenerator from '../../utils/random';
 import * as battleTransitions from '../../battle transitions';
 
 import gameDPad from '../../gamepad-imgs/d-pad-element-01.svg'
+import gameActionA from '../../gamepad-imgs/action-button-01.svg'
+import gameActionB from '../../gamepad-imgs/action-button-02.svg'
 
 class Game extends React.PureComponent {
 
@@ -375,7 +377,8 @@ class Game extends React.PureComponent {
                         }}>
                         <img 
                             src={gameDPad}
-                        />
+                            alt="Up"
+                            />
                     </button>
                     <button 
                         onTouchStart={()=> {
@@ -387,7 +390,8 @@ class Game extends React.PureComponent {
                         }}>
                         <img 
                             src={gameDPad}
-                        />
+                            alt="Down"
+                            />
                     </button>
                     <button 
                         onTouchStart={()=> {
@@ -399,7 +403,8 @@ class Game extends React.PureComponent {
                         }}>
                         <img 
                             src={gameDPad}
-                        />
+                            alt="Left"
+                            />
                     </button>
                     <button 
                         onTouchStart={()=> {
@@ -411,6 +416,7 @@ class Game extends React.PureComponent {
                         }}>
                         <img 
                             src={gameDPad}
+                            alt="Right"
                         />
                     </button>
                     {/* <button onClick={this.pressedKeys.add("mobileUp")}>Left</button>    
@@ -419,8 +425,28 @@ class Game extends React.PureComponent {
                 <div
                     className={styles["right-controls"]}
                 >
-                    <button>A</button>
-                    <button>B</button>
+                    <button
+                        className={styles["game-action-buttons"]}
+                        onTouchStart={() => {
+                            // Run 'a' button
+                        }}
+                    >
+                        <img 
+                            src={gameActionA}
+                            alt="A"
+                        />
+                    </button>
+                    <button
+                        className={styles["game-action-buttons"]}
+                        onTouchStart={() => {
+                            // Run 'b' button
+                        }}
+                    >
+                        <img 
+                            src={gameActionB}
+                            alt="B"
+                        />
+                    </button>
                 </div>
             </div> 
         </div>
