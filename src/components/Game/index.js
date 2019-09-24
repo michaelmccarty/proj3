@@ -345,12 +345,43 @@ class Game extends React.PureComponent {
     }
 
     render() {
-        return <canvas key="game-canvas" className={styles["game-screen"]} tabIndex="0" width="160" height="144" ref={this.setupCanvas} onKeyDown={this.handleKeyDown} onKeyUp={this.handleKeyUp} />;
+        return (
+        <div className={styles["game-screen"]}>
+            <canvas
+                key="game-canvas"
+                className={styles["game-canvas"]}
+                tabIndex="0"
+                width="160"
+                height="144"
+                ref={this.setupCanvas}
+                onKeyDown={this.handleKeyDown}
+                onKeyUp={this.handleKeyUp} 
+            />
+            <div
+                className={styles["game-mobile-controls"]}
+            >
+                On-screen-controlls    
+            </div> 
+        </div>
+        );
     }
 
     getVisibleMaps() {
         return [this.currentMap];
     }
+
+    // componentDidMount = () => {
+    //     this.checkMobile();
+    // }
+
+    // checkMobile() {
+    //     console.log("IS mobile:", this.props.isMobile, "Type: ", typeof(this.props.isMobile))
+    //     if (this.props.isMobile) {
+    //         console.log("Is mobile! rendering on-screen controls.");
+    //     } else {
+    //         console.log("Not mobile! Leaving open for keyboard / gamepad.");
+    //     }
+    // }
 }
 
 export default Game;
