@@ -31,7 +31,6 @@ app.use(passport.session());
 require('./routes/api/user')(app, passport, db);
 
 passport.use(
-    // this is going to be called on Logging in
     new LocalStrategy(
         {
             usernameField: 'email',
@@ -45,7 +44,7 @@ passport.use(
                     console.log('\n\nuser not found. login failed');
 
                 else if (user) {
-                    if (password == user.password){
+                    if (password === user.password){
                         console.log('\n\nsuccessful login, ' + user.username + '\n\n');
                         return done(null, user);
                     }
