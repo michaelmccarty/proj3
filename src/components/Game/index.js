@@ -363,6 +363,7 @@ class Game extends React.PureComponent {
             />
             <div
                 className={styles["game-mobile-controls"]}
+                id="mobile-controls"
             >
                 <div
                     className={styles["left-controls"]}

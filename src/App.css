@@ -278,6 +278,10 @@ main.container {
   animation-iteration-count: 1;
 }
 
+#mobile-controls {
+  display: none;
+}
+
 @keyframes flash {
   0% { background-color: rgba(0, 0, 0, 0.25); border-radius: 16px; }
   100% { background-color: unset; border-radius: 0; }
@@ -297,5 +301,8 @@ main.container {
   }
   div.options { 
     display: flex;
+  }
+  #mobile-controls {
+    display: unset;
   }
 }
