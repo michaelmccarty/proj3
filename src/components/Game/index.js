@@ -360,7 +360,7 @@ class Game extends React.PureComponent {
             <div
                 className={styles["game-mobile-controls"]}
             >
-                On-screen-controlls    
+                On-screen-controls    
             </div> 
         </div>
         );

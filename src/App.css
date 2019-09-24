@@ -287,6 +287,7 @@ main.container {
   main.container { /* Options will be fulscreen over game on start button click */
     grid-template-areas:
     "game"
+    "options"
     "chat";
     grid-template-rows: 1fr;
     grid-template-columns: 100%;
@@ -294,5 +295,7 @@ main.container {
     min-height: unset;
     height: unset;
   }
-  div.options { display: none; }
+  div.options { 
+    display: flex;
+  }
 }
