@@ -281,10 +281,11 @@ class Game extends React.PureComponent {
 
     gameLoop = () => {
         const keys = this.pressedKeys;
+        console.log(keys);
         if (Date.now() > this.movementDelay) {
-            if (keys.has('ArrowUp') || keys.has('w') || keys.has('W')) {
+            if (keys.has('ArrowUp') || keys.has('w') || keys.has('W') || keys.has("mobileUp")) {
                 this.player.walk('north');
-            } else if (keys.has('ArrowDown') || keys.has('s') || keys.has('S')) {
+            } else if (keys.has('ArrowDown') || keys.has('s') || keys.has('S') || keys.has("mobileDown")) {
                 this.player.walk('south');
             } else if (keys.has('ArrowLeft') || keys.has('a') || keys.has('A')) {
                 this.player.walk('west');
@@ -363,10 +364,28 @@ class Game extends React.PureComponent {
                 <div
                     className={styles["left-controls"]}
                 >
-                    <button onClick={this.handleKeyDown}>Up</button>    
-                    <button onClick={this.handleKeyDown}>Down</button>    
-                    <button onClick={this.handleKeyDown}>Left</button>    
-                    <button onClick={this.handleKeyDown}>Right</button>    
+                    <button
+                        onTouchStart={() => {
+                            if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
+                            this.pressedKeys.add("mobileUp");
+                        }}
+                        onTouchEnd={() => {
+                            this.pressedKeys.delete("mobileUp")
+                        }}>
+                        Up
+                    </button>    
+                    <button 
+                        onTouchStart={()=> {
+                            if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
+                            this.pressedKeys.add("mobileDown")
+                        }}
+                        onTouchEnd={() => {
+                            this.pressedKeys.delete("mobileDown")
+                        }}>
+                        Down
+                    </button>    
+                    {/* <button onClick={this.pressedKeys.add("mobileUp")}>Left</button>    
+                    <button onClick={this.pressedKeys.add("mobileUp")}>Right</button>     */}
                 </div> 
                 <div
                     className={styles["right-controls"]}
