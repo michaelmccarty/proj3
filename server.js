@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
+const bcrypt = require('bcrypt');
 const socket = require('socket.io');
 const bindGameEvents = require('./game/bindSocketEvents');
 const mongoose = require('mongoose');
@@ -45,6 +46,9 @@ passport.use(
                 if (!user) {
                     console.log('\n\nuser not found. login failed');
                 } else if (user) {
+
+                    //hash here
+
                     if (password === user.password){
                         console.log('\n\nsuccessful login, ' + user.username + '\n\n');
                         return done(null, user);

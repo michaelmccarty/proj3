@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 module.exports = (app, passport, db) => {
   // const url = 'localhost:3001'
 
@@ -18,12 +20,21 @@ module.exports = (app, passport, db) => {
   });
 
 
-
+  //register
   app.post("/api/users", (req, res) => {
-    // console.log(req);
-    console.log(req)
+    const unhashedpw = req.body.password;
+
+
     console.log(req.body);
-    res.json(req.body);
-    db.User.create(req.body).then(data => {res.json(data)});
+
+
+    bcrypt.hash(unhashedpw, 10, function(err, hash) {
+      db.User.create({
+        email: req.body.email,
+        password: hash
+      }).then(data => {res.json(data)});
+    });
+
+
   });
 };
