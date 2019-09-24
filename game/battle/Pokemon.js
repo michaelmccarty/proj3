@@ -41,7 +41,7 @@ class Pokemon {
 
     getDefaultMoves() {
         // assume learnset is sorted for now
-        const learnset = this.getSpecies();
+        const {learnset} = this.getSpecies();
         const moveset = [];
         for (let i = learnset.length - 1; i >= 0 && moveset.length < 4; i--) {
             if (learnset[i].level <= this.level) {
@@ -54,19 +54,19 @@ class Pokemon {
     calculateStats() {
         this.stats = {
             attack: Pokemon.calculateStat(
-                this.getSpecies.baseStats().attack,
+                this.getSpecies().baseStats().attack,
                 this.ivs.attack,
                 this.evs.attack,
                 this.level
             ),
             defense: Pokemon.calculateStat(
-                this.getSpecies.baseStats().defense,
+                this.getSpecies().baseStats().defense,
                 this.ivs.defense,
                 this.evs.defense,
                 this.level
             ),
             speed: Pokemon.calculateStat(
-                this.getSpecies.baseStats().speed,
+                this.getSpecies().baseStats().speed,
                 this.ivs.speed,
                 this.evs.speed,
                 this.level

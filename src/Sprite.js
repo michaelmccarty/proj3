@@ -22,6 +22,8 @@ class Sprite {
         this.mask = options.mask || [0xFFFF, 0xFFFF];
         // this.mask = options.mask || [32766, 4080]
 
+        this.scale = options.scale || 1;
+
         this.frameGen = (function* (sprite) {
             // const frameInterval = 1 / sprite.framerate * 1000;
             restingFrame:
@@ -69,6 +71,7 @@ class Sprite {
     }
 
     nextFrame() {
+        if (this.updateAnimationFrame) this.updateAnimationFrame();
         return this.frameGen.next().value;
     }
 
@@ -76,6 +79,12 @@ class Sprite {
         this._resetAnimation = true;
         this._playOnce = true;
         this.play(1);
+    }
+
+    updateAnimationFrame() {};
+
+    animate(animationFunction) {
+        this.updateAnimationFrame = animationFunction;
     }
 
     get x() {
@@ -98,6 +107,8 @@ class Sprite {
 Sprite.drawSpritesFactory = function() {
     let program;
     return function (gl, sprites, offset, spritesheet) {
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
         if (!program) program = GLUtil.createProgram(gl, spriteVS, spriteFS);
         // console.log(offset);
         const shader = program;
@@ -126,6 +137,7 @@ Sprite.drawSpritesFactory = function() {
             buffer[i++] = textureOffset.flip_v ? 1.0 : 0.0;
             buffer[i++] = sprite.mask[0];
             buffer[i++] = sprite.mask[1];
+            buffer[i++] = sprite.scale;
             count++;
         }
     
@@ -138,13 +150,15 @@ Sprite.drawSpritesFactory = function() {
         gl.enableVertexAttribArray(shader.attribute.texOffset);
         gl.enableVertexAttribArray(shader.attribute.flip);
         gl.enableVertexAttribArray(shader.attribute.mask);
+        gl.enableVertexAttribArray(shader.attribute.scale);
     
-        gl.vertexAttribPointer(shader.attribute.spritePosition, 2, gl.FLOAT, false, 36, 0);
-        gl.vertexAttribPointer(shader.attribute.spriteSize, 1, gl.FLOAT, false, 36, 8);
-        gl.vertexAttribPointer(shader.attribute.texOffset, 2, gl.FLOAT, false, 36, 12);
-        gl.vertexAttribPointer(shader.attribute.flip, 2, gl.FLOAT, false, 36, 20);
-        gl.vertexAttribPointer(shader.attribute.mask, 2, gl.FLOAT, false, 36, 28)
-    
+        gl.vertexAttribPointer(shader.attribute.spritePosition, 2, gl.FLOAT, false, 40, 0);
+        gl.vertexAttribPointer(shader.attribute.spriteSize, 1, gl.FLOAT, false, 40, 8);
+        gl.vertexAttribPointer(shader.attribute.texOffset, 2, gl.FLOAT, false, 40, 12);
+        gl.vertexAttribPointer(shader.attribute.flip, 2, gl.FLOAT, false, 40, 20);
+        gl.vertexAttribPointer(shader.attribute.mask, 2, gl.FLOAT, false, 40, 28)
+        gl.vertexAttribPointer(shader.attribute.scale, 1, gl.FLOAT, false, 40, 36)
+
         gl.drawArrays(gl.POINTS, 0, count);
     }
 }

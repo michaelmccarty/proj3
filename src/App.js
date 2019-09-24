@@ -107,7 +107,9 @@ class App extends React.Component {
                 <div className="game">
                   <Game socket={socket} />
                 </div>
-                <Battle socket={socket} />
+                <div className="game">
+                  <Battle socket={socket} />
+                </div>
                 <div className="options">
                   <OptionsWrapper socket={socket} pressLogout={this.logout}/>
                 </div>
