@@ -7,3 +7,17 @@
 .option:hover {
     font-weight: bold;
 }
+
+@media screen and (max-width: 768px) {
+    .option-wrapper { 
+      /* width: 100%; */
+      width: 100%;
+      height: 240px !important;
+      overflow-y: scroll;
+    }
+
+    .option-wrapper ul li {
+        /* display: inline;
+        flex-basis: 25%; */
+    }
+  }

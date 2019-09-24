@@ -34,6 +34,8 @@ class ChatBox extends React.Component {
   handleSubmitChatMessage = event => {
     event.preventDefault();
 
+    if (!this.state.chatInput) return;
+
     const {socket} = this.props;
     const newMessage = {
       userName: this.props.socket.id,
