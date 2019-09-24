@@ -7,6 +7,7 @@
 .chat-messages { 
     flex: 1;
     overflow-y: auto;
+
 }
 .chat-form {
     composes: flx flx-align-center from global;
@@ -22,6 +23,8 @@
     height: 32px;
     padding: 6px;
     outline: none;
+    margin-left: 8px;
+    margin-right: 8px;
 }
 .chat-input:focus {
     background-color: var(--screen);
@@ -44,8 +47,8 @@
 
 @media screen and (max-width: 768px) {
     .chatbox { flex-direction: column; }
-    .chat-messages { height: 280px; width: 100%; flex: unset; }
+    .chat-messages { max-height: 280px; min-height: 80px; width: 100%; flex: unset; }
     .chat-avatar-wrapper { width: 28px; min-width: 28px; height: 28px; }
     .online-users { height: 140px; width: 100%; order: 2; }
-    .chat-form { margin-left: 0; }
+    .chat-form {  }
 }

@@ -23,6 +23,7 @@ class App extends React.Component {
     socket: null,
     user: null,
     messages: [],
+    // isMobile: true,
     endpoint: "/", //change to /socket when it is time
     party: [{
       image: "https://www.serebii.net/pokearth/sprites/green/001.png",
@@ -125,7 +126,7 @@ class App extends React.Component {
                   }}
                 /> */}
                 <div className="game">
-                  <Game socket={socket} />
+                  <Game socket={socket} isMobile={this.state.isMobile} />
                 </div>
                 <div className="options">
                   <OptionsWrapper socket={socket} pressLogout={this.logout} party={party} pokedex={pokedex} />

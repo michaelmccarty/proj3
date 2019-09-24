@@ -278,6 +278,10 @@ main.container {
   animation-iteration-count: 1;
 }
 
+#mobile-controls {
+  display: none;
+}
+
 @keyframes flash {
   0% { background-color: rgba(0, 0, 0, 0.25); border-radius: 16px; }
   100% { background-color: unset; border-radius: 0; }
@@ -287,6 +291,7 @@ main.container {
   main.container { /* Options will be fulscreen over game on start button click */
     grid-template-areas:
     "game"
+    "options"
     "chat";
     grid-template-rows: 1fr;
     grid-template-columns: 100%;
@@ -294,5 +299,10 @@ main.container {
     min-height: unset;
     height: unset;
   }
-  div.options { display: none; }
+  div.options { 
+    display: flex;
+  }
+  #mobile-controls {
+    display: unset;
+  }
 }
