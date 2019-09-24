@@ -20,7 +20,14 @@ class LoginForm extends React.Component {
         // Run this always after the .then from checking the login
         const { email, password } = this.state;
         const body = { email, password };
-        API.login(body);
+        API.login(body)
+            .then(() => {
+                console.log('boop');
+                this.props.history.push('/game');
+            })
+            .catch(function(err) {
+                console.log(err);
+            });
         this.setState({
             password: ''
         });

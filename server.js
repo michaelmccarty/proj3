@@ -42,10 +42,9 @@ passport.use(
             db.User.findOne({
                 email: email
             }).then(function(user) {
-                if (!user) 
+                if (!user) {
                     console.log('\n\nuser not found. login failed');
-
-                else if (user) {
+                } else if (user) {
                     if (password === user.password){
                         console.log('\n\nsuccessful login, ' + user.username + '\n\n');
                         return done(null, user);

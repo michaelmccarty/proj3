@@ -9,13 +9,13 @@ module.exports = (app, passport, db) => {
   // })
 
 
-  app.post('/login',
-  passport.authenticate('local', {
-      successRedirect: '/main',
+  app.post('/login', passport.authenticate('local', {
+      // successRedirect: '/game',
       failureRedirect: '/',
       failerFlash: false
-  })
-);
+  }), function (req, res) {
+    res.json({ message: "successful login" });
+  });
 
 
 
