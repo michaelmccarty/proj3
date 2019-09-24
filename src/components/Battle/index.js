@@ -16,7 +16,7 @@ class Battle extends React.Component {
         this.canvasRef = React.createRef();
         this.textRef = React.createRef();
         this.drawSprites = Sprite.drawSpritesFactory();
-        this.text = new Textbox(16, 96, 144, 128);
+        this.text = new Textbox(16, 112, 144, 128);
     }
     
     componentDidMount() {
