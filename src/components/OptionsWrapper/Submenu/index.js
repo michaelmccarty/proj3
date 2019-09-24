@@ -43,7 +43,7 @@ function Pokemon(props) {
             // return <div>These will be the Pokemon from the Pokedex</div>;
             return (
               <>
-                  {props.party.map(({ name, image }, i) => {
+                  {props.pokedex.map(({ name, image }, i) => {
                       return (
                           <div key={i} className={styles['pokemon-wrapper']}>
                               <img
