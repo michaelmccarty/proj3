@@ -32,7 +32,7 @@ module.exports = (app, passport, db) => {
       db.User.create({
         email: req.body.email,
         password: hash
-      }).then(data => {res.json(data)});
+      }).then(data => {res.json({message: "registration successful"})});
     });
 
 
