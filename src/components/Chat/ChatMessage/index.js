@@ -10,7 +10,7 @@ function ChatMessage({userName, time, message}) {
             </div>
             <div className={styles["chat-message-content"]}>
                 <div className={styles["chat-message-info"]}>
-                    <span>{userName} <span>{moment(time).from(Date.now())}</span></span>
+                    <span>{userName} <span className={styles["chat-message-date"]}>{moment(time).from(Date.now())}</span></span>
                 </div>
                 <p>{message}</p>
             </div>

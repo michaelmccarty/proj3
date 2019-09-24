@@ -6,18 +6,22 @@ function validate(user, pendingMove, previousMove) {
     // Needs user flags and progress, probably just take the user
 
     // TODO: check if player is able to move.  It should be a flag on the user.  disabled when they have triggered a battle
-    
-    const dMove = pendingMove.stepNumber = previousMove.stepNumber 
 
+    const dMove = pendingMove.stepNumber - previousMove.stepNumber;
+
+    // console.log('dmove: ' + dMove);
     // Moves are consecutive
-    if (dMove === 1) {
+    if (dMove < 1) {
+        return true;
+    } else if (dMove === 1) {
         // Normalize coordinates
         // convert pending move coords to the map of previous move
-        const {x: newx, y: newy} = maps[previousMove.map].transformCoordinates(pendingMove.map, pendingMove.x, pendingMove.y);
-        const [dx, dy] = [newx - previousMove, newy - previousMove];
+
+        const { x: newx, y: newy } = maps[previousMove.map].transformCoordinates(pendingMove.map, pendingMove.x, pendingMove.y);
+        const [dx, dy] = [newx - previousMove.x, newy - previousMove.y];
 
         const collision = maps[pendingMove.map].getTile(pendingMove.x, pendingMove.y).collision;
-
+        // console.log('collision:', collision)
         switch (collision) {
             case true:
                 return false;
@@ -33,7 +37,7 @@ function validate(user, pendingMove, previousMove) {
             const diff = Math.abs(dx) + Math.abs(dy);
             return diff <= 1;
         } else {
-            return pendingMove.x === previousMove.x && pendingMove.y + 2 === pendingMove.y;
+            return previousMove.x === newx && previousMove.y + 2 === newy;
         }
     } else if (dMove === 2) {
         // Single interpolation
