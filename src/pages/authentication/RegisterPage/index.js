@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './RegisterPage.module.css';
 import API from '../../../utils/API';
+import { Sprite } from '../../../Sprite';
+import Texture from '../../../Texture';
 
 class RegisterPage extends React.Component {
     state = {
@@ -36,6 +38,11 @@ class RegisterPage extends React.Component {
             });
     };
 
+    requestAnimationFrame = () => {
+        this.actorSpriteSheet = new Texture(this.gl, './spritesheets/overworld-actors.png');
+        console.log(this.actorSpriteSheet);
+    }
+
     render() {
         return (
             <div className={styles['register-page']}>
@@ -65,18 +72,22 @@ class RegisterPage extends React.Component {
                                 placeholder="Password"
                             />
                             <label>Character Creation</label>
-                            <select
-                                className={styles['character-selector']}
-                                name="character"
-                                onChange={this.handleInputChange}
-                                value={this.state.character}
-                            >
-                                <option>A</option>
-                                <option>A</option>
-                                <option>b</option>
-                                <option>A</option>
-                                <option>A</option>
-                            </select>
+                            <div>
+                                <figure
+                                    onClick={() => {
+                                        this.setState({character: 'nobody'})
+                                    }}
+                                >
+                                    <canvas  />
+                                </figure>
+                                <figure
+                                    onClick={() => {
+                                        this.setState({character: 'nobody2'})
+                                    }}
+                                >
+                                    <canvas  />
+                                </figure>
+                            </div>
                         </div>
                         <button
                             className={styles['register-button']}
