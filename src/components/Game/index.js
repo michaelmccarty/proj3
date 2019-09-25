@@ -468,6 +468,15 @@ class Game extends React.PureComponent {
         }
     }
 
+    handleKeyDown = (e) => {	
+        if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;	
+        this.pressedKeys.add(e.key);	
+    }	
+
+    handleKeyUp = (e) => {	
+        this.pressedKeys.delete(e.key);	
+    }
+
     gamepadEvents = () => {
         const mainGamepad = navigator.getGamepads()[0];
 
