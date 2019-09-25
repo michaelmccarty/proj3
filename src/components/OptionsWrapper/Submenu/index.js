@@ -68,7 +68,7 @@ function Pokemon(props) {
             return (
                 <div className={styles['logout-submenu']}>
                     Are you sure?
-                    <button>Yes</button>
+                    <button onClick={props.pressLogout}>Yes</button>
                     <button>Keep Playing</button>
                 </div>
             );

@@ -9,6 +9,7 @@ import './App.css';
 import socketIOClient from 'socket.io-client';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import pokedex from '../src/pokedex';
+import API from './utils/API';
 // function Button(props) {
 //   return <button id="button" onClick={(e)=> {
 //     e.preventDefault();
@@ -119,9 +120,7 @@ class App extends React.Component {
         const { socket } = this.state;
         socket.emit('logout');
 
-        $.get('/logout', function(response) {
-            console.log(response);
-        });
+        API.logout();
         this.setState({ user: null });
     };
 
