@@ -265,7 +265,7 @@ const typechart = (moveType, type) => {
   }
 };
 
-console.log(typechart("Normal", "Ground"));
+// console.log(typechart("Normal", "Ground"));
 
 const typeModifier = (moveType, type1, type2) => {
   console.log(`${moveType} against a ${type1}, ${type2} type`);
@@ -273,3 +273,6 @@ const typeModifier = (moveType, type1, type2) => {
   const b = typechart(moveType, type2);
   return a * b;
 };
+
+
+console.log(typeModifier("Grass", "Water", "Rock"))
