@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3001;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static('client/public'));
 
 const LocalStrategy = require('passport-local').Strategy;
 
