@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Submenu.module.css';
+import API from '../../../utils/API';
 
 // {/* {this.props.pokedex.map(({ name, image }, i) => (
 //               <Pokemon
@@ -66,7 +67,10 @@ function ListItem(props) {
             return (
                 <div className={styles['logout-submenu']}>
                     Are you sure?
-                    <button onClick={props.logout}>Yes</button>
+                    <button onClick={() => {
+                        console.log(API);
+                        props.logout();
+                    }}>Yes</button>
                     <button>Keep Playing</button>
                 </div>
             );
