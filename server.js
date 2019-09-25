@@ -8,8 +8,7 @@ const socket = require('socket.io');
 const bindGameEvents = require('./game/bindSocketEvents');
 const mongoose = require('mongoose');
 const db = require('./models');
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/project3');
-if (process.env.MONGO_URI) {console.log(process.env.MONGO_URI)}
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/project3');
 
 // app setup
 const app = express();
