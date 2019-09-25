@@ -473,19 +473,18 @@ class Game extends React.PureComponent {
         const mainGamepad = navigator.getGamepads()[0];
 
         if (gamepads[0]) {
+            const {axes: joy, buttons: btn} = mainGamepad; 
 
-            // console.log(navigator.getGamepads()[0].buttons);
-            if (mainGamepad.buttons[0].pressed === true) {
-                alert('pressed A!');
-            } else if (mainGamepad.buttons[1].pressed === true) {
-                alert('pressed B!');
+            if (btn[0].pressed === true) {
+                alert('pressed A! add this to game loop when we use A/B Buttons');
+            } else if (btn[1].pressed === true) {
+                alert('pressed B! add this to game loop when we use A/B Buttons');
             }
 
-            // axes[0] is X-Axis
+            // axes[0] is x-axis
             // axes[1] is y-axis
             // axes[2,3] are the second joystick
             const axisThreshold = 0.75;
-            const {axes: joy} = mainGamepad; 
 
             if (joy[0] > axisThreshold) {
                 if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
