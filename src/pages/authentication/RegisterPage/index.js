@@ -2,9 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './RegisterPage.module.css';
 import API from '../../../utils/API';
-import { Sprite } from '../../../Sprite';
+import { Sprite, AlternatingSprite } from '../../../Sprite';
 import Texture from '../../../Texture';
-import Actors from '../../../actors/actors.json';
+import actors from '../../../actors/actors.json';
 
 class RegisterPage extends React.Component {
     constructor (props) {
@@ -44,23 +44,26 @@ class RegisterPage extends React.Component {
     };
 
     componentDidMount = () => {
-        this.drawSprites = Sprite.drawSpritesFactory();
+        this.drawSprites = Sprite.drawSpritesFactory(16, 16);
+        const gl = this.myCanvasRef.current.getContext('webgl');
+
+        this.actorSpriteSheet = new Texture(gl, './spritesheets/overworld-actors.png');
         
+        this.sprite = new AlternatingSprite(actors['lass'].south);
+    
+        this.sprite.play();
         requestAnimationFrame(this.gameLoop);
     }
     
     gameLoop = () => {
-        this.Sprite = new Sprite(Actors['youngster'].south);
         
         const gl = this.myCanvasRef.current.getContext('webgl');
 
-        this.actorSpriteSheet = new Texture(gl, './spritesheets/overworld-actors.png');
-        this.drawSprites(gl, [this.Sprite], {x: 0, y: 0}, this.actorSpriteSheet);
-        requestAnimationFrame(this.gameLoop)
-    }
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-    drawSprites = (gl, Sprite, {x, y}, spriteSheet) => {
-        
+        this.drawSprites(gl, [this.sprite], {x: 0, y: 0}, this.actorSpriteSheet);
+        requestAnimationFrame(this.gameLoop)
     }
 
     render() {
@@ -99,6 +102,8 @@ class RegisterPage extends React.Component {
                                     }}
                                 >
                                     <canvas
+                                        width="16"
+                                        height="16"
                                         ref={this.myCanvasRef}
                                     />
                                 </figure>
