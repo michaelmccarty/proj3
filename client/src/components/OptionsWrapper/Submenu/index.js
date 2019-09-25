@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Submenu.module.css';
+import API from '../../../utils/API';
 
 // {/* {this.props.pokedex.map(({ name, image }, i) => (
 //               <Pokemon
@@ -11,9 +12,7 @@ import styles from './Submenu.module.css';
 //               />
 //             ))} */}
 
-function Pokemon(props) {
-    console.log(props);
-
+function ListItem(props) {
     switch (
         props.id // id gets converted to a number when passing it down
     ) {
@@ -68,7 +67,10 @@ function Pokemon(props) {
             return (
                 <div className={styles['logout-submenu']}>
                     Are you sure?
-                    <button>Yes</button>
+                    <button onClick={() => {
+                        console.log(API);
+                        props.logout();
+                    }}>Yes</button>
                     <button>Keep Playing</button>
                 </div>
             );
@@ -85,7 +87,6 @@ class Submenu extends React.Component {
     };
 
     render() {
-        console.log(this.props);
         return (
             <div className={styles['submenu-wrapper']}>
                 <div className={styles['submenu-header']}>
@@ -98,10 +99,11 @@ class Submenu extends React.Component {
                     </button>
                 </div>
                 <div className={styles['content-container']}>
-                    <Pokemon
+                    <ListItem
                         pokedex={this.props.pokedex}
                         party={this.props.party}
                         id={this.props.id}
+                        logout={this.props.logout}
                     />
                 </div>
             </div>

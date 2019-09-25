@@ -2,6 +2,10 @@ const maps = require('./maps');
 const $$ = require('../SocketEnum');
 const validateMove = require('./validateMove');
 const encounterTable = require('./encounterTable');
+const Battle = require('./battle/Battle');
+const Pokemon = require('./battle/Pokemon');
+const PlayerCombatant = require('./battle/combatants/Player');
+const WildPokemon = require('./battle/combatants/WildPokemon');
 
 function processMove(user, data, socket) {
     const nextMove = unpackData(data);
@@ -44,6 +48,12 @@ function processMove(user, data, socket) {
             // send 'random encounter' event to the socket
             // initialize a server side battle with the room name
 
+            // Listen for a response, THEN ask the question so there are no race conditions.
+            socket.once('battle ready', () => {
+                console.log('battle ready');
+                const battle = new Battle('wild', new PlayerCombatant(user), new WildPokemon(encounter.species, encounter.level));
+                battle.initialize();
+            })
             socket.emit('random encounter', encounter);
     }
 
