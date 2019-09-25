@@ -117,11 +117,13 @@ class App extends React.Component {
     };
 
     logout = () => {
-      console.log('hello worlld logout')
+
         const { socket } = this.state;
         socket.emit('logout');
 
-        API.logout();
+        API.logout().then(function (data){
+          window.location.href="/";
+        });
         this.setState({ user: null });
     };
 

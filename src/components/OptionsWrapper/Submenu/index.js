@@ -12,8 +12,6 @@ import styles from './Submenu.module.css';
 //             ))} */}
 
 function ListItem(props) {
-    console.log("LISTITEM props: "+props.logout);
-
     switch (
         props.id // id gets converted to a number when passing it down
     ) {
@@ -85,7 +83,6 @@ class Submenu extends React.Component {
     };
 
     render() {
-        console.log(this.props);
         return (
             <div className={styles['submenu-wrapper']}>
                 <div className={styles['submenu-header']}>

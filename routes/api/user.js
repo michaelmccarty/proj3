@@ -19,7 +19,6 @@ module.exports = (app, passport, db) => {
         );
 
         req.logout();
-
         res.json({ message: 'successful logout' });
     });
 
