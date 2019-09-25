@@ -16,7 +16,8 @@ const PORT = process.env.PORT || 3001;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static('client/public'));
+//serve up static assets (on heroku)
+if (process.env.NODE_ENV === "production") {app.use(express.static('client/public'));}
 
 const LocalStrategy = require('passport-local').Strategy;
 
