@@ -7,7 +7,8 @@ class RegisterPage extends React.Component {
     state = {
         username: '',
         email: '',
-        password: ''
+        password: '',
+        character: ''
     };
 
     handleInputChange = event => {
@@ -63,6 +64,19 @@ class RegisterPage extends React.Component {
                                 type="password"
                                 placeholder="Password"
                             />
+                            <label>Character Creation</label>
+                            <select
+                                className={styles['character-selector']}
+                                name="character"
+                                onChange={this.handleInputChange}
+                                value={this.state.character}
+                            >
+                                <option>A</option>
+                                <option>A</option>
+                                <option>b</option>
+                                <option>A</option>
+                                <option>A</option>
+                            </select>
                         </div>
                         <button
                             className={styles['register-button']}
