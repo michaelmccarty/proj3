@@ -17,6 +17,8 @@ import gameDPad from '../../gamepad-imgs/d-pad-element-01.svg'
 import gameActionA from '../../gamepad-imgs/action-button-01.svg'
 import gameActionB from '../../gamepad-imgs/action-button-02.svg'
 
+let gamepads = {};
+
 class Game extends React.PureComponent {
 
     pressedKeys = new Set();
@@ -285,6 +287,11 @@ class Game extends React.PureComponent {
 
     gameLoop = () => {
         const keys = this.pressedKeys;
+
+        if (navigator.getGamepads()[0]) {
+            this.gamepadEvents();
+        }
+
         if (Date.now() > this.movementDelay) {
             if (keys.has('ArrowUp') || keys.has('w') || keys.has('W') || keys.has('mobileUp')) {
                 this.player.walk('north');
@@ -305,7 +312,7 @@ class Game extends React.PureComponent {
             } else if (keys.has('ArrowRight') || keys.has('d') || keys.has('D') || keys.has('mobileRight')) {
                 this.player.turn('east');
             }
-        }
+        } 
 
         [this.coords.x, this.coords.y] = [this.player.x, this.player.y];
 
@@ -337,15 +344,6 @@ class Game extends React.PureComponent {
         Sprite.drawSprites(this.gl, sprites, { x: this.coords.x * 16 - 64, y: this.coords.y * 16 - 64 }, this.actorSpriteSheet);
 
         requestAnimationFrame(this.gameLoop);
-    }
-
-    handleKeyDown = (e) => {
-        if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
-        this.pressedKeys.add(e.key);
-    }
-
-    handleKeyUp = (e) => {
-        this.pressedKeys.delete(e.key);
     }
 
     render() {
@@ -458,9 +456,70 @@ class Game extends React.PureComponent {
         return [this.currentMap];
     }
 
-    // componentDidMount = () => {
-    //     this.checkMobile();
-    // }
+    gamepadHandler = (event, connecting) => {
+        const gamepad = event.gamepad;
+
+        if (connecting) {
+            gamepads[gamepad.index] = gamepad;
+            alert('gamepad is connected!')
+            console.log(gamepad);
+        } else {
+            delete gamepads[gamepad.index];
+            alert('gamepad is disconnected!')
+        }
+    }
+
+    gamepadEvents = () => {
+        const mainGamepad = navigator.getGamepads()[0];
+
+        if (gamepads[0]) {
+
+            // console.log(navigator.getGamepads()[0].buttons);
+            if (mainGamepad.buttons[0].pressed === true) {
+                alert('pressed A!');
+            } else if (mainGamepad.buttons[1].pressed === true) {
+                alert('pressed B!');
+            }
+
+            // axes[0] is X-Axis
+            // axes[1] is y-axis
+            // axes[2,3] are the second joystick
+            const axisThreshold = 0.75;
+            const {axes: joy} = mainGamepad; 
+
+            if (joy[0] > axisThreshold) {
+                if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
+                this.pressedKeys.add('ArrowRight');
+            } else if (joy[0] < -1 * axisThreshold) {
+                if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
+                this.pressedKeys.add('ArrowLeft');
+            } else if (joy[0] <= axisThreshold && joy[0] >= -1 * axisThreshold) {
+                this.pressedKeys.delete('ArrowRight');
+                this.pressedKeys.delete('ArrowLeft');
+            }
+
+            if (joy[1] > axisThreshold) {
+                if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
+                this.pressedKeys.add('ArrowDown');
+            } else if (joy[1] < -1 * axisThreshold) {
+                if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
+                this.pressedKeys.add('ArrowUp');
+            } else if (joy[1] <= axisThreshold && joy[1] >= -1 * axisThreshold) {
+                this.pressedKeys.delete('ArrowDown');
+                this.pressedKeys.delete('ArrowUp');
+            }
+        }
+    }
+
+    componentDidMount = () => {
+        window.addEventListener('gamepadconnected', event => {
+            this.gamepadHandler(event, true);
+        }, false);
+
+        window.addEventListener('gamepaddisconnected', event => {
+            this.gamepadHandler(event, false);
+        }, false);
+    }
 
     // checkMobile() {
     //     console.log("IS mobile:", this.props.isMobile, "Type: ", typeof(this.props.isMobile))
