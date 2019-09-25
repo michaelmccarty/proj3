@@ -117,6 +117,7 @@ class App extends React.Component {
     };
 
     logout = () => {
+      console.log('hello worlld logout')
         const { socket } = this.state;
         socket.emit('logout');
 
@@ -150,7 +151,7 @@ class App extends React.Component {
                                 <div className="options">
                                     <OptionsWrapper
                                         socket={socket}
-                                        pressLogout={this.logout}
+                                        logout={this.logout}
                                         party={party}
                                         pokedex={pokedex}
                                     />

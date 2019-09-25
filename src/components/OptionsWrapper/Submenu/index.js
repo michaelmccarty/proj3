@@ -11,8 +11,8 @@ import styles from './Submenu.module.css';
 //               />
 //             ))} */}
 
-function Pokemon(props) {
-    console.log(props);
+function ListItem(props) {
+    console.log("LISTITEM props: "+props.logout);
 
     switch (
         props.id // id gets converted to a number when passing it down
@@ -68,7 +68,7 @@ function Pokemon(props) {
             return (
                 <div className={styles['logout-submenu']}>
                     Are you sure?
-                    <button onClick={props.pressLogout}>Yes</button>
+                    <button onClick={props.logout}>Yes</button>
                     <button>Keep Playing</button>
                 </div>
             );
@@ -98,10 +98,11 @@ class Submenu extends React.Component {
                     </button>
                 </div>
                 <div className={styles['content-container']}>
-                    <Pokemon
+                    <ListItem
                         pokedex={this.props.pokedex}
                         party={this.props.party}
                         id={this.props.id}
+                        logout={this.props.logout}
                     />
                 </div>
             </div>
