@@ -3,6 +3,7 @@ const Pokemon = require('../Pokemon');
 
 class Player extends Combatant {
     constructor(player) {
+        super();
         // takes the player object from the database
         this.trainer = player;
         this.currentPokemonIndex = 0;
@@ -36,11 +37,12 @@ class Player extends Combatant {
         return this.trainer.pokemon.find(pokemon => pokemon.status !== 'FNT');
     }
 
-    send(data) {
-        switch (data.type) {
+    send(type, data) {
+        switch (type) {
             case 'intro':
                 // wild pokemon doesn't care
-                this.trainer.socket.emit('battle intro', data);
+                this.trainer.socket.emit('battle intro', {...data, myPokemon: this.trainer.pokemon[0]});
+                console.log('emitted battle intro');
                 break;
             case 'updateOpponent':
                 this.trainer.socket.emit('battle update opponent', data);
@@ -50,7 +52,7 @@ class Player extends Combatant {
         }
     }
 
-    chooseAction() {
+    async chooseAction() {
         const actionPromise = new Promise(resolve =>
             this.trainer.socket.once('battle action', data => {
                 resolve(data);

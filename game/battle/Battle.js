@@ -3,6 +3,7 @@ const EventEmitter = require('events');
 
 class Battle extends EventEmitter {
     constructor(type, combatant1, combatant2) {
+        super();
         // combatant 1 MUST be a trainer
         this.type = type; // used to determine what happens when a pokemon faints
         this.combatant1 = combatant1;
@@ -13,8 +14,9 @@ class Battle extends EventEmitter {
         // this.combatant1.send('battle start'); // Trainer will wait to send this to the client until it gets the intro
         // this.combatant2.send('battle start');
 
-        this.combatant1.send('intro', combatant2.intro());
-        this.combatant2.send('intro', combatant1.intro());
+        console.log('running battle.initialize');
+        this.combatant1.send('intro', this.combatant2.intro());
+        this.combatant2.send('intro', this.combatant1.intro());
 
         const inBattle = true;
 

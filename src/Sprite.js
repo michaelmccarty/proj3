@@ -126,20 +126,26 @@ Sprite.drawSpritesFactory = function() {
         let count = 0;
         for (let sprite of sprites) { //eslint-disable-line
             if (!sprite) continue;
+            if (sprite.customDraw) {
+                i = sprite.customDraw(buffer, i);
+            } else {
+                const textureOffset = sprite.textureOffset;
+                buffer[i++] = sprite.position[0];
+                buffer[i++] = sprite.position[1];
+                buffer[i++] = sprite.size;
+                buffer[i++] = textureOffset.x;
+                buffer[i++] = textureOffset.y;
+                buffer[i++] = textureOffset.flip_h ? 1.0 : 0.0;
+                buffer[i++] = textureOffset.flip_v ? 1.0 : 0.0;
+                buffer[i++] = sprite.mask[0];
+                buffer[i++] = sprite.mask[1];
+                buffer[i++] = sprite.scale;
+                // count++;
+            }
             // console.log(i);
-            const textureOffset = sprite.textureOffset;
-            buffer[i++] = sprite.position[0];
-            buffer[i++] = sprite.position[1];
-            buffer[i++] = sprite.size;
-            buffer[i++] = textureOffset.x;
-            buffer[i++] = textureOffset.y;
-            buffer[i++] = textureOffset.flip_h ? 1.0 : 0.0;
-            buffer[i++] = textureOffset.flip_v ? 1.0 : 0.0;
-            buffer[i++] = sprite.mask[0];
-            buffer[i++] = sprite.mask[1];
-            buffer[i++] = sprite.scale;
-            count++;
         }
+
+        count = i / 10;
     
         const glBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, glBuffer);

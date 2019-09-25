@@ -17,7 +17,13 @@ class Textbox {
 
     clear(ctx) {
         this.stopText();
-        ctx.clearRect(...this.bounds);
+        console.log(this.x1, this.y1, this.x2 - this.x1, this.y2 - this.y1);
+        ctx.clearRect(
+            this.x1 - 1,
+            this.y1 - 8,
+            this.x2 - this.x1 + 1,
+            this.y2 - this.y1 + 8
+        );
     }
 
     stopText() {
@@ -30,7 +36,6 @@ class Textbox {
     cursorCoords() {
         const x = this.x1 + (this.cursor % this.width) * 8;
         const y = this.y1 + Math.floor(this.cursor / this.width) * 16;
-        console.log(x, y);
         return [x, y];
     }
 

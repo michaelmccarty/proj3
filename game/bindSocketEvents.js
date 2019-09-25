@@ -1,6 +1,7 @@
 const $$ = require('../SocketEnum');
 const processMove = require('./processMove');
 const makeEncounterGenerator = require( '../utils/random');
+const Pokemon = require('./battle/Pokemon');
 
 
 module.exports = function (io, connectedUsers) {
@@ -18,6 +19,12 @@ module.exports = function (io, connectedUsers) {
             socket: socket,
             skin: 'player_default',
             facing: 'south',
+
+            pokemon: [
+                new Pokemon(1, 5),
+                new Pokemon(4, 5),
+            ],
+
             previousMove: {
                 x: 4,
                 y: 4,

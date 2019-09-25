@@ -212,6 +212,11 @@ class Tilemap {
 
     playAnimation(animationFunctionFactory) {
         this.animationFunction = animationFunctionFactory();
+        return this.animationFunction.promise;
+    }
+
+    resetAnimation() {
+        this.animationFunction = this.defaultAnimationFunction;
     }
 }
 

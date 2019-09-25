@@ -13,9 +13,11 @@ import NPC from '../../actors/NPC';
 import makeEncounterGenerator from '../../utils/random';
 import * as battleTransitions from '../../battle transitions';
 
-import gameDPad from '../../gamepad-imgs/d-pad-element-01.svg'
-import gameActionA from '../../gamepad-imgs/action-button-01.svg'
-import gameActionB from '../../gamepad-imgs/action-button-02.svg'
+import { withRouter } from 'react-router-dom';
+
+import gameDPad from '../../gamepad-imgs/d-pad-element-01.svg';
+import gameActionA from '../../gamepad-imgs/action-button-01.svg';
+import gameActionB from '../../gamepad-imgs/action-button-02.svg';
 
 class Game extends React.PureComponent {
     pressedKeys = new Set();
@@ -185,7 +187,7 @@ class Game extends React.PureComponent {
                 this.determineEncounterAnimation();
             }
             // console.log(this.transitionAnimation, battleTransitions);
-            this.maps[this.currentMap].playAnimation(
+            this.animationPromise = this.maps[this.currentMap].playAnimation(
                 battleTransitions[this.transitionAnimation]
             );
             // Play encounter animation
@@ -305,38 +307,80 @@ class Game extends React.PureComponent {
         this.player.overridePosition(response.x, response.y);
     };
 
-    handleEncounter = ([data]) => {
+    handleEncounter = async ([data]) => {
         this.listenForEncounters(); // set up the listeners again
         // go into battle context
         console.log(data);
+        await this.animationPromise;
+        this.props.history.push('/game/battle');
+        this.maps[this.currentMap].resetAnimation();
     };
 
     gameLoop = () => {
         const keys = this.pressedKeys;
         if (Date.now() > this.movementDelay) {
-            if (keys.has('ArrowUp') || keys.has('w') || keys.has('W') || keys.has('mobileUp')) {
+            if (
+                keys.has('ArrowUp') ||
+                keys.has('w') ||
+                keys.has('W') ||
+                keys.has('mobileUp')
+            ) {
                 this.player.walk('north');
-            } else if (keys.has('ArrowDown') || keys.has('s') || keys.has('S') || keys.has('mobileDown')) {
+            } else if (
+                keys.has('ArrowDown') ||
+                keys.has('s') ||
+                keys.has('S') ||
+                keys.has('mobileDown')
+            ) {
                 this.player.walk('south');
-            } else if (keys.has('ArrowLeft') || keys.has('a') || keys.has('A') || keys.has('mobileLeft')) {
+            } else if (
+                keys.has('ArrowLeft') ||
+                keys.has('a') ||
+                keys.has('A') ||
+                keys.has('mobileLeft')
+            ) {
                 this.player.walk('west');
-            } else if (keys.has('ArrowRight') || keys.has('d') || keys.has('D') || keys.has('mobileRight')) {
+            } else if (
+                keys.has('ArrowRight') ||
+                keys.has('d') ||
+                keys.has('D') ||
+                keys.has('mobileRight')
+            ) {
                 this.player.walk('east');
             }
         } else {
-            if (keys.has('ArrowUp') || keys.has('w') || keys.has('W') || keys.has('mobileUp')) {
+            if (
+                keys.has('ArrowUp') ||
+                keys.has('w') ||
+                keys.has('W') ||
+                keys.has('mobileUp')
+            ) {
                 this.player.turn('north');
-            } else if (keys.has('ArrowDown') || keys.has('s') || keys.has('S') || keys.has('mobileDown')) {
+            } else if (
+                keys.has('ArrowDown') ||
+                keys.has('s') ||
+                keys.has('S') ||
+                keys.has('mobileDown')
+            ) {
                 this.player.turn('south');
-            } else if (keys.has('ArrowLeft') || keys.has('a') || keys.has('A') || keys.has('mobileLeft')) {
+            } else if (
+                keys.has('ArrowLeft') ||
+                keys.has('a') ||
+                keys.has('A') ||
+                keys.has('mobileLeft')
+            ) {
                 this.player.turn('west');
-            } else if (keys.has('ArrowRight') || keys.has('d') || keys.has('D') || keys.has('mobileRight')) {
+            } else if (
+                keys.has('ArrowRight') ||
+                keys.has('d') ||
+                keys.has('D') ||
+                keys.has('mobileRight')
+            ) {
                 this.player.turn('east');
             }
         }
 
         [this.coords.x, this.coords.y] = [this.player.x, this.player.y];
-
 
         Tilemap.useShader(this.gl);
         // If the player moved, subtract the movement from the offset of all loaded maps
@@ -392,107 +436,93 @@ class Game extends React.PureComponent {
 
     render() {
         return (
-        <div className={styles["game-screen"]}>
-            <canvas
-                key="game-canvas"
-                className={styles["game-canvas"]}
-                tabIndex="0"
-                width="160"
-                height="144"
-                ref={this.setupCanvas}
-                onKeyDown={this.handleKeyDown}
-                onKeyUp={this.handleKeyUp} 
-            />
-            <div
-                className={styles["game-mobile-controls"]}
-                id="mobile-controls"
-            >
+            <div className={styles['game-screen']}>
+                <canvas
+                    key="game-canvas"
+                    className={styles['game-canvas']}
+                    tabIndex="0"
+                    width="160"
+                    height="144"
+                    ref={this.setupCanvas}
+                    onKeyDown={this.handleKeyDown}
+                    onKeyUp={this.handleKeyUp}
+                />
                 <div
-                    className={styles["left-controls"]}
+                    className={styles['game-mobile-controls']}
+                    id="mobile-controls"
                 >
-                    <button
-                        onTouchStart={() => {
-                            if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
-                            this.pressedKeys.add("mobileUp");
-                        }}
-                        onTouchEnd={() => {
-                            this.pressedKeys.delete("mobileUp")
-                        }}>
-                        <img 
-                            src={gameDPad}
-                            alt="Up"
-                            />
-                    </button>
-                    <button 
-                        onTouchStart={()=> {
-                            if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
-                            this.pressedKeys.add("mobileDown")
-                        }}
-                        onTouchEnd={() => {
-                            this.pressedKeys.delete("mobileDown")
-                        }}>
-                        <img 
-                            src={gameDPad}
-                            alt="Down"
-                            />
-                    </button>
-                    <button 
-                        onTouchStart={()=> {
-                            if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
-                            this.pressedKeys.add("mobileLeft")
-                        }}
-                        onTouchEnd={() => {
-                            this.pressedKeys.delete("mobileLeft")
-                        }}>
-                        <img 
-                            src={gameDPad}
-                            alt="Left"
-                            />
-                    </button>
-                    <button 
-                        onTouchStart={()=> {
-                            if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
-                            this.pressedKeys.add("mobileRight")
-                        }}
-                        onTouchEnd={() => {
-                            this.pressedKeys.delete("mobileRight")
-                        }}>
-                        <img 
-                            src={gameDPad}
-                            alt="Right"
-                        />
-                    </button>
-                    {/* <button onClick={this.pressedKeys.add("mobileUp")}>Left</button>    
+                    <div className={styles['left-controls']}>
+                        <button
+                            onTouchStart={() => {
+                                if (!this.pressedKeys.size)
+                                    this.movementDelay = Date.now() + 70;
+                                this.pressedKeys.add('mobileUp');
+                            }}
+                            onTouchEnd={() => {
+                                this.pressedKeys.delete('mobileUp');
+                            }}
+                        >
+                            <img src={gameDPad} alt="Up" />
+                        </button>
+                        <button
+                            onTouchStart={() => {
+                                if (!this.pressedKeys.size)
+                                    this.movementDelay = Date.now() + 70;
+                                this.pressedKeys.add('mobileDown');
+                            }}
+                            onTouchEnd={() => {
+                                this.pressedKeys.delete('mobileDown');
+                            }}
+                        >
+                            <img src={gameDPad} alt="Down" />
+                        </button>
+                        <button
+                            onTouchStart={() => {
+                                if (!this.pressedKeys.size)
+                                    this.movementDelay = Date.now() + 70;
+                                this.pressedKeys.add('mobileLeft');
+                            }}
+                            onTouchEnd={() => {
+                                this.pressedKeys.delete('mobileLeft');
+                            }}
+                        >
+                            <img src={gameDPad} alt="Left" />
+                        </button>
+                        <button
+                            onTouchStart={() => {
+                                if (!this.pressedKeys.size)
+                                    this.movementDelay = Date.now() + 70;
+                                this.pressedKeys.add('mobileRight');
+                            }}
+                            onTouchEnd={() => {
+                                this.pressedKeys.delete('mobileRight');
+                            }}
+                        >
+                            <img src={gameDPad} alt="Right" />
+                        </button>
+                        {/* <button onClick={this.pressedKeys.add("mobileUp")}>Left</button>    
                     <button onClick={this.pressedKeys.add("mobileUp")}>Right</button>     */}
-                </div> 
-                <div
-                    className={styles["right-controls"]}
-                >
-                    <button
-                        className={styles["game-action-buttons"]}
-                        onTouchStart={() => {
-                            // Run 'a' button
-                        }}
-                    >
-                        <img 
-                            src={gameActionA}
-                            alt="A"
-                        />
-                    </button>
-                    <button
-                        className={styles["game-action-buttons"]}
-                        onTouchStart={() => {
-                            // Run 'b' button
-                        }}
-                    >
-                        <img 
-                            src={gameActionB}
-                            alt="B"
-                        />
-                    </button>
+                    </div>
+                    <div className={styles['right-controls']}>
+                        <button
+                            className={styles['game-action-buttons']}
+                            onTouchStart={() => {
+                                // Run 'a' button
+                            }}
+                        >
+                            <img src={gameActionA} alt="A" />
+                        </button>
+                        <button
+                            className={styles['game-action-buttons']}
+                            onTouchStart={() => {
+                                // Run 'b' button
+                            }}
+                        >
+                            <img src={gameActionB} alt="B" />
+                        </button>
+                    </div>
                 </div>
-            </div> 
-        </div>
+            </div>
         );
     }
 
@@ -514,4 +544,4 @@ class Game extends React.PureComponent {
     // }
 }
 
-export default Game;
+export default withRouter(Game);

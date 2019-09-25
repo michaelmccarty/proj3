@@ -3,30 +3,23 @@ const Pokemon = require('../Pokemon');
 
 class WildPokemon extends Combatant {
     constructor(species, level) {
-        const ivs = {
-            attack: Pokemon.generateIV(),
-            defense: Pokemon.generateIV(),
-            speed: Pokemon.generateIV(),
-            special: Pokemon.generateIV()
-        };
-        ivs.hp = Pokemon.calculateHPIV(this.ivs);
+        super();
+        // const ivs = {
+        //     attack: Pokemon.generateIV(),
+        //     defense: Pokemon.generateIV(),
+        //     speed: Pokemon.generateIV(),
+        //     special: Pokemon.generateIV()
+        // };
+        // ivs.hp = Pokemon.calculateHPIV(ivs);
 
-        const evs = {
-            attack: 0,
-            defense: 0,
-            speed: 0,
-            special: 0,
-            hp: 0
-        };
-
-        this.pokemon = new Pokemon(species, evs, ivs, level);
+        this.pokemon = new Pokemon(species, level);
     }
 
     intro() {
         return {
             introText: `A wild ${this.pokemon.getSpecies().name} appeared!`,
             isTrainer: false,
-            species: this.species
+            species: this.pokemon.species
         };
     }
 

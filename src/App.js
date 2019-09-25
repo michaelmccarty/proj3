@@ -46,8 +46,13 @@ class App extends React.Component {
     this.initSocket();
   }
 
+  componentWillUnmount() {
+    // stop listening to all socket events
+  }
+
   // socket connection established, and then socket listening events defined
   initSocket() {
+    console.log("init socket")
     const { endpoint } = this.state;
     const socket = socketIOClient(endpoint);
 
@@ -108,7 +113,7 @@ class App extends React.Component {
 
   render() {
     const { socket, messages, onlineUsers, party, pokedex } = this.state;
-    // console.log(socket)
+    console.log("render App");
     return (
       <Router>
         <Switch>
@@ -125,7 +130,7 @@ class App extends React.Component {
                 <div className="game">
                   <Game socket={socket} isMobile={this.state.isMobile} />
                 </div>
-                <Route exact path="/game/battle" render={
+                <Route path="/game/battle" render={
                   () => (
                     <div className="game">
                       <Battle socket={socket} />

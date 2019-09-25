@@ -1,0 +1,180 @@
+{
+    "poof": {
+        "x": 0,
+        "y": 0,
+        "size": 16,
+        "framerate": 8,
+        "frames": [
+            [
+                {
+                    "x": 0,
+                    "y": 120,
+                    "dx": 0,
+                    "dy": 0,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 0,
+                    "y": 120,
+                    "dx": 16,
+                    "dy": 0,
+                    "flip_h": true,
+                    "flip_v": false
+                },
+                {
+                    "x": 0,
+                    "y": 120,
+                    "dx": 0,
+                    "dy": 16,
+                    "flip_h": false,
+                    "flip_v": true
+                },
+                {
+                    "x": 0,
+                    "y": 120,
+                    "dx": 16,
+                    "dy": 16,
+                    "flip_h": true,
+                    "flip_v": true
+                }
+            ],
+            [
+                {
+                    "x": 16,
+                    "y": 120,
+                    "dx": 0,
+                    "dy": 0,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 16,
+                    "y": 120,
+                    "dx": 16,
+                    "dy": 0,
+                    "flip_h": true,
+                    "flip_v": false
+                },
+                {
+                    "x": 16,
+                    "y": 120,
+                    "dx": 0,
+                    "dy": 16,
+                    "flip_h": false,
+                    "flip_v": true
+                },
+                {
+                    "x": 16,
+                    "y": 120,
+                    "dx": 16,
+                    "dy": 16,
+                    "flip_h": true,
+                    "flip_v": true
+                }
+            ],
+            [
+                {
+                    "x": 16,
+                    "y": 120,
+                    "dx": -4,
+                    "dy": -4,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 16,
+                    "y": 120,
+                    "dx": 20,
+                    "dy": -4,
+                    "flip_h": true,
+                    "flip_v": false
+                },
+                {
+                    "x": 16,
+                    "y": 120,
+                    "dx": -4,
+                    "dy": 20,
+                    "flip_h": false,
+                    "flip_v": true
+                },
+                {
+                    "x": 16,
+                    "y": 120,
+                    "dx": 20,
+                    "dy": 20,
+                    "flip_h": true,
+                    "flip_v": true
+                }
+            ],
+            [
+                {
+                    "x": 32,
+                    "y": 120,
+                    "dx": -4,
+                    "dy": -4,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 32,
+                    "y": 120,
+                    "dx": 20,
+                    "dy": -4,
+                    "flip_h": true,
+                    "flip_v": false
+                },
+                {
+                    "x": 32,
+                    "y": 120,
+                    "dx": -4,
+                    "dy": 20,
+                    "flip_h": false,
+                    "flip_v": true
+                },
+                {
+                    "x": 32,
+                    "y": 120,
+                    "dx": 20,
+                    "dy": 20,
+                    "flip_h": true,
+                    "flip_v": true
+                }
+            ],
+            [
+                {
+                    "x": 32,
+                    "y": 120,
+                    "dx": -8,
+                    "dy": -8,
+                    "flip_h": false,
+                    "flip_v": false
+                },
+                {
+                    "x": 32,
+                    "y": 120,
+                    "dx": 24,
+                    "dy": -8,
+                    "flip_h": true,
+                    "flip_v": false
+                },
+                {
+                    "x": 32,
+                    "y": 120,
+                    "dx": -8,
+                    "dy": 24,
+                    "flip_h": false,
+                    "flip_v": true
+                },
+                {
+                    "x": 32,
+                    "y": 120,
+                    "dx": 24,
+                    "dy": 24,
+                    "flip_h": true,
+                    "flip_v": true
+                }
+            ]
+        ]
+    }
+}
