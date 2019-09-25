@@ -12,9 +12,7 @@ import API from '../../../utils/API';
 //               />
 //             ))} */}
 
-function Pokemon(props) {
-    console.log(props);
-
+function ListItem(props) {
     switch (
         props.id // id gets converted to a number when passing it down
     ) {
@@ -71,6 +69,7 @@ function Pokemon(props) {
                     Are you sure?
                     <button onClick={() => {
                         console.log(API);
+                        props.logout();
                     }}>Yes</button>
                     <button>Keep Playing</button>
                 </div>
@@ -88,7 +87,6 @@ class Submenu extends React.Component {
     };
 
     render() {
-        console.log(this.props);
         return (
             <div className={styles['submenu-wrapper']}>
                 <div className={styles['submenu-header']}>
@@ -101,10 +99,11 @@ class Submenu extends React.Component {
                     </button>
                 </div>
                 <div className={styles['content-container']}>
-                    <Pokemon
+                    <ListItem
                         pokedex={this.props.pokedex}
                         party={this.props.party}
                         id={this.props.id}
+                        logout={this.props.logout}
                     />
                 </div>
             </div>

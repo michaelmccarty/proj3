@@ -7,19 +7,19 @@ function MainMenu(props) {
   switch (props.menu) {
     case "1":
       return (
-        <Submenu id={1} menuDisplayName="Pokemon" party={props.party} pokedex={props.pokedex} closeMenu={props.closeMenu}/>
+        <Submenu id={1} menuDisplayName="Pokemon" logout={props.logout} party={props.party} pokedex={props.pokedex} closeMenu={props.closeMenu}/>
       );
     case "2":
       return (
-        <Submenu id={2} menuDisplayName="Pokedex" party={props.party} pokedex={props.pokedex} closeMenu={props.closeMenu}/>
+        <Submenu id={2} menuDisplayName="Pokedex" logout={props.logout} party={props.party} pokedex={props.pokedex} closeMenu={props.closeMenu}/>
       );
     case "3":
       return (
-        <Submenu id={3} menuDisplayName="Settings" party={props.party} pokedex={props.pokedex} closeMenu={props.closeMenu}/>
+        <Submenu id={3} menuDisplayName="Settings" logout={props.logout} party={props.party} pokedex={props.pokedex} closeMenu={props.closeMenu}/>
       );
     case "4":
       return (
-        <Submenu id={4} menuDisplayName="Logout" closeMenu={props.closeMenu}/>
+        <Submenu id={4} menuDisplayName="Logout" logout={props.logout} closeMenu={props.closeMenu}/>
       );
     default:
       return (
@@ -86,6 +86,7 @@ class OptionsWrapper extends React.Component {
           closeMenu={this.closeMenu}
           party={this.props.party}
           pokedex={this.props.pokedex}
+          logout= {this.props.logout}
           />
       </div>
     );
