@@ -461,8 +461,7 @@ class Game extends React.PureComponent {
 
         if (connecting) {
             gamepads[gamepad.index] = gamepad;
-            alert('gamepad is connected!')
-            console.log(gamepad);
+            console.log('gamepad is connected! :', gamepad)
         } else {
             delete gamepads[gamepad.index];
             alert('gamepad is disconnected!')
