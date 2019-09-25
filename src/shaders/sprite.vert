@@ -5,6 +5,7 @@ attribute float spriteSize;
 attribute vec2 texOffset;
 attribute vec2 flip;
 attribute vec2 mask;
+attribute float scale;
 
 varying vec2 fTexOffset;
 varying float fSpriteSize;
@@ -19,8 +20,8 @@ void main() {
     fSpriteSize = spriteSize;
     vflip = flip;
     vec4 screenTransform = vec4(2.0 * inverseViewportSize.x, -2.0 * inverseViewportSize.y, -1.0, 1.0);
-    vec2 sizeAdjust = vec2(0.5 * screenTransform.xy * spriteSize); // Points are specified by their center, sprites position is top-left corner.
+    vec2 sizeAdjust = vec2(0.5 * screenTransform.xy * spriteSize * scale); // Points are specified by their center, sprites position is top-left corner.
     // (16, 0) - (16, 0) * 
     gl_Position = vec4((spritePosition - viewOffset) * screenTransform.xy + screenTransform.zw + sizeAdjust, 0.0, 1.0);
-    gl_PointSize = spriteSize; // set this with a buffer
+    gl_PointSize = spriteSize * scale; // set this with a buffer
 }
