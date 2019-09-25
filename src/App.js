@@ -7,15 +7,9 @@ import OptionsWrapper from "./components/OptionsWrapper";
 import ChatBox from "./components/Chat";
 import "./App.css";
 import socketIOClient from "socket.io-client";
-import {BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Battle from './components/Battle';
-
-// function Button(props) {
-//   return <button id="button" onClick={(e)=> {
-//     e.preventDefault();
-//     props.onClick();
-//   }}>Click me</button>;
-// }
+import pokedex from '../src/pokedex'
 
 class App extends React.Component {
 
@@ -24,7 +18,28 @@ class App extends React.Component {
     socket: null,
     user: null,
     messages: [],
-    endpoint: "http://localhost:3001"
+    // isMobile: true,
+    endpoint: "/", //change to /socket when it is time
+    party: [{
+      image: "https://www.serebii.net/pokearth/sprites/green/001.png",
+      name: "Bulbasaur"
+    }, {
+      image: "https://www.serebii.net/pokearth/sprites/green/002.png",
+      name: "Ivysaur"
+    }, {
+      image: "https://www.serebii.net/pokearth/sprites/green/003.png",
+      name: "Venusaur"
+    }, {
+      image: "https://www.serebii.net/pokearth/sprites/green/004.png",
+      name: "Charmander"
+    }, {
+      image: "https://www.serebii.net/pokearth/sprites/green/005.png",
+      name: "Charmeleon"
+    }, {
+      image: "https://www.serebii.net/pokearth/sprites/green/006.png",
+      name: "Charizard"
+    }],
+    pokedex: pokedex
   };
 
   componentDidMount() {
@@ -38,7 +53,7 @@ class App extends React.Component {
 
     // bread and butter connection confirmation
     socket.on("connect", data => console.log("Connected"));
-    
+
     // asks for the online users
     socket.emit("connectedUserCheck");
     // then listens for online users from server
@@ -46,14 +61,17 @@ class App extends React.Component {
       console.log(data);
       //set state with the online users
       this.setState({ onlineUsers: data.onlineUsers });
-      
-      const {onlineUsers} = this.state;
+
+      const { onlineUsers } = this.state;
       console.log(onlineUsers);
     })
 
+
     // allows messages to be passed back and forth from client to server
     socket.on("chat", data => {
-      this.setState({ messages: [...this.state.messages, data]})
+      this.setState({ messages: [...this.state.messages, data] }, () => {
+        document.querySelector("#chat-box").scrollTo(0, document.querySelector("#chat-box").scrollHeight);
+      })
     });
 
     // socket.on("chat2", data => {
@@ -66,7 +84,7 @@ class App extends React.Component {
       console.log(disconnectedUser + " disconnected");
       const index = this.state.onlineUsers.find(user => { //eslint-disable-line
         console.log(user);
-        console.log(user===disconnectedUser);
+        console.log(user === disconnectedUser);
       })
 
     });
@@ -89,36 +107,40 @@ class App extends React.Component {
   };
 
   render() {
-    const { socket,messages,onlineUsers } = this.state;
+    const { socket, messages, onlineUsers, party, pokedex } = this.state;
     // console.log(socket)
     return (
       <Router>
         <Switch>
           <Route
-            exact path="/game"
-            render={() => 
+            path="/game"
+            render={() =>
               <main className="container">
-              {/* button is for testing some sockets */}
+                {/* button is for testing some sockets */}
                 {/* <Button
                   onClick={() => {
                     this.buttonClick();
                   }}
                 /> */}
                 <div className="game">
-                  <Game socket={socket} />
+                  <Game socket={socket} isMobile={this.state.isMobile} />
                 </div>
-                <div className="game">
-                  <Battle socket={socket} />
-                </div>
+                <Route exact path="/game/battle" render={
+                  () => (
+                    <div className="game">
+                      <Battle socket={socket} />
+                    </div>
+                  )
+                } />
                 <div className="options">
-                  <OptionsWrapper socket={socket} pressLogout={this.logout}/>
+                  <OptionsWrapper socket={socket} pressLogout={this.logout} party={party} pokedex={pokedex} />
                 </div>
-                <div className="chat">
-                  <ChatBox socket={socket} messages={messages} onlineUsers={onlineUsers} />
-                </div>
+              <div className="chat">
+                <ChatBox socket={socket} messages={messages} onlineUsers={onlineUsers} />
+              </div>
               </main>
-            }
-          />
+        }
+      />
           <Route exact path="/" component={LoginPage} />
           <Route exact path="/register" component={RegisterPage} />
           <Route component={NoMatch} />

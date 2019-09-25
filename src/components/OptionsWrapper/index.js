@@ -3,18 +3,19 @@ import styles from "./OptionsWrapper.module.css";
 import Submenu from "./Submenu"
 
 function MainMenu(props) {
+  console.log(props)
   switch (props.menu) {
     case "1":
       return (
-        <Submenu id={1} menuDisplayName="Pokemon" closeMenu={props.closeMenu}/>
+        <Submenu id={1} menuDisplayName="Pokemon" party={props.party} pokedex={props.pokedex} closeMenu={props.closeMenu}/>
       );
     case "2":
       return (
-        <Submenu id={2} menuDisplayName="Pokedex" closeMenu={props.closeMenu}/>
+        <Submenu id={2} menuDisplayName="Pokedex" party={props.party} pokedex={props.pokedex} closeMenu={props.closeMenu}/>
       );
     case "3":
       return (
-        <Submenu id={3} menuDisplayName="Settings" closeMenu={props.closeMenu}/>
+        <Submenu id={3} menuDisplayName="Settings" party={props.party} pokedex={props.pokedex} closeMenu={props.closeMenu}/>
       );
     case "4":
       return (
@@ -76,12 +77,16 @@ class OptionsWrapper extends React.Component {
   };
 
   render() {
+    console.log(this.props)
     return (
       <div className={styles["option-wrapper"]}>
         <MainMenu
           menu={this.state.menu}
           handleMenuChange={this.handleMenuChange} 
-          closeMenu={this.closeMenu}/>
+          closeMenu={this.closeMenu}
+          party={this.props.party}
+          pokedex={this.props.pokedex}
+          />
       </div>
     );
   }

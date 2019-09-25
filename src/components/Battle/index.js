@@ -16,7 +16,7 @@ class Battle extends React.Component {
         this.canvasRef = React.createRef();
         this.textRef = React.createRef();
         this.drawSprites = Sprite.drawSpritesFactory();
-        this.text = new Textbox(16, 112, 144, 128);
+        this.text = new Textbox(16, 116, 144, 128);
     }
     
     componentDidMount() {
@@ -26,7 +26,7 @@ class Battle extends React.Component {
     
     startBattle() {
         this.gl = this.canvasRef.current.getContext('webgl');
-        this.textCtx = this.textRef.current.getContext('2d')
+        this.textCtx = this.textRef.current.getContext('2d', {antialias: false});
         const { socket } = this.props;
 
         this.background = new Texture(
@@ -69,7 +69,7 @@ class Battle extends React.Component {
         // });
 
         this.mySprite.animate(slide(160, 32, 0, 32, linear(1000)));
-        this.text.printString(this.textCtx, 'A wild Rattata appears!');
+        this.text.printString(this.textCtx, introData ? introData.introText : 'Debug');
     };
 
     draw = () => {

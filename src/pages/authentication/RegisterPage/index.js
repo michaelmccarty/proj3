@@ -24,8 +24,15 @@ class RegisterPage extends React.Component {
             email: email,
             password: password
         };
-        console.log(body)
-        API.register(body);
+        console.log(body);
+        API.register(body)
+            .then(() => {
+                console.log('boop');
+                this.props.history.push('/game');
+            })
+            .catch(function(err) {
+                console.log(err);
+            });
     };
 
     render() {

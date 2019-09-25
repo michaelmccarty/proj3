@@ -147,6 +147,14 @@
 
 .pokemon-font { font-family: Pokemon, arial; }
 
+body {
+  background-image: url('./background-pattern/background-pokemon.jpg');
+  background-size: cover;
+  background-position: top;
+  background-repeat: no-repeat;
+  background-color: #3c4291;
+}
+
 .gameboy-start-button {
   cursor: pointer;
   color: var(--blue);
@@ -227,6 +235,7 @@
 }
 
 #root {
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -239,12 +248,14 @@ main.container {
   "chat chat";
   grid-template-rows: 1fr minmax(0, 1fr);
   grid-template-columns: 640px 1fr;
-  grid-gap: 10px;
+  grid-gap: 16px;
+  padding: 16px;
   height: 100vh;
-  padding: 20px;
   max-width: 1200px;
   max-height: 900px;
   min-height: 780px;
+  /* background-image: url('./background-pattern/line.png'); */
+  background-color: rgba(0, 0, 0, 0.75);
 }
 
 .game { 
@@ -255,13 +266,32 @@ main.container {
   padding-top: 90%;
   cursor: none;
 }
-.options { grid-area: options; }
+.options { 
+  grid-area: options;
+  min-height: 0;
+}
 .chat { grid-area: chat; }
+
+.flash {
+  animation-name: flash;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
+}
+
+#mobile-controls {
+  display: none;
+}
+
+@keyframes flash {
+  0% { background-color: rgba(0, 0, 0, 0.25); border-radius: 16px; }
+  100% { background-color: unset; border-radius: 0; }
+}
 
 @media screen and (max-width: 768px) {
   main.container { /* Options will be fulscreen over game on start button click */
     grid-template-areas:
     "game"
+    "options"
     "chat";
     grid-template-rows: 1fr;
     grid-template-columns: 100%;
@@ -269,5 +299,10 @@ main.container {
     min-height: unset;
     height: unset;
   }
-  div.options { display: none; }
+  div.options { 
+    display: flex;
+  }
+  #mobile-controls {
+    display: unset;
+  }
 }

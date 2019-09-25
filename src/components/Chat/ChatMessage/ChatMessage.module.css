@@ -1,14 +1,25 @@
-.chat-message-container { composes: flx flx-row m-2 from global; }
+.chat-message-container { composes: flash pokemon-font flx flx-row from global; padding: 12px 12px 12px 12px; }
 .chat-avatar-wrapper {
   border-radius: 31px;
   overflow: hidden;
-  width: 62px;
-  min-width: 62px;
-  height: 62px;
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
 }
 .chat-avatar { composes: w-100 h-100 from global; }
-.chat-message-content { composes: ml-2 from global; }
-.chat-message-info { composes: mb-2 from global; }
+.chat-message-content { 
+  composes: ml-2 from global; 
+  font-size: 0.9em;
+  border-bottom: 2px dotted var(--dark-2);
+  width: 100%;
+}
+.chat-message-info { 
+  composes: mb-1 from global; 
+  font-size: 0.7em;
+}
+.chat-message-date {
+  opacity: 0.5;
+}
 
 @media screen and (max-width: 768px) {
     .chat-message-info { font-size: 0.7em; }

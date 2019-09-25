@@ -29,14 +29,14 @@ class Textbox {
 
     cursorCoords() {
         const x = this.x1 + (this.cursor % this.width) * 8;
-        const y = this.y1 + Math.floor(this.cursor / this.width) * 8;
+        const y = this.y1 + Math.floor(this.cursor / this.width) * 16;
         console.log(x, y);
         return [x, y];
     }
 
     printChar(ctx, char) {
-        // ctx.font = '8px Pokemon';
-        ctx.fillText(char, ...this.cursorCoords(), 8);
+        ctx.font = '8px Pokemon';
+        ctx.fillText(char, ...this.cursorCoords());
         this.cursor++;
     }
 
