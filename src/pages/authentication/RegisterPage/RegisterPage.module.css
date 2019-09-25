@@ -8,3 +8,12 @@
 .inputs { composes: inputs from global; }
 .register-button { composes: gameboy-start-button mb-3 from global; }
 .already-have-account { composes: m-1 from global; font-size: 0.7em; }
+.figures-container {
+    display: grid;
+    grid-template-columns: 60px 60px 60px;
+}
+
+.figures-container * {
+    width: 100%;
+    height: 60px;
+}

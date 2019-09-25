@@ -4,8 +4,14 @@ import styles from './RegisterPage.module.css';
 import API from '../../../utils/API';
 import { Sprite } from '../../../Sprite';
 import Texture from '../../../Texture';
+import Actors from '../../../actors/actors.json';
 
 class RegisterPage extends React.Component {
+    constructor (props) {
+        super(props);
+        this.myCanvasRef = React.createRef();
+    }
+
     state = {
         username: '',
         email: '',
@@ -38,9 +44,24 @@ class RegisterPage extends React.Component {
             });
     };
 
-    requestAnimationFrame = () => {
-        this.actorSpriteSheet = new Texture(this.gl, './spritesheets/overworld-actors.png');
-        console.log(this.actorSpriteSheet);
+    componentDidMount = () => {
+        this.drawSprites = Sprite.drawSpritesFactory();
+        
+        requestAnimationFrame(this.gameLoop);
+    }
+    
+    gameLoop = () => {
+        this.Sprite = new Sprite(Actors['youngster'].south);
+        
+        const gl = this.myCanvasRef.current.getContext('webgl');
+
+        this.actorSpriteSheet = new Texture(gl, './spritesheets/overworld-actors.png');
+        this.drawSprites(gl, [this.Sprite], {x: 0, y: 0}, this.actorSpriteSheet);
+        requestAnimationFrame(this.gameLoop)
+    }
+
+    drawSprites = (gl, Sprite, {x, y}, spriteSheet) => {
+        
     }
 
     render() {
@@ -71,14 +92,16 @@ class RegisterPage extends React.Component {
                                 type="password"
                                 placeholder="Password"
                             />
-                            <label>Character Creation</label>
-                            <div>
+                            <label>Character Select</label>
+                            <div className={styles["figures-container"]}>
                                 <figure
                                     onClick={() => {
                                         this.setState({character: 'nobody'})
                                     }}
                                 >
-                                    <canvas  />
+                                    <canvas
+                                        ref={this.myCanvasRef}
+                                    />
                                 </figure>
                                 <figure
                                     onClick={() => {
