@@ -22,7 +22,6 @@ class LoginForm extends React.Component {
         const body = { email, password };
         API.login(body)
             .then(() => {
-                console.log('boop');
                 this.props.history.push('/game');
             })
             .catch(function(err) {
