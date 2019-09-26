@@ -87,14 +87,6 @@ class Battle extends React.Component {
 
         this.actorSprites.push(this.opponentSprite, this.mySprite);
 
-        // this.backgroundSprite = new Sprite({
-        //     x: 0,
-        //     y: 0,
-        //     frames: [{ x: 0, y: 0 }],
-        //     frameRate: 1,
-        //     size: 160
-        // });
-
         this.mySprite.animate(slide(160, 32, 0, 32, linear(1000)));
         this.opponentSprite.animate(slide(-56, 0, 96, 0, linear(1000)));
 
@@ -115,15 +107,43 @@ class Battle extends React.Component {
 
         await new Promise(response => setTimeout(response, 300));
 
+        const myPokemon = introData.myPokemon;
+
+        await this.text.printString(
+            this.textCtx,
+            `Go! ${myPokemon.name}`
+        );
+
         const poof = new CompositeSprite({
             ...effectSprites.poof,
             x: 32,
             y: 80
         });
 
-        poof.play(1);
+        const pokeballAnimation = poof.play(1);
 
         this.actorSprites.push(poof);
+
+        await pokeballAnimation;
+
+        this.actorSprites.pop();
+
+        const speciesData = getSpecies(myPokemon.species)
+
+        this.mySprite = new Sprite({
+            x: 16,
+            y: 64,
+            size: 32,
+            scale: 2,
+            frames: [speciesData.backsprite]
+        });
+
+        await this.awaitTextAdvance();
+
+
+
+
+
     };
 
     awaitTextAdvance() {

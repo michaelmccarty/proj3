@@ -1,6 +1,10 @@
 const species = {
     1: {
       name: "Bulbasaur",
+      backSprite: {
+        x: 32,
+        y: 0,
+      },
       baseStats: {
         hp: 45,
         attack: 49,
@@ -49,6 +53,10 @@ const species = {
     },
     4: {
       name: "Charmander",
+      backSprite: {
+        x: 64,
+        y: 0,
+      },
       baseStats: {
         hp: 45,
         attack: 49,
@@ -93,6 +101,10 @@ const species = {
     },
     7: {
       name: "Squirtle",
+      backSprite: {
+        x: 96,
+        y: 0,
+      },
       baseStats: {
         hp: 45,
         attack: 49,

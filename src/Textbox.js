@@ -24,6 +24,7 @@ class Textbox {
             this.x2 - this.x1 + 1,
             this.y2 - this.y1 + 8
         );
+        this.cursor = 0;
     }
 
     stopText() {
@@ -45,7 +46,7 @@ class Textbox {
         this.cursor++;
     }
 
-    printString(ctx, string, speed = 50, i = 0) {
+    printString(ctx, string, speed = 50, i = 0, nested = false) {
         if (string[i]) {
             this.printChar(ctx, string[i]);
             if (string[i] === ' ') {
@@ -54,8 +55,6 @@ class Textbox {
                     // console.log(j);
                     j++;
                 }
-                console.log(this.cursor + j);
-                console.log('width: ', this.width);
                 if (j + (this.cursor % this.width) > this.width) {
                     this.cursor =
                         Math.floor(this.cursor / this.width + 1) * this.width;
@@ -63,9 +62,14 @@ class Textbox {
             }
 
             setTimeout(
-                () => this.printString(ctx, string, speed, i + 1),
+                () => this.printString(ctx, string, speed, i + 1, true),
                 speed
             );
+        } else {
+            this._resolve();
+        }
+        if (!nested) {
+            return new Promise(resolve => this._resolve = resolve);
         }
     }
 

@@ -24,6 +24,8 @@ class Sprite {
 
         this.scale = options.scale || 1;
 
+        new Promise(resolve => this._promise = resolve);
+
         this.frameGen = (function* (sprite) {
             // const frameInterval = 1 / sprite.framerate * 1000;
             restingFrame:
@@ -51,6 +53,9 @@ class Sprite {
         })(this);
     }
 
+    _reject() { };
+    _resolve() { };
+
     get textureOffset() {
         return this.nextFrame();
     }
@@ -62,9 +67,12 @@ class Sprite {
         this._resetAnimation = true;
         this._playing = true;
         this._repeat = n;
+        this._resolve();
+        return new Promise((resolve, reject) => [this._resolve, this._reject] = [resolve, reject]);
     }
 
     pause() {
+        this._resolve();
         this._playing = false;
         // this._playOnce = false;
         this._repeat = 0;
@@ -81,7 +89,7 @@ class Sprite {
         this.play(1);
     }
 
-    updateAnimationFrame() {};
+    updateAnimationFrame() { };
 
     animate(animationFunction) {
         this.updateAnimationFrame = animationFunction;
@@ -104,7 +112,7 @@ class Sprite {
     }
 }
 
-Sprite.drawSpritesFactory = function(canvasWidth, canvasHeight) {
+Sprite.drawSpritesFactory = function (canvasWidth, canvasHeight) {
     const inverseWidth = 1 / canvasWidth;
     const inverseHeight = 1 / canvasHeight;
     let program;
@@ -115,14 +123,14 @@ Sprite.drawSpritesFactory = function(canvasWidth, canvasHeight) {
         // console.log(offset);
         const shader = program;
         gl.useProgram(shader.program);
-    
+
         gl.uniform2f(shader.uniform.inverseViewportSize, inverseWidth, inverseHeight);
         gl.uniform2f(shader.uniform.viewOffset, offset.x, offset.y);
         gl.uniform2f(shader.uniform.inverseTextureSize, spritesheet.inverseWidth, spritesheet.inverseHeight);
-    
+
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, spritesheet.texture);
-    
+
         const buffer = new Float32Array(448); // 64 sprites active at once;
         let i = 0;
         let count = 0;
@@ -148,18 +156,18 @@ Sprite.drawSpritesFactory = function(canvasWidth, canvasHeight) {
         }
 
         count = i / 10;
-    
+
         const glBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, glBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, buffer, gl.DYNAMIC_DRAW);
-    
+
         gl.enableVertexAttribArray(shader.attribute.spritePosition);
         gl.enableVertexAttribArray(shader.attribute.spriteSize);
         gl.enableVertexAttribArray(shader.attribute.texOffset);
         gl.enableVertexAttribArray(shader.attribute.flip);
         gl.enableVertexAttribArray(shader.attribute.mask);
         gl.enableVertexAttribArray(shader.attribute.scale);
-    
+
         gl.vertexAttribPointer(shader.attribute.spritePosition, 2, gl.FLOAT, false, 40, 0);
         gl.vertexAttribPointer(shader.attribute.spriteSize, 1, gl.FLOAT, false, 40, 8);
         gl.vertexAttribPointer(shader.attribute.texOffset, 2, gl.FLOAT, false, 40, 12);
