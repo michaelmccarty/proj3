@@ -24,7 +24,7 @@ class Player extends Combatant {
 
     async nextPokemon() {
         if (this.firstTurn) {
-            return this.trainer.pokemon[currentPokemonIndex];
+            return this.trainer.pokemon[this.currentPokemonIndex];
         }
         const selectionPromise = new Promise(resolve =>
             this.trainer.socket.once('battle next pokemon', data => {
