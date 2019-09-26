@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+const path = require("path");
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
@@ -8,7 +9,7 @@ const socket = require('socket.io');
 const bindGameEvents = require('./game/bindSocketEvents');
 const mongoose = require('mongoose');
 const db = require('./models');
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/project3');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/project3');
 
 // app setup
 const app = express();
@@ -17,7 +18,10 @@ const PORT = process.env.PORT || 3001;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static('public'));
+//serve up static assets (on heroku)
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, './client/build')));
+}
 
 const LocalStrategy = require('passport-local').Strategy;
 
@@ -81,6 +85,12 @@ passport.deserializeUser(function(id, done) {
             done(err);
         });
 });
+
+if (process.env.NODE_ENV === "production") {
+    app.get("*", function (req, res) {
+        res.sendFile(path.join(__dirname, "/client/build/index.html"));
+    });
+}
 
 // socket setup
 const io = socket(server);

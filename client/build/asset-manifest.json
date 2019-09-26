@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/static/css/main.e88615b6.chunk.css",
+    "main.js": "/static/js/main.b5c11aa4.chunk.js",
+    "main.js.map": "/static/js/main.b5c11aa4.chunk.js.map",
+    "runtime~main.js": "/static/js/runtime~main.2e3ee507.js",
+    "runtime~main.js.map": "/static/js/runtime~main.2e3ee507.js.map",
+    "static/js/2.779daea4.chunk.js": "/static/js/2.779daea4.chunk.js",
+    "static/js/2.779daea4.chunk.js.map": "/static/js/2.779daea4.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.bd9339d4c4bf912429361bd9c51d6fa3.js": "/precache-manifest.bd9339d4c4bf912429361bd9c51d6fa3.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.e88615b6.chunk.css.map": "/static/css/main.e88615b6.chunk.css.map",
+    "static/media/action-button-01.svg": "/static/media/action-button-01.ed6796f7.svg",
+    "static/media/action-button-02.svg": "/static/media/action-button-02.7729580d.svg",
+    "static/media/App.css": "/static/media/background-pokemon.a45b3797.jpg",
+    "static/media/d-pad-element-01.svg": "/static/media/d-pad-element-01.db308a3c.svg"
+  }
+}
