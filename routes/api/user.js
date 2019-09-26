@@ -18,13 +18,9 @@ module.exports = (app, passport, db) => {
     );
 
     app.get('/logout', function(req, res) {
-        console.log(
-            '\n\n\n' + req.user.username + ' has been logged out.\n\n\n'
-        );
-
         req.logout();
         res.cookie("isLoggedIn", false, {
-            expires: 23213601 // 1970 unix timestamp
+            expires: new Date(315532800000) // 1980 unix timestamp
         });
         res.json({ message: 'successful logout' });
     });
