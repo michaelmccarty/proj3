@@ -102,9 +102,15 @@ class Sprite {
     set y(val) {
         this.position[1] = val;
     }
+
+    isPlaying() {
+        return this._playing;
+    }
 }
 
-Sprite.drawSpritesFactory = function() {
+Sprite.drawSpritesFactory = function(canvasWidth, canvasHeight) {
+    const inverseWidth = 1 / canvasWidth;
+    const inverseHeight = 1 / canvasHeight;
     let program;
     return function (gl, sprites, offset, spritesheet) {
         gl.enable(gl.BLEND);
@@ -114,7 +120,7 @@ Sprite.drawSpritesFactory = function() {
         const shader = program;
         gl.useProgram(shader.program);
     
-        gl.uniform2f(shader.uniform.inverseViewportSize, 1 / 160, 1 / 144);
+        gl.uniform2f(shader.uniform.inverseViewportSize, inverseWidth, inverseHeight);
         gl.uniform2f(shader.uniform.viewOffset, offset.x, offset.y);
         gl.uniform2f(shader.uniform.inverseTextureSize, spritesheet.inverseWidth, spritesheet.inverseHeight);
     
