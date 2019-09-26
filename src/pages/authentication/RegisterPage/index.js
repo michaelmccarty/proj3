@@ -5,6 +5,7 @@ import API from '../../../utils/API';
 import { Sprite, AlternatingSprite } from '../../../Sprite';
 import Texture from '../../../Texture';
 import actors from '../../../actors/actors.json';
+import SpriteBox from './SpriteBox';
 
 class RegisterPage extends React.Component {
     constructor (props) {
@@ -43,27 +44,10 @@ class RegisterPage extends React.Component {
             });
     };
 
-    componentDidMount = () => {
-        this.drawSprites = Sprite.drawSpritesFactory(16, 16);
-        const gl = this.myCanvasRef.current.getContext('webgl');
-
-        this.actorSpriteSheet = new Texture(gl, './spritesheets/overworld-actors.png');
-        
-        this.sprite = new AlternatingSprite(actors['lass'].south);
-    
-        this.sprite.play();
-        requestAnimationFrame(this.gameLoop);
-    }
-    
-    gameLoop = () => {
-        
-        const gl = this.myCanvasRef.current.getContext('webgl');
-
-        gl.enable(gl.BLEND);
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
-        this.drawSprites(gl, [this.sprite], {x: 0, y: 0}, this.actorSpriteSheet);
-        requestAnimationFrame(this.gameLoop)
+    handleActorSelect = (actorName) => {
+        this.setState({
+            character: actorName
+        });
     }
 
     render() {
@@ -96,24 +80,14 @@ class RegisterPage extends React.Component {
                             />
                             <label>Character Select</label>
                             <div className={styles["figures-container"]}>
-                                <figure
-                                    onClick={() => {
-                                        this.setState({character: 'nobody'})
-                                    }}
-                                >
-                                    <canvas
-                                        width="16"
-                                        height="16"
-                                        ref={this.myCanvasRef}
+                                {Object.entries(actors).map(([key, value], i) => (
+                                    <SpriteBox 
+                                        key={key}
+                                        actorName={key}
+                                        handleActorSelect={this.handleActorSelect}
+                                        selected={this.state.character || 'player_default'}
                                     />
-                                </figure>
-                                <figure
-                                    onClick={() => {
-                                        this.setState({character: 'nobody2'})
-                                    }}
-                                >
-                                    <canvas  />
-                                </figure>
+                                ))}
                             </div>
                         </div>
                         <button

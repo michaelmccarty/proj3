@@ -1,0 +1,16 @@
+.actor-figure {
+    width: 100%;
+    height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.actor-canvas {
+    image-rendering: pixelated;
+}
+.actor-canvas:hover {
+    border: 2px solid rgba(0,0,0,0.25);
+}
+.actor-canvas[data-active="true"] {
+    border: 2px solid rgba(0,0,0,0.75);
+}
