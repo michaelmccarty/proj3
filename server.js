@@ -52,7 +52,7 @@ passport.use(
                     console.log('\n\nuser not found. login failed');
                 } else if (user) {
 
-                    //hash here
+                    // hashing taking place
                     bcrypt.compare(password, user.password, function (req, res){
                         if (res){
                         console.log('\n\nsuccessful login, ' + user.username + '\n\n');
@@ -62,12 +62,6 @@ passport.use(
                             console.log('\n\nbad password. login failed');
                         }
                     });
-
-                    // if (password === user.password){
-                    //     console.log('\n\nsuccessful login, ' + user.username + '\n\n');
-                    //     return done(null, user);
-                    // }
-
                     
                 }
             });
