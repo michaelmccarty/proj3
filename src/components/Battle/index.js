@@ -25,10 +25,10 @@ class Battle extends React.Component {
         this.textRef = React.createRef();
         this.drawSprites = Sprite.drawSpritesFactory(160, 144);
 
+
         this.text = {};
 
-
-        this.text.log = new Textbox(16, 108, 144, 128);
+        this.text.log = new Textbox(8, 108, 144, 128);
         this.text.enemyName = new Textbox(8, 0, 72, 8);
         this.text.enemyLevel = new Textbox(40, 8, 56, 16);
 
@@ -36,7 +36,10 @@ class Battle extends React.Component {
         this.text.myLevel = new Textbox(120, 64, 136, 72);
         this.text.myHP = new Textbox(88, 80, 156, 88);
 
+        this.text.battleMenu = new Textbox(80, 112, 153, 140);
+
         this.actorSprites = [];
+        this.hudSprites = [];
     }
 
     componentDidMount() {
@@ -70,6 +73,7 @@ class Battle extends React.Component {
             frameRate: 1,
             size: 160
         });
+        this.hudSprites.push(this.backgroundSprite);
         requestAnimationFrame(this.draw);
 
         socket.once('battle intro', this.playIntro);
@@ -191,10 +195,11 @@ class Battle extends React.Component {
 
         await this.awaitTextAdvance();
 
+        this.text.log.clear(this.textCtx);
 
+        // Draw the menu.
 
-
-
+        // The server is waiting for us to select our action
     };
 
     awaitTextAdvance() {
@@ -228,7 +233,7 @@ class Battle extends React.Component {
         // this.tilemap.draw(this.gl);
         this.drawSprites(
             gl,
-            [this.backgroundSprite],
+            this.hudSprites,
             { x: 0, y: 0 },
             this.background
         );

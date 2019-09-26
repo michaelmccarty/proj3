@@ -20,7 +20,7 @@ class Textbox {
         console.log(this.x1, this.y1, this.x2 - this.x1, this.y2 - this.y1);
         ctx.clearRect(
             this.x1 - 1,
-            this.y1,
+            this.y1 - 1,
             this.x2 - this.x1 + 1,
             this.y2 - this.y1 + 16
         );

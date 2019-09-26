@@ -7,6 +7,7 @@ class Player extends Combatant {
         // takes the player object from the database
         this.trainer = player;
         this.currentPokemonIndex = 0;
+        this.firstTurn = true;
     }
 
     intro() {
@@ -22,6 +23,9 @@ class Player extends Combatant {
     }
 
     async nextPokemon() {
+        if (this.firstTurn) {
+            return this.trainer.pokemon[currentPokemonIndex];
+        }
         const selectionPromise = new Promise(resolve =>
             this.trainer.socket.once('battle next pokemon', data => {
                 resolve(data);
