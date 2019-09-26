@@ -1,9 +1,10 @@
 class Textbox {
-    constructor(x1, y1, x2, y2) {
+    constructor(x1, y1, x2, y2, linespacing = 8) {
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
+        this.linespacing = linespacing;
 
         this.cursor = 0;
         this.width = Math.floor((x2 - x1) / 8);
@@ -36,11 +37,18 @@ class Textbox {
 
     cursorCoords() {
         const x = this.x1 + (this.cursor % this.width) * 8;
-        const y = this.y1 + Math.floor(this.cursor / this.width) * 16 + 7;
+        const y =
+            this.y1 +
+            Math.floor(this.cursor / this.width) * (8 + this.linespacing) +
+            7;
         return [x, y];
     }
 
     printChar(ctx, char) {
+        if (char === '\n') {
+            return (this.cursor =
+                Math.floor(this.cursor / this.width + 1) * this.width);
+        }
         ctx.font = '8px Pokemon';
         ctx.fillText(char, ...this.cursorCoords());
         this.cursor++;
@@ -49,17 +57,22 @@ class Textbox {
     printString(ctx, string, speed = 50, i = 0, nested = false) {
         let promise;
         if (!nested) {
-            promise = new Promise(resolve => this._resolve = resolve);
+            promise = new Promise(resolve => (this._resolve = resolve));
         }
         if (string[i]) {
             this.printChar(ctx, string[i]);
             if (string[i] === ' ') {
                 let j = 1;
-                while (string[j + i] && string[j + i] !== ' ') {
+                while (
+                    string[j + i] &&
+                    string[j + i] !== ' ' &&
+                    string[j + i] !== '\n'
+                ) {
                     // console.log(j);
                     j++;
                 }
-                if (j + (this.cursor % this.width) > this.width) {
+                console.log(j + (this.cursor % this.width));
+                if (j + (this.cursor % this.width) - 1 > this.width) {
                     this.cursor =
                         Math.floor(this.cursor / this.width + 1) * this.width;
                 }

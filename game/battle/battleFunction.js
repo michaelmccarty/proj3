@@ -494,3 +494,4 @@ console.log(battle(charmander, bulbasaur, move1, move2));
 //   return damage;
 // };
 
+module.exports = battle;

@@ -69,6 +69,7 @@ function ListItem(props) {
                     Are you sure?
                     <button onClick={() => {
                         console.log(API);
+                        console.log(props.logout);
                         props.logout();
                     }}>Yes</button>
                     <button>Keep Playing</button>

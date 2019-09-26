@@ -64,10 +64,11 @@ class Pokemon {
         const moveset = [];
         for (let i = learnset.length - 1; i >= 0 && moveset.length < 4; i--) {
             if (learnset[i].level <= this.level) {
-                moveset.push(learnset[i].name);
+                // TODO: look up max PP for move
+                moveset.push({ name: learnset[i].name, PP: 20 });
             }
         }
-        this.moves = moveset;
+        return moveset;
     }
 
     calculateStats() {
@@ -112,16 +113,16 @@ class Pokemon {
 }
 
 // Create a pokemon object from packed pokemon data
-Pokemon.fromPacked = function (packed) {
+Pokemon.fromPacked = function(packed) {
     // unpack the binary data
     return new Pokemon();
 };
 
-Pokemon.generateIV = function () {
+Pokemon.generateIV = function() {
     return Math.floor(Math.random() * 16);
 };
 
-Pokemon.calculateHPIV = function (ivs) {
+Pokemon.calculateHPIV = function(ivs) {
     return (
         (ivs.attack % 2) * 8 +
         (ivs.defense % 2) * 4 +
@@ -130,10 +131,11 @@ Pokemon.calculateHPIV = function (ivs) {
     );
 };
 
-Pokemon.calculateStat = function (base, iv, ev, level) {
+Pokemon.calculateStat = function(base, iv, ev, level) {
     return (
-        Math.floor(((base + iv) * 2 + Math.floor(Math.sqrt(ev) / 4)) * level /
-            100) + 5
+        Math.floor(
+            (((base + iv) * 2 + Math.floor(Math.sqrt(ev) / 4)) * level) / 100
+        ) + 5
     );
 };
 

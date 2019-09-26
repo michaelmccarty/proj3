@@ -55,7 +55,12 @@ class WildPokemon extends Combatant {
     }
 
     async chooseAction() {
-        return this.moves[Math.floor(Math.random() * this.moves.length)];
+        return {
+            type: 'fight',
+            movename: this.pokemon.moves[
+                Math.floor(Math.random() * this.pokemon.moves.length)
+            ].name
+        };
     }
 }
 

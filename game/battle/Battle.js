@@ -1,4 +1,4 @@
-const executeRound = require('./executeRound');
+const executeRound = require('./battleFunction');
 const EventEmitter = require('events');
 
 class Battle extends EventEmitter {
@@ -46,6 +46,7 @@ class Battle extends EventEmitter {
                 this.combatant2
             );
             // This function can also do exp gain.
+            console.log(results);
 
             pokemon1 = results.pokemon1;
             pokemon2 = results.pokemon2;

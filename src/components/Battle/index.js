@@ -25,7 +25,6 @@ class Battle extends React.Component {
         this.textRef = React.createRef();
         this.drawSprites = Sprite.drawSpritesFactory(160, 144);
 
-
         this.text = {};
 
         this.text.log = new Textbox(8, 108, 144, 128);
@@ -36,10 +35,39 @@ class Battle extends React.Component {
         this.text.myLevel = new Textbox(120, 64, 136, 72);
         this.text.myHP = new Textbox(88, 80, 156, 88);
 
-        this.text.battleMenu = new Textbox(80, 112, 153, 140);
+        this.text.battleMenu = new Textbox(80, 112, 156, 140);
+        this.text.moveMenu = new Textbox(48, 104, 156, 140, 0);
+        this.text.moveDetails = new Textbox(8, 64, 89, 89);
 
         this.actorSprites = [];
         this.hudSprites = [];
+        this.cursorSettings = {};
+
+        this.boxes = {};
+
+        this.boxes.battleMenu = new Sprite({
+            x: 64,
+            y: 96,
+            frames: [{ x: 160, y: 0 }],
+            frameRate: 1,
+            size: 96
+        });
+
+        this.boxes.moveMenu = new Sprite({
+            x: 32,
+            y: 96,
+            frames: [{ x: 32, y: 160 }],
+            frameRate: 1,
+            size: 160
+        });
+
+        this.boxes.moveDetails = new Sprite({
+            x: 0,
+            y: 56,
+            frames: [{ x: 160, y: 96 }],
+            frameRate: 1,
+            size: 80
+        });
     }
 
     componentDidMount() {
@@ -73,6 +101,15 @@ class Battle extends React.Component {
             frameRate: 1,
             size: 160
         });
+
+        this.selectArrow = new Sprite({
+            x: 0,
+            y: 0,
+            frames: [{ x: 240, y: 96 }],
+            frameRate: 1,
+            size: 8
+        });
+
         this.hudSprites.push(this.backgroundSprite);
         requestAnimationFrame(this.draw);
 
@@ -117,11 +154,7 @@ class Battle extends React.Component {
 
         // Enemy HP bar renders here
 
-        this.text.enemyName.printString(
-            this.textCtx,
-            introData.pokemonName,
-            0
-        );
+        this.text.enemyName.printString(this.textCtx, introData.pokemonName, 0);
 
         this.text.enemyLevel.printString(
             this.textCtx,
@@ -137,17 +170,12 @@ class Battle extends React.Component {
         this.actorSprites = [this.opponentSprite];
 
         const myPokemon = introData.myPokemon;
+        this.myPokemon = myPokemon;
+        console.log(this.myPokemon);
 
-        await this.text.log.printString(
-            this.textCtx,
-            `Go! ${myPokemon.name}`
-        );
+        await this.text.log.printString(this.textCtx, `Go! ${myPokemon.name}`);
 
-        this.text.myName.printString(
-            this.textCtx,
-            myPokemon.name,
-            0
-        );
+        this.text.myName.printString(this.textCtx, myPokemon.name, 0);
 
         console.log(myPokemon.level);
 
@@ -159,9 +187,9 @@ class Battle extends React.Component {
 
         this.text.myHP.printString(
             this.textCtx,
-            myPokemon.stats.hp.toString().padStart(3, ' ') + 
-            '/' +
-            myPokemon.stats.maxHp.toString().padStart(3, ' '),
+            myPokemon.stats.hp.toString().padStart(3, ' ') +
+                '/' +
+                myPokemon.stats.maxHp.toString().padStart(3, ' '),
             0
         );
 
@@ -195,12 +223,32 @@ class Battle extends React.Component {
 
         await this.awaitTextAdvance();
 
-        this.text.log.clear(this.textCtx);
-
         // Draw the menu.
+
+        // this.myPokemon = myPokemon;
+
+        this.chooseAction();
 
         // The server is waiting for us to select our action
     };
+
+    async chooseAction() {
+        // draw the battle menu
+        this.text.log.clear(this.textCtx);
+        this.hudSprites.push(this.boxes.battleMenu);
+        const battleMenuString = 'FIGHT $%\n' + 'ITEM  RUN';
+        this.text.battleMenu.printString(this.textCtx, battleMenuString, 0);
+
+        // draw the cursor
+        this.hudSprites.push(this.selectArrow);
+        this.configureCursor('battle menu');
+
+        const selection = new Promise(resolve => (this._select = resolve));
+        const action = await selection;
+
+        this.hudSprites.pop(); // battle menu
+        this.props.socket.emit('battle action', action);
+    }
 
     awaitTextAdvance() {
         if (!this.textAdvance) {
@@ -213,6 +261,84 @@ class Battle extends React.Component {
         return this.textAdvance;
     }
 
+    configureCursor(preset) {
+        switch (preset) {
+            case 'battle menu':
+                this.cursorSettings = {
+                    active: true,
+                    options: [
+                        [
+                            { x: 72, y: 112, cb: this.fightMenu },
+                            { x: 120, y: 112, cb: this.pkmnMenu }
+                        ],
+                        [
+                            { x: 72, y: 128, cb: this.itemMenu },
+                            { x: 120, y: 128, cb: this.run }
+                        ]
+                    ],
+                    current: [0, 0]
+                };
+                break;
+            case 'move menu':
+                this.cursorSettings = {
+                    active: true,
+                    options: [
+                        //map over moves and limit it to valid ones
+                        [{ x: 40, y: 104, cb: () => this.useMove(0) }],
+                        [{ x: 40, y: 112, cb: () => this.useMove(1) }],
+                        [{ x: 40, y: 120, cb: () => this.useMove(2) }],
+                        [{ x: 40, y: 128, cb: () => this.useMove(3) }]
+                    ],
+                    current: [0, 0]
+                };
+                break;
+            case 'inactive':
+                this.cursorSettings = {
+                    active: false
+                };
+                return;
+        }
+        const options = this.cursorSettings.options;
+        const current = this.cursorSettings.current;
+        this.selectArrow.x = options[current[1]][current[0]].x;
+        this.selectArrow.y = options[current[1]][current[0]].y;
+    }
+
+    selectOption() {
+        if (!this.cursorSettings.active) return;
+        const current = this.cursorSettings.current;
+        this.cursorSettings.options[current[1]][current[0]].cb();
+    }
+
+    fightMenu = () => {
+        // console.log(this.myPokemon);
+        // const moves = this.myPokemon.moves;
+        this.hudSprites.pop(); // cursor
+        const moveString = this.myPokemon.moves
+            .map(move => move.name.toUpperCase())
+            .concat(
+                Array(4)
+                    .fill('-')
+                    .slice(0, this.myPokemon.moves.length)
+            )
+            .join('\n');
+        this.text.battleMenu.clear(this.textCtx);
+        this.hudSprites.push(this.boxes.moveMenu);
+        this.hudSprites.push(this.selectArrow);
+        this.text.moveMenu.printString(this.textCtx, moveString, 0);
+        this.configureCursor('move menu');
+    };
+
+    useMove = slot => {
+        this.text.moveMenu.clear(this.textCtx);
+        this.hudSprites.pop(); // cursor
+        this.hudSprites.pop(); // move box
+        this._select({
+            type: 'fight',
+            movename: this.myPokemon.moves[slot].name
+        });
+    };
+
     handleKeyDown = e => {
         console.log(e);
         switch (e.key) {
@@ -220,9 +346,58 @@ class Battle extends React.Component {
             case 'F':
                 if (this.textAdvance) {
                     this.textAdvanceFunction();
+                } else {
+                    this.selectOption();
                 }
+                break;
+            case 'a':
+            case 'A':
+            case 'ArrowLeft':
+                this.moveCursor('left');
+                break;
+            case 's':
+            case 'S':
+            case 'ArrowDown':
+                this.moveCursor('down');
+                break;
+            case 'd':
+            case 'D':
+            case 'ArrowRight':
+                this.moveCursor('right');
+                break;
+            case 'w':
+            case 'W':
+            case 'ArrowUp':
+                this.moveCursor('up');
+                break;
         }
     };
+
+    moveCursor(direction) {
+        if (!this.cursorSettings.active) return;
+        const settings = this.cursorSettings;
+        console.log(settings.current);
+        switch (direction) {
+            case 'left':
+                if (settings.current[0] > 0) settings.current[0]--;
+                break;
+            case 'right':
+                if (settings.current[0] < settings.options[0].length - 1)
+                    settings.current[0]++;
+                break;
+            case 'up':
+                if (settings.current[1] > 0) settings.current[1]--;
+                break;
+            case 'down':
+                if (settings.current[1] < settings.options.length - 1)
+                    settings.current[1]++;
+                break;
+        }
+        this.selectArrow.x =
+            settings.options[settings.current[1]][settings.current[0]].x;
+        this.selectArrow.y =
+            settings.options[settings.current[1]][settings.current[0]].y;
+    }
 
     draw = () => {
         const gl = this.canvasRef.current.getContext('webgl');
@@ -231,13 +406,7 @@ class Battle extends React.Component {
         // Tilemap.useShader(this.gl);
 
         // this.tilemap.draw(this.gl);
-        this.drawSprites(
-            gl,
-            this.hudSprites,
-            { x: 0, y: 0 },
-            this.background
-        );
-
+        this.drawSprites(gl, this.hudSprites, { x: 0, y: 0 }, this.background);
 
         if (this.actorSprites.length) {
             this.drawSprites(
