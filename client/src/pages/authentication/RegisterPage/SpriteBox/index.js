@@ -18,16 +18,21 @@ class SpriteBox extends React.Component {
 
     gameLoop = () => {
         
-        const gl = this.myCanvasRef.current.getContext('webgl');
+        if (this.stopGameLoop) return;
+
+        const canvas = this.myCanvasRef.current;
+        if (!canvas) return;
+
+        const gl = canvas.getContext('webgl');
 
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
         this.drawSprites(gl, [this.sprite], {x: 0, y: 0}, this.actorSpriteSheet);
-        requestAnimationFrame(this.gameLoop)
+        requestAnimationFrame(this.gameLoop);
     }
 
-    componentDidMount = () => {
+    componentDidMount() {
         this.drawSprites = Sprite.drawSpritesFactory(16, 16);
         const gl = this.myCanvasRef.current.getContext('webgl');
 
@@ -35,6 +40,10 @@ class SpriteBox extends React.Component {
             
         this.sprite.pause();
         requestAnimationFrame(this.gameLoop);
+    }
+
+    componentWillUnmount() {
+        this.stopGameLoop = true;
     }
 
     render() {
