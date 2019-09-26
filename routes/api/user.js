@@ -9,7 +9,11 @@ module.exports = (app, passport, db) => {
             failerFlash: false
         }),
         function(req, res) {
-            res.json({ message: 'successful login' });
+            res.cookie("isLoggedIn", true);
+            res.json({
+                id: req.user._id,
+                username: req.user.username
+            });
         }
     );
 
@@ -19,6 +23,9 @@ module.exports = (app, passport, db) => {
         );
 
         req.logout();
+        res.cookie("isLoggedIn", false, {
+            expires: 23213601 // 1970 unix timestamp
+        });
         res.json({ message: 'successful logout' });
     });
 
