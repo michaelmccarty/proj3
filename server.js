@@ -58,6 +58,9 @@ passport.use(
                         console.log('\n\nsuccessful login, ' + user.username + '\n\n');
                         return done(null, user);
                         }
+                        else{
+                            console.log('\n\nbad password. login failed');
+                        }
                     });
 
                     // if (password === user.password){
@@ -65,7 +68,7 @@ passport.use(
                     //     return done(null, user);
                     // }
 
-                    console.log('\n\nbad password. login failed');
+                    
                 }
             });
         }
