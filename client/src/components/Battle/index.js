@@ -23,7 +23,7 @@ class Battle extends React.Component {
         super(props);
         this.canvasRef = React.createRef();
         this.textRef = React.createRef();
-        this.drawSprites = Sprite.drawSpritesFactory();
+        this.drawSprites = Sprite.drawSpritesFactory(160, 144);
         this.text = new Textbox(16, 116, 144, 136);
         this.actorSprites = [];
     }

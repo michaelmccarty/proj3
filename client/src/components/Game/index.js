@@ -76,7 +76,7 @@ class Game extends React.PureComponent {
             './spritesheets/overworld-actors.png'
         );
 
-        this.drawSprites = Sprite.drawSpritesFactory();
+        this.drawSprites = Sprite.drawSpritesFactory(160, 144);
 
         this.player = new Player(
             this.coords.x,

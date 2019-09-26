@@ -2,12 +2,22 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './RegisterPage.module.css';
 import API from '../../../utils/API';
+import { Sprite, AlternatingSprite } from '../../../Sprite';
+import Texture from '../../../Texture';
+import actors from '../../../actors/actors.json';
+import SpriteBox from './SpriteBox';
 
 class RegisterPage extends React.Component {
+    constructor (props) {
+        super(props);
+        this.myCanvasRef = React.createRef();
+    }
+
     state = {
         username: '',
         email: '',
-        password: ''
+        password: '',
+        character: 'player_default'
     };
 
     handleInputChange = event => {
@@ -17,12 +27,13 @@ class RegisterPage extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        const { username, email, password } = this.state;
+        const { username, email, password, character } = this.state;
         console.log(username, email, password);
         const body = {
             username: username,
             email: email,
-            password: password
+            password: password,
+            character: character
         };
         console.log(body);
         API.register(body)
@@ -33,6 +44,12 @@ class RegisterPage extends React.Component {
                 console.log(err);
             });
     };
+
+    handleActorSelect = (actorName) => {
+        this.setState({
+            character: actorName
+        });
+    }
 
     render() {
         return (
@@ -62,6 +79,19 @@ class RegisterPage extends React.Component {
                                 type="password"
                                 placeholder="Password"
                             />
+                            <div className={styles['character-creation-container']}>
+                                <label className={styles['character-creation-label']}>Pick your Character</label>
+                                <div className={styles["figures-container"]}>
+                                    {Object.entries(actors).map(([key, value], i) => (
+                                        <SpriteBox 
+                                            key={key}
+                                            actorName={key}
+                                            handleActorSelect={this.handleActorSelect}
+                                            selected={this.state.character || 'player_default'}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                         <button
                             className={styles['register-button']}
