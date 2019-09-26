@@ -433,7 +433,7 @@ class Game extends React.PureComponent {
 
     render() {
         return (
-            <div className={styles['game-screen']}>
+            <div id="game-canvas-container" className={styles['game-screen']}>
                 <canvas
                     key="game-canvas"
                     className={styles['game-canvas']}
@@ -597,16 +597,9 @@ class Game extends React.PureComponent {
         window.addEventListener('gamepaddisconnected', event => {
             this.gamepadHandler(event, false);
         }, false);
-    }
 
-    // checkMobile() {
-    //     console.log("IS mobile:", this.props.isMobile, "Type: ", typeof(this.props.isMobile))
-    //     if (this.props.isMobile) {
-    //         console.log("Is mobile! rendering on-screen controls.");
-    //     } else {
-    //         console.log("Not mobile! Leaving open for keyboard / gamepad.");
-    //     }
-    // }
+        document.getElementById('game-canvas-container').oncontextmenu = new Function("return false;");
+    }
 }
 
 export default withRouter(Game);
