@@ -19,7 +19,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prepare": "patch-package"
+    "postinstall": "patch-package"
   },
   "eslintConfig": {
     "extends": "react-app"
