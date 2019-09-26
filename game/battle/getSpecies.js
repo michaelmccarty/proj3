@@ -8,6 +8,10 @@ const species = {
         special: 65,
         speed: 45
       },
+      spriteCoord: {
+        x: 0,
+        y: 0,
+      },
       learnset: [
         {
           level: 0,
@@ -56,6 +60,10 @@ const species = {
         special: 65,
         speed: 45
       },
+      spriteCoord: {
+        x: 0,
+        y: 0,
+      },
       learnset: [
         {
           level: 0,
@@ -99,6 +107,10 @@ const species = {
         defense: 49,
         special: 65,
         speed: 45
+      },
+      spriteCoord: {
+        x: 0,
+        y: 0,
       },
       learnset: [
         {
@@ -144,6 +156,10 @@ const species = {
         special: 65,
         speed: 45
       },
+      spriteCoord: {
+        x: 0,
+        y: 0,
+      },
       learnset: [
         {
           level: 0,
@@ -184,6 +200,10 @@ const species = {
         special: 65,
         speed: 45
       },
+      spriteCoord: {
+        x: 0,
+        y: 0,
+      },
       learnset: [
         {
           level: 0,
@@ -217,8 +237,8 @@ const getSpecies = (dexNumber) => {
     return species[dexNumber];
 }
  
-console.log(getSpecies(1).name)
-console.log(getSpecies(1).learnset)
-console.log(getSpecies(1).baseStats)
+// console.log(getSpecies(1).name)
+// console.log(getSpecies(1).learnset)
+// console.log(getSpecies(1).baseStats)
 
 module.exports = getSpecies;

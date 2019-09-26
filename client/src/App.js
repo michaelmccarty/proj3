@@ -59,7 +59,10 @@ class App extends React.Component {
         const socket = socketIOClient(endpoint);
 
         // bread and butter connection confirmation
-        socket.on('connect', data => console.log('Connected'));
+        socket.on('connect', data => {
+            console.log('Connected');
+            console.log(data);
+        });
 
         // asks for the online users
         socket.emit('connectedUserCheck');
@@ -185,8 +188,8 @@ class App extends React.Component {
     logout = () => {
         const { socket } = this.state;
         socket.emit('logout');
-        API.logout().then(function (data){
-          window.location.href="/";
+        API.logout().then(function(data) {
+            window.location.href = '/';
         });
         this.setState({ user: null });
     };

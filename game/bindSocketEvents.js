@@ -2,13 +2,20 @@ const $$ = require('../SocketEnum');
 const processMove = require('./processMove');
 const makeEncounterGenerator = require( '../utils/random');
 const Pokemon = require('./battle/Pokemon');
-
+const socketioJWT = require('socketio-jwt')
 
 module.exports = function (io, connectedUsers) {
+    
+    socketioJWT.authorize({
+        secret: process.env.SESSIONKEY,
+        timeout: 15000
+    })
+    
+    
     const trainerMap = {};
     return function (socket) {
         console.log('made socket connection', socket.id);
-
+        // console.log(socket)
         // For now, create a dummy user to simulate logging them in
         let user = {
             trainerId: Math.floor(100000000000000 * Math.random()),

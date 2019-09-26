@@ -9,7 +9,7 @@ module.exports = (app, passport, db) => {
             failerFlash: false
         }),
         function(req, res) {
-            res.json({ message: 'successful login' });
+            res.json({ message: 'welcome login' });
         }
     );
 
