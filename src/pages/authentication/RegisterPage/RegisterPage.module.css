@@ -14,4 +14,5 @@
     width: 100%;
     display: grid;
     grid-template-columns: 96px 96px 96px;
+    background-color: rgba(0,0,0,0.1);
 }

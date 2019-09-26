@@ -102,6 +102,10 @@ class Sprite {
     set y(val) {
         this.position[1] = val;
     }
+
+    isPlaying() {
+        return this._playing;
+    }
 }
 
 Sprite.drawSpritesFactory = function(canvasWidth, canvasHeight) {

@@ -8,6 +8,12 @@ class SpriteBox extends React.Component {
     constructor(props) {
         super(props);
         this.myCanvasRef = React.createRef();
+        this.sprite = new AlternatingSprite(actors[this.props.actorName].south);
+        this.isHovered = false;
+    }
+
+    state = {
+        isHovered: false
     }
 
     gameLoop = () => {
@@ -26,27 +32,35 @@ class SpriteBox extends React.Component {
         const gl = this.myCanvasRef.current.getContext('webgl');
 
         this.actorSpriteSheet = new Texture(gl, './spritesheets/overworld-actors.png');
-        
-        console.log("ACtor: ", this.props.actorName)
-        this.sprite = new AlternatingSprite(actors[this.props.actorName].south);
-    
-        this.sprite.play();
+            
+        this.sprite.pause();
         requestAnimationFrame(this.gameLoop);
     }
 
     render() {
+        const isActive = this.props.selected === this.props.actorName ? true : false;
+
+        if ((isActive || this.state.isHovered) && !this.sprite.isPlaying()) this.sprite.play();
+        else if (isActive && this.state.isHovered);
+        else if ((!isActive || this.state.isHovered) && this.sprite.isPlaying()) this.sprite.pause();
+
         return (
             <figure
                 onClick={() => (this.props.handleActorSelect(this.props.actorName))}
-                key={this.props.key}
                 className={styles['actor-figure']}
-            >
+                >
                 <canvas
-                    width="64"
-                    height="64"
+                    onMouseOver={()=> {
+                        this.setState({isHovered: true})
+                    }}
+                    onMouseLeave={()=> {
+                        this.setState({isHovered: false})
+                    }}
+                    width="16"
+                    height="16"
                     ref={this.myCanvasRef}
                     className={styles['actor-canvas']}
-                    data-active={this.props.selected === this.props.actorName ? "true" : "false"}
+                    data-active={isActive}
                 />
             </figure>
         )
