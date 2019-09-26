@@ -26,7 +26,7 @@ class Pokemon {
         };
 
         this.moves = moves || this.getDefaultMoves(); // Auto calculate if not provided
-        this.name = name || this.getSpecies().name; // auto calculate if not provided
+        this.name = name || this.getSpecies().name.toUpperCase(); // auto calculate if not provided
         this.stats = stats || this.calculateStats(); // calculate if not provided
     }
 
@@ -112,16 +112,16 @@ class Pokemon {
 }
 
 // Create a pokemon object from packed pokemon data
-Pokemon.fromPacked = function(packed) {
+Pokemon.fromPacked = function (packed) {
     // unpack the binary data
     return new Pokemon();
 };
 
-Pokemon.generateIV = function() {
+Pokemon.generateIV = function () {
     return Math.floor(Math.random() * 16);
 };
 
-Pokemon.calculateHPIV = function(ivs) {
+Pokemon.calculateHPIV = function (ivs) {
     return (
         (ivs.attack % 2) * 8 +
         (ivs.defense % 2) * 4 +
@@ -130,11 +130,10 @@ Pokemon.calculateHPIV = function(ivs) {
     );
 };
 
-Pokemon.calculateStat = function(base, iv, ev, level) {
+Pokemon.calculateStat = function (base, iv, ev, level) {
     return (
-        Math.floor(((base + iv) * 2 + Math.floor(Math.sqrt(ev) / 4)) * level) /
-            100 +
-        5
+        Math.floor(((base + iv) * 2 + Math.floor(Math.sqrt(ev) / 4)) * level /
+            100) + 5
     );
 };
 

@@ -19,6 +19,7 @@ class WildPokemon extends Combatant {
         console.log(this.pokemon);
         return {
             introText: `A wild ${this.pokemon.getSpecies().name} appeared!`,
+            pokemonName: this.pokemon.name,
             isTrainer: false,
             species: this.pokemon.species,
             level: this.pokemon.level,

@@ -36,7 +36,7 @@ class Textbox {
 
     cursorCoords() {
         const x = this.x1 + (this.cursor % this.width) * 8;
-        const y = this.y1 + Math.floor(this.cursor / this.width) * 16 + 8;
+        const y = this.y1 + Math.floor(this.cursor / this.width) * 16 + 7;
         return [x, y];
     }
 

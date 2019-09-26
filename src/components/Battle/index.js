@@ -25,9 +25,16 @@ class Battle extends React.Component {
         this.textRef = React.createRef();
         this.drawSprites = Sprite.drawSpritesFactory(160, 144);
 
-        this.text = new Textbox(16, 108, 144, 128);
-        this.enemyName = new Textbox(8, 0, 72, 8);
-        this.enemyLevel = new Textbox(40, 8, 56, 16);
+        this.text = {};
+
+
+        this.text.log = new Textbox(16, 108, 144, 128);
+        this.text.enemyName = new Textbox(8, 0, 72, 8);
+        this.text.enemyLevel = new Textbox(40, 8, 56, 16);
+
+        this.text.myName = new Textbox(80, 56, 160, 64);
+        this.text.myLevel = new Textbox(120, 64, 136, 72);
+        this.text.myHP = new Textbox(88, 80, 156, 88);
 
         this.actorSprites = [];
     }
@@ -96,7 +103,7 @@ class Battle extends React.Component {
 
         await new Promise(response => setTimeout(response, 1000));
 
-        this.text.printString(
+        this.text.log.printString(
             this.textCtx,
             introData ? introData.introText : 'Debug'
         );
@@ -106,20 +113,19 @@ class Battle extends React.Component {
 
         // Enemy HP bar renders here
 
-        this.enemyName.printString(
+        this.text.enemyName.printString(
             this.textCtx,
-            getSpecies(introData.species).name,
+            introData.pokemonName,
             0
         );
 
-        console.log(introData);
-        this.enemyLevel.printString(
+        this.text.enemyLevel.printString(
             this.textCtx,
-            introData.level,
+            introData.level.toString(),
             0
         );
 
-        this.text.clear(this.textCtx);
+        this.text.log.clear(this.textCtx);
         this.mySprite.animate(slide(0, 32, -64, 32, linear(300)));
 
         await new Promise(response => setTimeout(response, 300));
@@ -128,9 +134,31 @@ class Battle extends React.Component {
 
         const myPokemon = introData.myPokemon;
 
-        await this.text.printString(
+        await this.text.log.printString(
             this.textCtx,
             `Go! ${myPokemon.name}`
+        );
+
+        this.text.myName.printString(
+            this.textCtx,
+            myPokemon.name,
+            0
+        );
+
+        console.log(myPokemon.level);
+
+        this.text.myLevel.printString(
+            this.textCtx,
+            myPokemon.level.toString(),
+            0
+        );
+
+        this.text.myHP.printString(
+            this.textCtx,
+            myPokemon.stats.hp.toString().padStart(3, ' ') + 
+            '/' +
+            myPokemon.stats.maxHp.toString().padStart(3, ' '),
+            0
         );
 
         const poof = new CompositeSprite({
