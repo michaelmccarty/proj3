@@ -288,16 +288,22 @@ main.container {
 }
 
 @media screen and (max-width: 768px) {
+  #root {
+    height: 100vh;
+    width: 100%;
+  }
+
   main.container { /* Options will be fulscreen over game on start button click */
     grid-template-areas:
     "game"
     "options"
     "chat";
-    grid-template-rows: 1fr;
+    grid-template-rows: minmax(0, 1fr);
     grid-template-columns: 100%;
     max-height: unset;
     min-height: unset;
-    height: unset;
+    height: auto;
+    width: 100%;
   }
   div.options { 
     display: flex;
