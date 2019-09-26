@@ -17,7 +17,7 @@ class RegisterPage extends React.Component {
         username: '',
         email: '',
         password: '',
-        character: ''
+        character: 'player_default'
     };
 
     handleInputChange = event => {
@@ -27,12 +27,13 @@ class RegisterPage extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        const { username, email, password } = this.state;
+        const { username, email, password, character } = this.state;
         console.log(username, email, password);
         const body = {
             username: username,
             email: email,
-            password: password
+            password: password,
+            character: character
         };
         console.log(body);
         API.register(body)
@@ -78,16 +79,18 @@ class RegisterPage extends React.Component {
                                 type="password"
                                 placeholder="Password"
                             />
-                            <label>Character Select</label>
-                            <div className={styles["figures-container"]}>
-                                {Object.entries(actors).map(([key, value], i) => (
-                                    <SpriteBox 
-                                        key={key}
-                                        actorName={key}
-                                        handleActorSelect={this.handleActorSelect}
-                                        selected={this.state.character || 'player_default'}
-                                    />
-                                ))}
+                            <div className={styles['character-creation-container']}>
+                                <label className={styles['character-creation-label']}>Pick your Character</label>
+                                <div className={styles["figures-container"]}>
+                                    {Object.entries(actors).map(([key, value], i) => (
+                                        <SpriteBox 
+                                            key={key}
+                                            actorName={key}
+                                            handleActorSelect={this.handleActorSelect}
+                                            selected={this.state.character || 'player_default'}
+                                        />
+                                    ))}
+                                </div>
                             </div>
                         </div>
                         <button

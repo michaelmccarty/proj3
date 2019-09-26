@@ -10,6 +10,10 @@ const UserSchema = new Schema({
     required: true,
     match: [/.+@.+\..+/, "Please enter a valid e-mail address"]
   },
+  character: {
+    type: String,
+    required: true
+  },
   userCreated: {
     type: Date,
     default: Date.now

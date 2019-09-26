@@ -5,14 +5,19 @@
 .register-form-container { composes: gameboy-form-container p-3 from global; }
 .register-form { composes: flx flx-col flx-align-center from global; }
 .register-form-inputs { composes: gameboy-form-inputs-wrapper flx flx-col flx-align-center mb-5 from global; }
-.inputs { composes: inputs from global; }
+.inputs { composes: pokemon-font inputs from global; }
 .register-button { composes: gameboy-start-button mb-3 from global; }
 .already-have-account { composes: m-1 from global; font-size: 0.7em; }
 .figures-container {
-    margin-top: 32px;
-    margin-bottom: 32px;
     width: 100%;
     display: grid;
     grid-template-columns: 96px 96px 96px;
-    background-color: rgba(0,0,0,0.1);
+}
+.character-creation-container {
+}
+.character-creation-label {
+    composes: pokemon-font from global;
+    text-align: center;
+    display: block;
+    padding: 16px;
 }
