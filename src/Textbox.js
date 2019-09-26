@@ -20,9 +20,9 @@ class Textbox {
         console.log(this.x1, this.y1, this.x2 - this.x1, this.y2 - this.y1);
         ctx.clearRect(
             this.x1 - 1,
-            this.y1 - 8,
+            this.y1,
             this.x2 - this.x1 + 1,
-            this.y2 - this.y1 + 8
+            this.y2 - this.y1 + 16
         );
         this.cursor = 0;
     }
@@ -36,7 +36,7 @@ class Textbox {
 
     cursorCoords() {
         const x = this.x1 + (this.cursor % this.width) * 8;
-        const y = this.y1 + Math.floor(this.cursor / this.width) * 16;
+        const y = this.y1 + Math.floor(this.cursor / this.width) * 16 + 8;
         return [x, y];
     }
 
@@ -47,6 +47,10 @@ class Textbox {
     }
 
     printString(ctx, string, speed = 50, i = 0, nested = false) {
+        let promise;
+        if (!nested) {
+            promise = new Promise(resolve => this._resolve = resolve);
+        }
         if (string[i]) {
             this.printChar(ctx, string[i]);
             if (string[i] === ' ') {
@@ -61,23 +65,20 @@ class Textbox {
                 }
             }
 
-            setTimeout(
-                () => this.printString(ctx, string, speed, i + 1, true),
-                speed
-            );
+            // instant text if speed is 0;
+            if (speed) {
+                setTimeout(
+                    () => this.printString(ctx, string, speed, i + 1, true),
+                    speed
+                );
+            } else {
+                this.printString(ctx, string, speed, i + 1, true);
+            }
         } else {
             this._resolve();
         }
-        if (!nested) {
-            return new Promise(resolve => this._resolve = resolve);
-        }
+        return promise;
     }
-
-    // printWord(ctx, word, speed = 50, i = 0) {
-    //     if (word.length + (this.cursor % this.width) > this.width) {
-    //         cursor = (cursor + this.width) % this.width;
-    //     }
-    // }
 }
 
 export default Textbox;

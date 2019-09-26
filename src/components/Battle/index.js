@@ -24,7 +24,11 @@ class Battle extends React.Component {
         this.canvasRef = React.createRef();
         this.textRef = React.createRef();
         this.drawSprites = Sprite.drawSpritesFactory(160, 144);
-        this.text = new Textbox(16, 116, 144, 136);
+
+        this.text = new Textbox(16, 108, 144, 128);
+        this.enemyName = new Textbox(8, 0, 72, 8);
+        this.enemyLevel = new Textbox(40, 8, 56, 16);
+
         this.actorSprites = [];
     }
 
@@ -100,12 +104,27 @@ class Battle extends React.Component {
         // wait for text advance
         await this.awaitTextAdvance();
 
-        console.log('advance text');
+        // Enemy HP bar renders here
+
+        this.enemyName.printString(
+            this.textCtx,
+            getSpecies(introData.species).name,
+            0
+        );
+
+        console.log(introData);
+        this.enemyLevel.printString(
+            this.textCtx,
+            introData.level,
+            0
+        );
 
         this.text.clear(this.textCtx);
         this.mySprite.animate(slide(0, 32, -64, 32, linear(300)));
 
         await new Promise(response => setTimeout(response, 300));
+
+        this.actorSprites = [this.opponentSprite];
 
         const myPokemon = introData.myPokemon;
 
@@ -128,15 +147,19 @@ class Battle extends React.Component {
 
         this.actorSprites.pop();
 
-        const speciesData = getSpecies(myPokemon.species)
+        const speciesData = getSpecies(myPokemon.species);
+        console.log(myPokemon.species, speciesData);
 
         this.mySprite = new Sprite({
-            x: 16,
-            y: 64,
+            x: 0,
+            y: 32,
             size: 32,
             scale: 2,
-            frames: [speciesData.backsprite]
+            frameRate: 1,
+            frames: [speciesData.backSprite]
         });
+
+        this.actorSprites.push(this.mySprite);
 
         await this.awaitTextAdvance();
 
@@ -181,6 +204,7 @@ class Battle extends React.Component {
             { x: 0, y: 0 },
             this.background
         );
+
 
         if (this.actorSprites.length) {
             this.drawSprites(

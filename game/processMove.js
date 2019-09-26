@@ -51,7 +51,7 @@ function processMove(user, data, socket) {
             // Listen for a response, THEN ask the question so there are no race conditions.
             socket.once('battle ready', () => {
                 console.log('battle ready');
-                const battle = new Battle('wild', new PlayerCombatant(user), new WildPokemon(encounter.species, encounter.level));
+                const battle = new Battle('wild', new PlayerCombatant(user), new WildPokemon(encounter.species, encounter.lvl));
                 battle.initialize();
             })
             socket.emit('random encounter', encounter);
