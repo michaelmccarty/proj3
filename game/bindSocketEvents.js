@@ -6,6 +6,8 @@ const Pokemon = require('./battle/Pokemon');
 module.exports = function(io, connectedUsers) {
     const trainerMap = {};
     return function(socket) {
+        // const claims = authenticateSocket(socket);
+        // console.log(socket.handshake.headers);
         console.log('made socket connection', socket.id);
 
         // For now, create a dummy user to simulate logging them in

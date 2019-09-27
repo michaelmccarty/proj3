@@ -18,6 +18,7 @@ import { withRouter } from 'react-router-dom';
 import gameDPad from '../../gamepad-imgs/d-pad-element-01.svg';
 import gameActionA from '../../gamepad-imgs/action-button-01.svg';
 import gameActionB from '../../gamepad-imgs/action-button-02.svg';
+
 let gamepads = {};
 
 class Game extends React.PureComponent {
@@ -249,9 +250,10 @@ class Game extends React.PureComponent {
         );
         const clientEncounterEvent = new Promise(resolve =>
             this.player.once('random encounter', () => {
+                this.shouldBeFocused = false;
                 this.props.socket.once('battle end', () => {
                     this.player.inBattle = false;
-                    // this.canvasRef.current.focus();
+                    this.shouldBeFocused = true;
                 });
                 resolve();
             })
@@ -675,6 +677,12 @@ class Game extends React.PureComponent {
         ).oncontextmenu = new Function('return false;');
         this.setup();
     };
+
+    componentDidUpdate() {
+        if (this.shouldBeFocused) {
+            this.canvasRef.current.focus();
+        }
+    }
 }
 
 export default withRouter(Game);
