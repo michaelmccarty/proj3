@@ -56,10 +56,18 @@ class Textbox {
         this.cursor++;
     }
 
+    advance(ctx) {
+        if (this.cursor) {
+            this._instantText = true;
+        }
+    }
+
     printString(ctx, string, speed = 50, i = 0, nested = false) {
         let promise;
         if (!nested) {
             promise = new Promise(resolve => (this._resolve = resolve));
+            promise.textbox = this;
+            promise.then(() => promise.isResolved = true);
         }
         if (string[i]) {
             this.printChar(ctx, string[i]);
@@ -83,13 +91,14 @@ class Textbox {
             // instant text if speed is 0;
             if (speed) {
                 setTimeout(
-                    () => this.printString(ctx, string, speed, i + 1, true),
-                    speed
+                    () => this.printString(ctx, string,  this._instantText ? 0 : speed, i + 1, true),
+                    this._instantText ? 0 : speed
                 );
             } else {
                 this.printString(ctx, string, speed, i + 1, true);
             }
         } else {
+            this._instantText = false;
             this._resolve();
         }
         return promise;

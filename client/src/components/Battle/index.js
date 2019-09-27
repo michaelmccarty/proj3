@@ -70,7 +70,7 @@ class Battle extends React.Component {
             size: 80
         });
     }
-    
+
     componentDidMount() {
         this.stopDrawLoop = false;
         this.startBattle();
@@ -87,10 +87,7 @@ class Battle extends React.Component {
 
         socket.once('battle end', this.battleEnd);
 
-        this.background = new Texture(
-            this.gl,
-            '/spritesheets/battle-base.png'
-        );
+        this.background = new Texture(this.gl, '/spritesheets/battle-base.png');
 
         this.actorSpritesheet = new Texture(
             this.gl,
@@ -114,6 +111,8 @@ class Battle extends React.Component {
             size: 8
         });
 
+        this.configureCursor('inactive');
+
         this.hudSprites.push(this.backgroundSprite);
         requestAnimationFrame(this.draw);
 
@@ -130,7 +129,7 @@ class Battle extends React.Component {
             frameRate: 1,
             size: 32,
             scale: 2,
-            filters: {monochrome: true}
+            filters: { monochrome: true }
         });
 
         const enemyData = getSpecies(introData.species);
@@ -140,7 +139,7 @@ class Battle extends React.Component {
             frames: [enemyData],
             frameRate: 1,
             size: 56,
-            filters: {monochrome: true}
+            filters: { monochrome: true }
         });
 
         this.actorSprites.push(this.opponentSprite, this.mySprite);
@@ -152,13 +151,18 @@ class Battle extends React.Component {
         this.mySprite.filters.monochrome = false;
         this.opponentSprite.filters.monochrome = false;
 
-        this.text.log.printString(
-            this.textCtx,
-            introData ? introData.introText : 'Debug'
-        );
+        // this.text.log.printString(
+        //     this.textCtx,
+        //     introData ? introData.introText : 'Debug'
+        // );
 
         // wait for text advance
-        await this.awaitTextAdvance();
+        await this.awaitTextAdvance(
+            this.text.log.printString(
+                this.textCtx,
+                introData ? introData.introText : 'Debug'
+            )
+        );
 
         // Enemy HP bar renders here
 
@@ -194,8 +198,8 @@ class Battle extends React.Component {
         this.text.myHP.printString(
             this.textCtx,
             myPokemon.stats.hp.toString().padStart(3, ' ') +
-            '/' +
-            myPokemon.stats.maxHp.toString().padStart(3, ' '),
+                '/' +
+                myPokemon.stats.maxHp.toString().padStart(3, ' '),
             0
         );
 
@@ -238,7 +242,7 @@ class Battle extends React.Component {
         // The server is waiting for us to select our action
     };
 
-    executeTurn = async (turnData) => {
+    executeTurn = async turnData => {
         if (this.canExitBattle) this.exitBattle();
         console.log(turnData);
         const meFirst = turnData.script.whoFirst === 'me' ? 0 : 1;
@@ -246,73 +250,85 @@ class Battle extends React.Component {
         if (meFirst) {
             // don't play the second if the first one feints
             if (await this.executeTurnAction(turnData.script[0]))
-                await this.executeTurnAction(turnData.script[1], turnData.pokemon2.name);
+                await this.executeTurnAction(
+                    turnData.script[1],
+                    turnData.pokemon2.name
+                );
         } else {
-            if (await this.executeTurnAction(turnData.script[1], turnData.pokemon2.name))
+            if (
+                await this.executeTurnAction(
+                    turnData.script[1],
+                    turnData.pokemon2.name
+                )
+            )
                 await this.executeTurnAction(turnData.script[0]);
         }
 
         this.chooseAction();
-    }
+    };
 
     async executeTurnAction(action, enemy) {
         if (action.type === 'fight') {
             // Pokemon used Move
-            this.text.log.printString(
-                this.textCtx,
-                `${enemy ? `Enemy ${enemy}` : this.myPokemon.name} used ${action.move.toUpperCase()}!`
-            );
 
             // sprite animation + screen effects
             // screen shake
-            // HP bar 
+            // HP bar
 
-            await this.awaitTextAdvance();
+            await this.awaitTextAdvance(
+                this.text.log.printString(
+                    this.textCtx,
+                    `${
+                        enemy ? `Enemy ${enemy}` : this.myPokemon.name
+                    } used ${action.move.toUpperCase()}!`
+                )
+            );
 
             this.text.log.clear(this.textCtx);
 
-            // Critical Hit! 
+            // Critical Hit!
             if (action.crit) {
-                this.text.log.printString(
-                    this.textCtx,
-                    'Critical hit!'
+                await this.awaitTextAdvance(
+                    this.text.log.printString(this.textCtx, 'Critical hit!')
                 );
-
-                await this.awaitTextAdvance();
                 this.text.log.clear(this.textCtx);
             }
 
             // super effective
             if (action.effectiveness > 1) {
-                this.text.log.printString(
-                    this.textCtx,
-                    'It\'s super effective!'
+                await this.awaitTextAdvance(
+                    this.text.log.printString(
+                        this.textCtx,
+                        "It's super effective!"
+                    )
                 );
-                await this.awaitTextAdvance();
                 this.text.log.clear(this.textCtx);
 
                 // not very effective
             } else if (action.effectiveness < 1) {
-                this.text.log.printString(
-                    this.textCtx,
-                    'It\'s not very effective...'
+                await this.awaitTextAdvance(
+                    this.text.log.printString(
+                        this.textCtx,
+                        "It's not very effective..."
+                    )
                 );
-                await this.awaitTextAdvance();
                 this.text.log.clear(this.textCtx);
             }
 
             if (action.effect == 'FNT') {
-                this.text.log.printString(
-                    this.textCtx,
-                    `${!enemy ? `Enemy ${enemy}` : this.myPokemon.name} feinted!`
-                );
                 // play feint animation
-                await this.awaitTextAdvance();
+                await this.awaitTextAdvance(
+                    this.text.log.printString(
+                        this.textCtx,
+                        `${
+                            !enemy ? `Enemy ${enemy}` : this.myPokemon.name
+                        } feinted!`
+                    )
+                );
                 this.text.log.clear(this.textCtx);
             }
 
             // Pokemon was statused
-
 
             return !(action.effect === 'FNT');
         }
@@ -341,35 +357,44 @@ class Battle extends React.Component {
         this.props.socket.emit('battle action', action);
     }
 
-    battleEnd = ({condition, winner}) => {
+    battleEnd = ({ condition, winner }) => {
         console.log(condition, winner);
         if (winner === 'me') {
             this.canExitBattle = true;
             if (this._instantExit) {
                 this.exitBattle();
             }
-        } else { // respawn player with full health pokemon
+        } else {
+            // respawn player with full health pokemon
             this.canExitBattle = true;
             if (this._instantExit) {
                 this.exitBattle();
             }
         }
-    }
+    };
 
     exitBattle() {
-        Object.entries(this.text).map(([, textbox]) => textbox.clear(this.textCtx));
+        Object.entries(this.text).map(([, textbox]) =>
+            textbox.clear(this.textCtx)
+        );
         this.hudSprites = [];
         this.actorSprites = [];
         this.props.history.goBack();
     }
 
-    awaitTextAdvance() {
+    awaitTextAdvance(textboxPromise) {
         if (!this.textAdvance) {
             this.textAdvance = new Promise(resolve => {
                 this.textAdvanceFunction = () => {
-                    resolve();
-                    delete this.textAdvance;
-                }
+                    console.log('f');
+                    if (!textboxPromise ||textboxPromise.isResolved ) {
+                        resolve();
+                        delete this.textAdvance;
+                    } else {
+                        console.log('advance');
+                        textboxPromise.textbox.advance();
+                    }
+                };
             });
         }
         // this.textAdvance.then(() => delete this.textAdvance);
@@ -378,6 +403,7 @@ class Battle extends React.Component {
     }
 
     configureCursor(preset) {
+        console.log('configuring cursor to: ' + preset);
         switch (preset) {
             case 'battle menu':
                 this.cursorSettings = {
@@ -421,7 +447,9 @@ class Battle extends React.Component {
     selectOption() {
         if (!this.cursorSettings.active) return;
         const current = this.cursorSettings.current;
-        this.cursorSettings.options[current[1]][current[0]].cb();
+        const cb = this.cursorSettings.options[current[1]][current[0]].cb
+        this.configureCursor('inactive');
+        cb();
     }
 
     fightMenu = () => {
