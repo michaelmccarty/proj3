@@ -55,13 +55,16 @@ class Battle extends EventEmitter {
                 type: 'turn results',
                 pokemon1: pokemon1.privateStats(),
                 pokemon2: pokemon2.publicStats(),
+                whoFirst: results.whoFirst ? 'other' : 'me',
                 script: results.script,
+
             };
-            
+
             const message2 = {
                 type: 'turn results',
                 pokemon1: pokemon2.privateStats(),
                 pokemon2: pokemon1.publicStats(),
+                whoFirst: results.whoFirst ? 'me' : 'other',
                 script: results.script,
             }
 

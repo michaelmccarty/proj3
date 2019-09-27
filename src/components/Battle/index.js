@@ -177,8 +177,6 @@ class Battle extends React.Component {
 
         this.text.myName.printString(this.textCtx, myPokemon.name, 0);
 
-        console.log(myPokemon.level);
-
         this.text.myLevel.printString(
             this.textCtx,
             myPokemon.level.toString(),
@@ -188,8 +186,8 @@ class Battle extends React.Component {
         this.text.myHP.printString(
             this.textCtx,
             myPokemon.stats.hp.toString().padStart(3, ' ') +
-                '/' +
-                myPokemon.stats.maxHp.toString().padStart(3, ' '),
+            '/' +
+            myPokemon.stats.maxHp.toString().padStart(3, ' '),
             0
         );
 
@@ -232,6 +230,84 @@ class Battle extends React.Component {
         // The server is waiting for us to select our action
     };
 
+    executeTurn = async (turnData) => {
+        console.log(turnData);
+        const meFirst = turnData.script.whoFirst === 'me' ? 0 : 1;
+
+        if (meFirst) {
+            await this.executeTurnAction(turnData.script[0]);
+            await this.executeTurnAction(turnData.script[1], turnData.pokemon2.name);
+        } else {
+            await this.executeTurnAction(turnData.script[1], turnData.pokemon2.name);
+            await this.executeTurnAction(turnData.script[0]);
+        }
+
+        this.chooseAction();
+    }
+
+    async executeTurnAction(action, enemy) {
+        if (action.type === 'fight') {
+            // Pokemon used Move
+            this.text.log.printString(
+                this.textCtx,
+                `${enemy ? `Enemy ${enemy}` : this.myPokemon.name} used ${action.move.toUpperCase()}!`
+            );
+
+            // sprite animation + screen effects
+            // screen shake
+            // HP bar 
+
+            await this.awaitTextAdvance();
+
+            this.text.log.clear(this.textCtx);
+
+            // Critical Hit! 
+            if (action.crit) {
+                this.text.log.printString(
+                    this.textCtx,
+                    'Critical hit!'
+                );
+
+                await this.awaitTextAdvance();
+                this.text.log.clear(this.textCtx);
+            }
+
+            // super effective
+            if (action.effectiveness > 1) {
+                this.text.log.printString(
+                    this.textCtx,
+                    'It\'s super effective!'
+                );
+                await this.awaitTextAdvance();
+                this.text.log.clear(this.textCtx);
+
+                // not very effective
+            } else if (action.effectiveness < 1) {
+                this.text.log.printString(
+                    this.textCtx,
+                    'It\'s not very effective...'
+                );
+                await this.awaitTextAdvance();
+                this.text.log.clear(this.textCtx);
+            }
+
+            if (action.effect == 'FNT') {
+                this.text.log.printString(
+                    this.textCtx,
+                    `${enemy ? `Enemy ${enemy}` : this.myPokemon.name} feinted!`
+                    );
+                    // play feint animation
+                await this.awaitTextAdvance();
+                this.text.log.clear(this.textCtx);
+            }
+
+            // Pokemon was statused
+
+
+            return;
+        }
+    }
+
     async chooseAction() {
         // draw the battle menu
         this.text.log.clear(this.textCtx);
@@ -247,16 +323,20 @@ class Battle extends React.Component {
         const action = await selection;
 
         this.hudSprites.pop(); // battle menu
+        this.props.socket.once('battle turn results', this.executeTurn);
         this.props.socket.emit('battle action', action);
     }
 
     awaitTextAdvance() {
         if (!this.textAdvance) {
             this.textAdvance = new Promise(resolve => {
-                this.textAdvanceFunction = resolve;
+                this.textAdvanceFunction = () => {
+                    resolve();
+                    delete this.textAdvance;
+                }
             });
         }
-        this.textAdvance.then(() => delete this.textAdvance);
+        // this.textAdvance.then(() => delete this.textAdvance);
 
         return this.textAdvance;
     }
@@ -283,11 +363,9 @@ class Battle extends React.Component {
                 this.cursorSettings = {
                     active: true,
                     options: [
-                        //map over moves and limit it to valid ones
-                        [{ x: 40, y: 104, cb: () => this.useMove(0) }],
-                        [{ x: 40, y: 112, cb: () => this.useMove(1) }],
-                        [{ x: 40, y: 120, cb: () => this.useMove(2) }],
-                        [{ x: 40, y: 128, cb: () => this.useMove(3) }]
+                        ...this.myPokemon.moves.map((_, i) => [
+                            { x: 40, y: 104 + 8 * i, cb: () => this.useMove(i) }
+                        ])
                     ],
                     current: [0, 0]
                 };
@@ -340,7 +418,7 @@ class Battle extends React.Component {
     };
 
     handleKeyDown = e => {
-        console.log(e);
+        // console.log(e);
         switch (e.key) {
             case 'f':
             case 'F':

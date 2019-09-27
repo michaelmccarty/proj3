@@ -48,6 +48,8 @@ class Textbox {
         if (char === '\n') {
             return (this.cursor =
                 Math.floor(this.cursor / this.width + 1) * this.width);
+        } else if (char === ' ' && this.cursor % this.width === 0) {
+            return;
         }
         ctx.font = '8px Pokemon';
         ctx.fillText(char, ...this.cursorCoords());
