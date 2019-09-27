@@ -10,7 +10,7 @@ const UserSchema = new Schema({
     required: true,
     match: [/.+@.+\..+/, "Please enter a valid e-mail address"]
   },
-  character: {
+  skin: {
     type: String,
     required: true
   },

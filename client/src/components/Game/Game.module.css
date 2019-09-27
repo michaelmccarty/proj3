@@ -26,6 +26,14 @@
     transform: scale(0.8);
 }
 
+.left-controls button, .right-controls button {
+    outline: none;
+}
+
+.left-controls button:hover, .right-controls button:hover {
+    opacity: 1;
+}
+
 .left-controls {
     left: 0;
     bottom: 0;
