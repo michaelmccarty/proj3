@@ -33,7 +33,9 @@ module.exports = (app, passport, db) => {
                 username: req.body.username,
                 email: req.body.email,
                 password: hash,
+
                 skin: req.body.character
+
             })
                 .then(data => {
                     res.json({ message: 'registration successful' });
