@@ -108,8 +108,8 @@ class App extends React.Component {
     logout = () => {
         const { socket } = this.state;
         socket.emit('logout');
-        API.logout().then(function (data){
-          window.location.href="/";
+        API.logout().then(function(data) {
+            window.location.href = '/';
         });
         this.setState({ user: null });
         API.logout();
@@ -122,44 +122,46 @@ class App extends React.Component {
         return (
             <Router>
                 <Switch>
-                    <Route
-                        path="/game"
-                        render={() => (
-                            <main className="container">
-                                <div className="game">
-                                    <Game
-                                        socket={socket}
-                                        isMobile={this.state.isMobile}
+                    {socket && (
+                        <Route
+                            path="/game"
+                            render={() => (
+                                <main className="container">
+                                    <div className="game">
+                                        <Game
+                                            socket={socket}
+                                            isMobile={this.state.isMobile}
+                                        />
+                                    </div>
+                                    <Route
+                                        path="/game/battle"
+                                        render={() => (
+                                            <div className="game">
+                                                <Battle socket={socket} />
+                                            </div>
+                                        )}
                                     />
-                                </div>
-                                <Route
-                                    path="/game/battle"
-                                    render={() => (
-                                        <div className="game">
-                                            <Battle socket={socket} />
-                                        </div>
-                                    )}
-                                />
-                                <div className="options">
-                                    <OptionsWrapper
-                                        socket={socket}
-                                        pressLogout={this.logout}
-                                        party={party}
-                                        pokedex={pokedex}
-                                        logout={this.logout}
-                                    />
-                                </div>
-                                <div className="chat">
-                                    <ChatBox
-                                        socket={socket}
-                                        messages={messages}
-                                        onlineUsers={onlineUsers}
-                                        logout={this.logout}
-                                    />
-                                </div>
-                            </main>
-                        )}
-                    />
+                                    <div className="options">
+                                        <OptionsWrapper
+                                            socket={socket}
+                                            pressLogout={this.logout}
+                                            party={party}
+                                            pokedex={pokedex}
+                                            logout={this.logout}
+                                        />
+                                    </div>
+                                    <div className="chat">
+                                        <ChatBox
+                                            socket={socket}
+                                            messages={messages}
+                                            onlineUsers={onlineUsers}
+                                            logout={this.logout}
+                                        />
+                                    </div>
+                                </main>
+                            )}
+                        />
+                    )}
                     <Route exact path="/" component={LoginPage} />
                     <Route exact path="/register" component={RegisterPage} />
                     <Route component={NoMatch} />

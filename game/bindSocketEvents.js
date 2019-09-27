@@ -1,12 +1,11 @@
 const $$ = require('../SocketEnum');
 const processMove = require('./processMove');
-const makeEncounterGenerator = require( '../utils/random');
+const makeEncounterGenerator = require('../utils/random');
 const Pokemon = require('./battle/Pokemon');
 
-
-module.exports = function (io, connectedUsers) {
+module.exports = function(io, connectedUsers) {
     const trainerMap = {};
-    return function (socket) {
+    return function(socket) {
         console.log('made socket connection', socket.id);
 
         // For now, create a dummy user to simulate logging them in
@@ -17,13 +16,10 @@ module.exports = function (io, connectedUsers) {
             x: 4,
             y: 4,
             socket: socket,
-            skin: 'player_default',
+            skin: 'gary',
             facing: 'south',
 
-            pokemon: [
-                new Pokemon(1, 5),
-                new Pokemon(4, 5),
-            ],
+            pokemon: [new Pokemon(1, 5), new Pokemon(4, 5)],
 
             previousMove: {
                 x: 4,
@@ -31,7 +27,7 @@ module.exports = function (io, connectedUsers) {
                 facing: 'south',
                 stepNumber: 0,
                 type: 'walk',
-                map: 'Route 1',
+                map: 'Route 1'
             },
             // Parameters for random encounters
             seed: Math.random(),
@@ -39,15 +35,29 @@ module.exports = function (io, connectedUsers) {
             stepsSinceLastEncounter: 0
         };
 
-        user.encounterGenerator = makeEncounterGenerator(user.seed, null, user.rngOffset);
+        user.encounterGenerator = makeEncounterGenerator(
+            user.seed,
+            null,
+            user.rngOffset
+        );
 
         trainerMap[user.trainerId] = socket.id;
-
-
 
         // Should be their user object, loaded from the database, plus the socket.
         connectedUsers[socket.id] = user;
 
+        socket.on('load game', function() {
+            socket.emit('player data', {
+                trainerId: user.trainerId,
+                name: user.name,
+                map: user.map,
+                skin: user.skin,
+                x: user.x,
+                y: user.y,
+                facing: user.facing,
+                party: user.pokemon
+            });
+        });
         // socket.on("connect", () => {
         user = connectedUsers[socket.id];
         console.log('spawning ' + user.trainerId);
@@ -79,7 +89,7 @@ module.exports = function (io, connectedUsers) {
                 [$$.X]: user.x,
                 [$$.Y]: user.y,
                 [$$.TRAINER_ID]: user.trainerId
-            }); 
+            });
             // io.sockets.emit('move', data);
         });
 
@@ -117,14 +127,14 @@ module.exports = function (io, connectedUsers) {
             delete connectedUsers[socket.id];
         });
 
-        socket.on('chat', function (data) {
+        socket.on('chat', function(data) {
             const user = connectedUsers[socket.id];
             data.userName = getDisplayName(user);
             io.sockets.emit('chat', data);
             io.sockets.emit('chat2', data);
         });
 
-        socket.on('typing', function (data) {
+        socket.on('typing', function(data) {
             socket.broadcast.emit('typing', data);
         });
 
@@ -132,7 +142,7 @@ module.exports = function (io, connectedUsers) {
             // console.log(connectedUsers);
 
             const srvSockets = io.sockets.sockets;
-            // const onlineUsers = 
+            // const onlineUsers =
             // console.log(srvSockets);
             const onlineUsers = Object.entries(srvSockets)
                 .map(([socketId]) => connectedUsers[socketId])
@@ -148,5 +158,11 @@ module.exports = function (io, connectedUsers) {
 };
 
 function getDisplayName(user) {
-    return displayName = user.name + '&' + user.trainerId.toString().padStart(15, '0').substring(0, 5)
+    return (displayName =
+        user.name +
+        '&' +
+        user.trainerId
+            .toString()
+            .padStart(15, '0')
+            .substring(0, 5));
 }

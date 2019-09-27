@@ -1,11 +1,17 @@
-
 // import directions from '../directions';
 import CollidableCreature from './CollidableCreature';
 import directions from '../directions';
 
 class Player extends CollidableCreature {
-    constructor(x, y, map, skin = "player_default", siblings) {
-        super(x, y, skin, 'north', map, siblings);
+    constructor(
+        x,
+        y,
+        map,
+        siblings,
+        skin = 'player_default',
+        facing = 'north'
+    ) {
+        super(x, y, skin, facing, map, siblings);
 
         this.setSpeed(3);
         //need to adjust sprites framerate to 4 * this.speed
@@ -20,35 +26,46 @@ class Player extends CollidableCreature {
         //eslint-disable-next-line
         for (let event of nextTile.events) {
             const result = event(this);
-            if (result === true) return true; // event has taken control.
-            else if (result) { // executed after the walk finishes
+            if (result === true) return true;
+            // event has taken control.
+            else if (result) {
+                // executed after the walk finishes
                 return result;
             }
         }
     }
 
     checkEncounter(direction, distance = 1, offset = 1) {
-        const rand = this.encounterGenerator(this.stepNumber + offset)
+        const rand = this.encounterGenerator(this.stepNumber + offset);
         if (this.nextTile(direction, distance).flags.encounter) {
             // console.log(rand, this.map.encounterParams.density)
-            if (rand < this.map.encounterParams.density && this.stepsSinceLastEncounter > 2) {
-                this.stepsSinceLastEncounter = 0;
+            if (
+                rand < this.map.encounterParams.density &&
+                this.stepsSinceLastEncounter > 2
+            ) {
+                console.log(this.stepsSinceLastEncounter);
                 return this.startEncounter;
             }
         }
     }
 
     walk(direction) {
-        this.stepsSinceLastEncounter++;
         if (this.walking || this.inBattle) return;
-        const cb = this.getEvent(direction) || this.checkEncounter(direction) || (() => { });
+        this.stepsSinceLastEncounter++;
+        const cb =
+            this.getEvent(direction) ||
+            this.checkEncounter(direction) ||
+            (() => {});
         if (cb === true) return; // event has taken control
 
         super.walk(direction, cb);
     }
 
     hop() {
-        const cb = this.getEvent('south', 2) || this.checkEncounter('south', 2, 0) || (() => { });
+        const cb =
+            this.getEvent('south', 2) ||
+            this.checkEncounter('south', 2, 0) ||
+            (() => {});
         super.hop(cb);
     }
 
@@ -56,9 +73,10 @@ class Player extends CollidableCreature {
         // enter event mode
         this.inBattle = true;
         this.emit('random encounter');
-    }
+        this.stepsSinceLastEncounter = 0;
+    };
 
-    handleMove = (e) => {
+    handleMove = e => {
         let dx, dy;
         switch (e.type) {
             case 'bonk':
@@ -71,7 +89,9 @@ class Player extends CollidableCreature {
                 [dx, dy] = [0, 2];
                 break;
             default:
-                console.log('If you\'re reading this, something has gone horribly wrong');
+                console.log(
+                    "If you're reading this, something has gone horribly wrong"
+                );
         }
         const [x, y] = [e.x + dx, e.y + dy];
         this.emit(e.type, {
@@ -81,7 +101,7 @@ class Player extends CollidableCreature {
             y: y,
             facing: this.facing
         });
-    }
+    };
 }
 
 export default Player;

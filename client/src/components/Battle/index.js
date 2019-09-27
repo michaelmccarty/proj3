@@ -344,6 +344,11 @@ class Battle extends React.Component {
             if (this._instantExit) {
                 this.exitBattle();
             }
+        } else { // respawn player with full health pokemon
+            this.canExitBattle = true;
+            if (this._instantExit) {
+                this.exitBattle();
+            }
         }
     }
 
@@ -545,6 +550,7 @@ class Battle extends React.Component {
                 <canvas
                     key="battle-text"
                     className={styles['game-screen']}
+                    tabIndex="2"
                     width="160"
                     height="144"
                     ref={this.textRef}
