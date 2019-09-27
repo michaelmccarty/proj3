@@ -11,6 +11,8 @@ import socketIOClient from 'socket.io-client';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import pokedex from '../src/pokedex';
 import API from './utils/API';
+import { UserProvider } from './context/UserContext';
+import ProtectedRoute from './ProtectedRoute';
 
 class App extends React.Component {
     state = {
@@ -100,9 +102,9 @@ class App extends React.Component {
     }
 
     setUser = user => {
-        const { socket } = this.state;
-        socket.emit('user_connected', user);
-        // this.setState
+        // const { socket } = this.state;
+        // socket.emit('user_connected', user);
+        this.setState({ user });
     };
 
     logout = () => {
@@ -117,55 +119,74 @@ class App extends React.Component {
     };
 
     render() {
-        const { socket, messages, onlineUsers, party, pokedex } = this.state;
+        const {
+            socket,
+            messages,
+            onlineUsers,
+            party,
+            pokedex,
+            user
+        } = this.state;
         console.log('render App');
+        console.log(API.isLoggedIn());
         return (
             <Router>
-                <Switch>
-                    {socket && (
+                <UserProvider
+                    value={{
+                        user,
+                        setUser: this.setUser
+                    }}
+                >
+                    <Switch>
+                        {socket && (
+                            <ProtectedRoute
+                                path="/game"
+                                render={() => (
+                                    <main className="container">
+                                        <div className="game">
+                                            <Game
+                                                socket={socket}
+                                                isMobile={this.state.isMobile}
+                                            />
+                                        </div>
+                                        <Route
+                                            path="/game/battle"
+                                            render={() => (
+                                                <div className="game">
+                                                    <Battle socket={socket} />
+                                                </div>
+                                            )}
+                                        />
+                                        <div className="options">
+                                            <OptionsWrapper
+                                                socket={socket}
+                                                pressLogout={this.logout}
+                                                party={party}
+                                                pokedex={pokedex}
+                                                logout={this.logout}
+                                            />
+                                        </div>
+                                        <div className="chat">
+                                            <ChatBox
+                                                socket={socket}
+                                                messages={messages}
+                                                onlineUsers={onlineUsers}
+                                                logout={this.logout}
+                                            />
+                                        </div>
+                                    </main>
+                                )}
+                            />
+                        )}
+                        <Route exact path="/" component={LoginPage} />
                         <Route
-                            path="/game"
-                            render={() => (
-                                <main className="container">
-                                    <div className="game">
-                                        <Game
-                                            socket={socket}
-                                            isMobile={this.state.isMobile}
-                                        />
-                                    </div>
-                                    <Route
-                                        path="/game/battle"
-                                        render={() => (
-                                            <div className="game">
-                                                <Battle socket={socket} />
-                                            </div>
-                                        )}
-                                    />
-                                    <div className="options">
-                                        <OptionsWrapper
-                                            socket={socket}
-                                            pressLogout={this.logout}
-                                            party={party}
-                                            pokedex={pokedex}
-                                            logout={this.logout}
-                                        />
-                                    </div>
-                                    <div className="chat">
-                                        <ChatBox
-                                            socket={socket}
-                                            messages={messages}
-                                            onlineUsers={onlineUsers}
-                                            logout={this.logout}
-                                        />
-                                    </div>
-                                </main>
-                            )}
+                            exact
+                            path="/register"
+                            component={RegisterPage}
                         />
-                    )}
-                    <Route exact path="/" component={LoginPage} />
-                    <Route exact path="/register" component={RegisterPage} />
-                    <Route component={NoMatch} />
-                </Switch>
+                        <Route component={NoMatch} />
+                    </Switch>
+                </UserProvider>
             </Router>
         );
     }

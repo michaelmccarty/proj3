@@ -68,8 +68,6 @@ function ListItem(props) {
                 <div className={styles['logout-submenu']}>
                     Are you sure?
                     <button onClick={() => {
-                        console.log(API);
-                        console.log(props.logout);
                         props.logout();
                     }}>Yes</button>
                     <button>Keep Playing</button>

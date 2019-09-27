@@ -2,8 +2,11 @@ import React from 'react';
 import styles from './LoginForm.module.css';
 import { Link } from 'react-router-dom';
 import API from '../../../utils/API';
+import UserContext from "../../../context/UserContext";
 
 class LoginForm extends React.Component {
+    static contextType = UserContext;
+
     state = {
         email: '',
         password: ''
@@ -21,7 +24,8 @@ class LoginForm extends React.Component {
         const { email, password } = this.state;
         const body = { email, password };
         API.login(body)
-            .then(() => {
+            .then((response) => {
+                this.context.setUser(response.data);
                 this.props.history.push('/game');
             })
             .catch(function(err) {
@@ -42,6 +46,7 @@ class LoginForm extends React.Component {
                             <input
                                 className={styles['inputs']}
                                 name="email"
+                                type="email"
                                 onChange={this.handleInputChange}
                                 value={this.state.email}
                                 placeholder="Email"
