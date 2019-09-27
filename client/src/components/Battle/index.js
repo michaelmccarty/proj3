@@ -18,6 +18,10 @@ import getSpecies from '../../pokedex/getSpecies';
 
 import effectSprites from '../../battle-sprites/sprites.json';
 
+import gameDPad from '../../gamepad-imgs/d-pad-element-01.svg';
+import gameActionA from '../../gamepad-imgs/action-button-01.svg';
+import gameActionB from '../../gamepad-imgs/action-button-02.svg';
+
 // @keydown
 class Battle extends React.Component {
     constructor(props) {
@@ -537,7 +541,7 @@ class Battle extends React.Component {
 
     render() {
         return (
-            <>
+            <div className={styles['battle-game-container']}>
                 <canvas
                     key="battle-canvas"
                     className={styles['game-screen']}
@@ -556,7 +560,60 @@ class Battle extends React.Component {
                     ref={this.textRef}
                     onKeyDown={this.handleKeyDown}
                 />
-            </>
+                <div
+                    className={styles['battle-mobile-controls']}
+                    id="mobile-controls"
+                >
+                    <div className={styles['left-controls']}>
+                        <button
+                            onTouchStart={() => {
+                                this.handleKeyDown(new KeyboardEvent('keydown',{'key':'ArrowUp'}));
+                            }}
+                        >
+                            <img src={gameDPad} alt="Up" />
+                        </button>
+                        <button
+                            onTouchStart={() => {
+                                this.handleKeyDown(new KeyboardEvent('keydown',{'key':'ArrowDown'}));
+                            }}
+                        >
+                            <img src={gameDPad} alt="Down" />
+                        </button>
+                        <button
+                            onTouchStart={() => {
+                                this.handleKeyDown(new KeyboardEvent('keydown',{'key':'ArrowLeft'}));
+                            }}
+                        >
+                            <img src={gameDPad} alt="Left" />
+                        </button>
+                        <button
+                            onTouchStart={() => {
+                                this.handleKeyDown(new KeyboardEvent('keydown',{'key':'ArrowRight'}));
+                            }}
+                        >
+                            <img src={gameDPad} alt="Right" />
+                        </button>
+                    </div>
+                    <div className={styles['right-controls']}>
+                        <button
+                            className={styles['game-action-buttons']}
+                            onTouchStart={() => {
+                                this.handleKeyDown(new KeyboardEvent('keydown',{'key':'f'}));
+                            }}
+                        >
+                            <img src={gameActionA} alt="A" />
+                        </button>
+                        <button
+                            className={styles['game-action-buttons']}
+                            onTouchStart={() => {
+                                this.handleKeyDown(new KeyboardEvent('keydown',{'key':'b'}));
+                            }}
+                        >
+                            <img src={gameActionB} alt="B" />
+                        </button>
+                    </div>
+                </div>
+            </div>
         );
     }
 }
