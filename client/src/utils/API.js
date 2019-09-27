@@ -15,13 +15,12 @@ export default {
     },
 
     isLoggedIn: function () {
-        let cookies = document.cookie.split(";");
+        let cookies = document.cookie.split(";").map(cookie=>cookie.trim());
         cookies = cookies.reduce((aggregatedCookies, cookie) => {
             const [key, value] = cookie.split("=");
             aggregatedCookies[key] = value === "true" ? true : ( value === "false" ? false : value );
             return aggregatedCookies;
         }, {});
-
         return cookies.isLoggedIn;
     }
 };

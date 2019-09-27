@@ -12,7 +12,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import pokedex from '../src/pokedex';
 import API from './utils/API';
 import { UserProvider } from './context/UserContext';
-import ProtectedRoute from "./ProtectedRoute";
+import ProtectedRoute from './ProtectedRoute';
 
 class App extends React.Component {
     state = {
@@ -187,77 +187,36 @@ class App extends React.Component {
     logout = () => {
         const { socket } = this.state;
         socket.emit('logout');
-        API.logout().then(function (data){
-          window.location.href="/";
+        API.logout().then(function(data) {
+            window.location.href = '/';
         });
         this.setState({ user: null });
     };
 
     render() {
-        const { socket, messages, onlineUsers, party, pokedex, user } = this.state;
+        const {
+            socket,
+            messages,
+            onlineUsers,
+            party,
+            pokedex,
+            user
+        } = this.state;
         console.log('render App');
-        API.isLoggedIn();
+        console.log(API.isLoggedIn());
         return (
             <Router>
-                <Switch>
-                    <UserProvider value={{
+                <UserProvider
+                    value={{
                         user,
                         setUser: this.setUser
-                    }}>
+                    }}
+                >
+                    <Switch>
                         <ProtectedRoute
                             path="/game"
                             render={() => (
                                 <main className="container">
-                                    {/* button is for testing some sockets */}
-                                    {/* <Button
-        socket.on('disconnection', disconnectedUser => {
-            console.log(disconnectedUser + ' disconnected');
-            const index = this.state.onlineUsers.find(user => {
-                //eslint-disable-line
-                console.log(user);
-                console.log(user === disconnectedUser);
-            });
-        });
-
-        // state is set once all the events are defined
-        this.setState({ socket });
-        console.log(socket);
-    }
-
-    setUser = user => {
-        const { socket } = this.state;
-        socket.emit('user_connected', user);
-        // this.setState
-    };
-
-    logout = () => {
-
-        const { socket } = this.state;
-        socket.emit('logout');
-
-        API.logout().then(function (data){
-          window.location.href="/";
-        });
-        this.setState({ user: null });
-    };
-
-    render() {
-        const { socket, messages, onlineUsers, party, pokedex } = this.state;
-        // console.log(socket)
-        return (
-            <Router>
-                <Switch>
-                    <Route
-                        exact
-                        path="/game"
-                        render={() => (
-                            <main className="container">
-                                {/* button is for testing some sockets */}
-                                    {/* <Button
-                  onClick={() => {
-                    this.buttonClick();
-                  }}
-                /> */}
                                     <div className="game">
                                         <Game
                                             socket={socket}
@@ -299,8 +258,8 @@ class App extends React.Component {
                             component={RegisterPage}
                         />
                         <Route component={NoMatch} />
-                    </UserProvider>
-                </Switch>
+                    </Switch>
+                </UserProvider>
             </Router>
         );
     }
