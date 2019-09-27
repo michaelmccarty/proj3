@@ -9,16 +9,19 @@ module.exports = (app, passport, db) => {
             failerFlash: false
         }),
         function(req, res) {
-            res.json({ message: 'successful login' });
+            res.cookie("isLoggedIn", true);
+            res.json({
+                id: req.user._id,
+                username: req.user.username
+            });
         }
     );
 
     app.get('/logout', function(req, res) {
-        console.log(
-            '\n\n\n' + req.user.username + ' has been logged out.\n\n\n'
-        );
-
         req.logout();
+        res.cookie("isLoggedIn", false, {
+            expires: new Date(315532800000) // 1980 unix timestamp
+        });
         res.json({ message: 'successful logout' });
     });
 
