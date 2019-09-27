@@ -32,6 +32,7 @@ class Player extends CollidableCreature {
         if (this.nextTile(direction, distance).flags.encounter) {
             // console.log(rand, this.map.encounterParams.density)
             if (rand < this.map.encounterParams.density && this.stepsSinceLastEncounter > 2) {
+                this.stepsSinceLastEncounter = 0;
                 return this.startEncounter;
             }
         }

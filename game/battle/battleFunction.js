@@ -120,7 +120,7 @@ function halfRound(attacker, defender, move) {
   defender.stats.hp -= dmg;
 
   if (defender.stats.hp <= 0) {
-    defender.stats.status = 'FNT';
+    defender.status = 'FNT';
     defender.stats.hp = 0;
     effect = 'FNT';
   }

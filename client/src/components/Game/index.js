@@ -44,14 +44,14 @@ class Game extends React.PureComponent {
     playerAvatars = {};
     _NPCs = {};
     NPCs = new Proxy(this._NPCs, {
-        get: function(target, prop, receiver) {
+        get: function (target, prop, receiver) {
             if (!target[prop]) {
                 target[prop] = [];
             }
             return Reflect.get(...arguments);
         },
 
-        set: function(target, prop, receiver) {
+        set: function (target, prop, receiver) {
             if (!target[prop]) {
                 target[prop] = [];
             }
@@ -212,7 +212,10 @@ class Game extends React.PureComponent {
             this.props.socket.once('random encounter', resolve)
         );
         const clientEncounterEvent = new Promise(resolve =>
-            this.player.once('random encounter', resolve)
+            this.player.once('random encounter', () => {
+                this.props.socket.once('battle end', () => this.player.inBattle = false);
+                resolve()
+            })
         );
 
         // serverEncounterEvent.catch(() => {});
@@ -384,7 +387,7 @@ class Game extends React.PureComponent {
             ) {
                 this.player.turn('east');
             }
-        } 
+        }
 
         [this.coords.x, this.coords.y] = [this.player.x, this.player.y];
 
@@ -539,20 +542,20 @@ class Game extends React.PureComponent {
         }
     }
 
-    handleKeyDown = (e) => {	
-        if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;	
-        this.pressedKeys.add(e.key);	
-    }	
+    handleKeyDown = (e) => {
+        if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
+        this.pressedKeys.add(e.key);
+    }
 
-    handleKeyUp = (e) => {	
-        this.pressedKeys.delete(e.key);	
+    handleKeyUp = (e) => {
+        this.pressedKeys.delete(e.key);
     }
 
     gamepadEvents = () => {
         const mainGamepad = navigator.getGamepads()[0];
 
         if (gamepads[0]) {
-            const {axes: joy, buttons: btn} = mainGamepad; 
+            const { axes: joy, buttons: btn } = mainGamepad;
 
             if (btn[0].pressed === true) {
                 alert('pressed A! add this to game loop when we use A/B Buttons');

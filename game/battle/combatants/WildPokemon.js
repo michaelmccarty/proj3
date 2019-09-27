@@ -32,6 +32,7 @@ class WildPokemon extends Combatant {
     }
 
     hasUsablePokemon() {
+        // console.log('wild pokemon status: ', this.pokemon.status);
         return this.pokemon.status !== 'FNT';
     }
 

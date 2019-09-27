@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 // import Tilemap from '../../Tilemap';
 import styles from './Battle.module.css';
 import { Sprite } from '../../Sprite';
@@ -69,8 +70,9 @@ class Battle extends React.Component {
             size: 80
         });
     }
-
+    
     componentDidMount() {
+        this.stopDrawLoop = false;
         this.startBattle();
         this.canvasRef.current.focus();
         // this.playIntro();
@@ -83,15 +85,17 @@ class Battle extends React.Component {
         });
         const { socket } = this.props;
 
+        socket.once('battle end', this.battleEnd);
+
         this.background = new Texture(
             this.gl,
-            '../spritesheets/battle base.png'
+            '/spritesheets/battle-base.png'
         );
 
         this.actorSpritesheet = new Texture(
             this.gl,
-            '../spritesheets/battle actors.png'
-            // './spritesheets/overworld-actors.png'
+            // '/spritesheets/battle actors.png'
+            '/spritesheets/battle-actors.png'
         );
 
         this.backgroundSprite = new Sprite({
@@ -231,15 +235,17 @@ class Battle extends React.Component {
     };
 
     executeTurn = async (turnData) => {
+        if (this.canExitBattle) this.exitBattle();
         console.log(turnData);
         const meFirst = turnData.script.whoFirst === 'me' ? 0 : 1;
 
         if (meFirst) {
-            await this.executeTurnAction(turnData.script[0]);
-            await this.executeTurnAction(turnData.script[1], turnData.pokemon2.name);
+            // don't play the second if the first one feints
+            if (await this.executeTurnAction(turnData.script[0]))
+                await this.executeTurnAction(turnData.script[1], turnData.pokemon2.name);
         } else {
-            await this.executeTurnAction(turnData.script[1], turnData.pokemon2.name);
-            await this.executeTurnAction(turnData.script[0]);
+            if (await this.executeTurnAction(turnData.script[1], turnData.pokemon2.name))
+                await this.executeTurnAction(turnData.script[0]);
         }
 
         this.chooseAction();
@@ -294,9 +300,9 @@ class Battle extends React.Component {
             if (action.effect == 'FNT') {
                 this.text.log.printString(
                     this.textCtx,
-                    `${enemy ? `Enemy ${enemy}` : this.myPokemon.name} feinted!`
-                    );
-                    // play feint animation
+                    `${!enemy ? `Enemy ${enemy}` : this.myPokemon.name} feinted!`
+                );
+                // play feint animation
                 await this.awaitTextAdvance();
                 this.text.log.clear(this.textCtx);
             }
@@ -304,11 +310,13 @@ class Battle extends React.Component {
             // Pokemon was statused
 
 
-            return;
+            return !(action.effect === 'FNT');
         }
     }
 
     async chooseAction() {
+        if (this.canExitBattle) this.exitBattle();
+
         // draw the battle menu
         this.text.log.clear(this.textCtx);
         this.hudSprites.push(this.boxes.battleMenu);
@@ -320,11 +328,30 @@ class Battle extends React.Component {
         this.configureCursor('battle menu');
 
         const selection = new Promise(resolve => (this._select = resolve));
+        this._instantExit = true;
         const action = await selection;
+        this._instantExit = false;
 
         this.hudSprites.pop(); // battle menu
         this.props.socket.once('battle turn results', this.executeTurn);
         this.props.socket.emit('battle action', action);
+    }
+
+    battleEnd = ({condition, winner}) => {
+        console.log(condition, winner);
+        if (winner === 'me') {
+            this.canExitBattle = true;
+            if (this._instantExit) {
+                this.exitBattle();
+            }
+        }
+    }
+
+    exitBattle() {
+        Object.entries(this.text).map(([, textbox]) => textbox.clear(this.textCtx));
+        this.hudSprites = [];
+        this.actorSprites = [];
+        this.props.history.goBack();
     }
 
     awaitTextAdvance() {
@@ -478,6 +505,7 @@ class Battle extends React.Component {
     }
 
     draw = () => {
+        if (this.stopDrawLoop) return;
         const gl = this.canvasRef.current.getContext('webgl');
 
         // if (!this.gl) this.gl = this.canvasRef.current.getContext('gl');
@@ -497,6 +525,10 @@ class Battle extends React.Component {
 
         requestAnimationFrame(this.draw);
     };
+
+    componentWillUnmount() {
+        this.stopDrawLoop = true;
+    }
 
     render() {
         return (
@@ -637,4 +669,4 @@ const mainBattleMenu = [
     18
 ];
 
-export default Battle;
+export default withRouter(Battle);

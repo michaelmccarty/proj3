@@ -18,7 +18,7 @@ class Battle extends EventEmitter {
         this.combatant1.send('intro', this.combatant2.intro());
         this.combatant2.send('intro', this.combatant1.intro());
 
-        const inBattle = true;
+        let inBattle = true;
 
         let [pokemon1, pokemon2] = await Promise.all([
             this.combatant1.nextPokemon(),
@@ -74,13 +74,14 @@ class Battle extends EventEmitter {
             // determine if either pokemon fainted
             // if so, determine if the battle is over
             // TIE needs to be determined first
+            console.log(pokemon1.status, pokemon2.status);
             if (pokemon1.status == 'FNT') {
                 if (this.combatant1.hasUsablePokemon()) {
                     pokemon1 = await this.combatant1.nextPokemon();
                     this.combatant2.send(pokemon1.publicStats());
                 } else {
                     inBattle = false;
-                    this.endBattle('ko');
+                    this.endBattle('ko', 1);
                 }
             } else if (pokemon2.status == 'FNT') {
                 if (this.combatant2.hasUsablePokemon()) {
@@ -88,15 +89,18 @@ class Battle extends EventEmitter {
                     this.combatant1.send(pokemon2.publicStats());
                 } else {
                     inBattle = false;
-                    this.endBattle('ko');
+                    this.endBattle('ko', 0);
                 }
             }
         }
     }
 
     // takes the condition ( ko, catch, run ) of the battle
-    endBattle(condition) {
+    endBattle(condition, winner) {
+        this.combatant1.send('battle end', { condition, winner: !winner ? 'me' : 'other' });
+        this.combatant2.send('battle end', { condition, winner: winner ? 'me' : 'other' });
         // does cleanup, maybe emit an event back to the server.
+        this.emit('battle end', winner);
     }
 }
 

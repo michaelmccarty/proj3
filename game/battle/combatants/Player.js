@@ -53,6 +53,11 @@ class Player extends Combatant {
                 break;
             case 'turn results':
                 this.trainer.socket.emit('battle turn results', data);
+                break;
+            case 'battle end':
+                this.trainer.socket.emit('battle end', data);
+                break;
+
         }
     }
 

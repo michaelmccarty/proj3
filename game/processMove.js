@@ -53,7 +53,11 @@ function processMove(user, data, socket) {
                 console.log('battle ready');
                 const battle = new Battle('wild', new PlayerCombatant(user), new WildPokemon(encounter.species, encounter.lvl));
                 battle.initialize();
+                battle.once('battle end', () => {
+                    user.inBattle = false;
+                });
             })
+            user.inBattle = true;
             socket.emit('random encounter', encounter);
     }
 
