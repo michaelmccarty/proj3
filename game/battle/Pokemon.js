@@ -1,7 +1,7 @@
 const getSpecies = require('./getSpecies');
 
 class Pokemon {
-    constructor(species, level, ivs, evs, stats, moves, name) {
+    constructor(species, level, ivs, evs, stats, moves, status, name) {
         // if moves are not provided, calculate them from species and level
         // if name is not provided, calculate it from species
         // sprites are determined by species client side.
@@ -26,8 +26,10 @@ class Pokemon {
         };
 
         this.moves = moves || this.getDefaultMoves(); // Auto calculate if not provided
-        this.name = name || this.getSpecies().name; // auto calculate if not provided
+        this.name = name || this.getSpecies().name.toUpperCase(); // auto calculate if not provided
         this.stats = stats || this.calculateStats(); // calculate if not provided
+
+        this.status = status;
     }
 
     publicStats() {
@@ -64,10 +66,11 @@ class Pokemon {
         const moveset = [];
         for (let i = learnset.length - 1; i >= 0 && moveset.length < 4; i--) {
             if (learnset[i].level <= this.level) {
-                moveset.push(learnset[i].name);
+                // TODO: look up max PP for move
+                moveset.push({ name: learnset[i].name, PP: 20 });
             }
         }
-        this.moves = moveset;
+        return moveset;
     }
 
     calculateStats() {
@@ -132,9 +135,9 @@ Pokemon.calculateHPIV = function(ivs) {
 
 Pokemon.calculateStat = function(base, iv, ev, level) {
     return (
-        Math.floor(((base + iv) * 2 + Math.floor(Math.sqrt(ev) / 4)) * level) /
-            100 +
-        5
+        Math.floor(
+            (((base + iv) * 2 + Math.floor(Math.sqrt(ev) / 4)) * level) / 100
+        ) + 5
     );
 };
 

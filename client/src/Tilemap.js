@@ -222,13 +222,14 @@ class Tilemap {
 
 Tilemap.useShader = function(gl) {
     if (!Tilemap.shader) Tilemap.shader = GLUtil.createProgram(gl, tilemapVS, tilemapFS);
-    try {
+    
         gl.useProgram(Tilemap.shader.program);
-        // console.log(Tilemap.shader);
-    } catch {
-        Tilemap.shader = GLUtil.createProgram(gl, tilemapVS, tilemapFS);
+        if (gl.getError()) {
+            Tilemap.shader = GLUtil.createProgram(gl, tilemapVS, tilemapFS);
+        }
+
         gl.useProgram(Tilemap.shader.program);
-    }
+    
 }
 
 Tilemap.flash = [0, 0, 0, 1];

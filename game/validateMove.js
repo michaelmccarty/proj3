@@ -1,6 +1,7 @@
 const maps = require('./maps');
 
 function validate(user, pendingMove, previousMove) {
+    if (user.inBattle) return false;
     // Needs the move
     // Needs the user's last good move
     // Needs user flags and progress, probably just take the user

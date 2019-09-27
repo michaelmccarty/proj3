@@ -40,7 +40,7 @@ function processMove(user, data, socket) {
         user.stepsSinceLastEncounter > 2) {
             user.stepsSinceLastEncounter = 0;
             const roll = Math.floor(Math.random() * 256);
-            const slot = 9 - encounterTable.findIndex(a => a < roll );
+            const slot = 9 - encounterTable.findIndex(a => a < roll ) || 0;
             const encounter = currentMap.encounterParams.encounters[slot];
             console.log(`Encountered a level ${encounter.lvl} ${encounter.species}`);
 
@@ -51,9 +51,13 @@ function processMove(user, data, socket) {
             // Listen for a response, THEN ask the question so there are no race conditions.
             socket.once('battle ready', () => {
                 console.log('battle ready');
-                const battle = new Battle('wild', new PlayerCombatant(user), new WildPokemon(encounter.species, encounter.level));
+                const battle = new Battle('wild', new PlayerCombatant(user), new WildPokemon(encounter.species, encounter.lvl));
                 battle.initialize();
+                battle.once('battle end', () => {
+                    user.inBattle = false;
+                });
             })
+            user.inBattle = true;
             socket.emit('random encounter', encounter);
     }
 

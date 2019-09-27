@@ -1,9 +1,10 @@
 class Textbox {
-    constructor(x1, y1, x2, y2) {
+    constructor(x1, y1, x2, y2, linespacing = 8) {
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
+        this.linespacing = linespacing;
 
         this.cursor = 0;
         this.width = Math.floor((x2 - x1) / 8);
@@ -20,10 +21,11 @@ class Textbox {
         console.log(this.x1, this.y1, this.x2 - this.x1, this.y2 - this.y1);
         ctx.clearRect(
             this.x1 - 1,
-            this.y1 - 8,
+            this.y1 - 1,
             this.x2 - this.x1 + 1,
-            this.y2 - this.y1 + 8
+            this.y2 - this.y1 + 16
         );
+        this.cursor = 0;
     }
 
     stopText() {
@@ -35,45 +37,63 @@ class Textbox {
 
     cursorCoords() {
         const x = this.x1 + (this.cursor % this.width) * 8;
-        const y = this.y1 + Math.floor(this.cursor / this.width) * 16;
+        const y =
+            this.y1 +
+            Math.floor(this.cursor / this.width) * (8 + this.linespacing) +
+            7;
         return [x, y];
     }
 
     printChar(ctx, char) {
+        if (char === '\n') {
+            return (this.cursor =
+                Math.floor(this.cursor / this.width + 1) * this.width);
+        } else if (char === ' ' && this.cursor % this.width === 0) {
+            return;
+        }
         ctx.font = '8px Pokemon';
         ctx.fillText(char, ...this.cursorCoords());
         this.cursor++;
     }
 
-    printString(ctx, string, speed = 50, i = 0) {
+    printString(ctx, string, speed = 50, i = 0, nested = false) {
+        let promise;
+        if (!nested) {
+            promise = new Promise(resolve => (this._resolve = resolve));
+        }
         if (string[i]) {
             this.printChar(ctx, string[i]);
             if (string[i] === ' ') {
                 let j = 1;
-                while (string[j + i] && string[j + i] !== ' ') {
+                while (
+                    string[j + i] &&
+                    string[j + i] !== ' ' &&
+                    string[j + i] !== '\n'
+                ) {
                     // console.log(j);
                     j++;
                 }
-                console.log(this.cursor + j);
-                console.log('width: ', this.width);
-                if (j + (this.cursor % this.width) > this.width) {
+                console.log(j + (this.cursor % this.width));
+                if (j + (this.cursor % this.width) - 1 > this.width) {
                     this.cursor =
                         Math.floor(this.cursor / this.width + 1) * this.width;
                 }
             }
 
-            setTimeout(
-                () => this.printString(ctx, string, speed, i + 1),
-                speed
-            );
+            // instant text if speed is 0;
+            if (speed) {
+                setTimeout(
+                    () => this.printString(ctx, string, speed, i + 1, true),
+                    speed
+                );
+            } else {
+                this.printString(ctx, string, speed, i + 1, true);
+            }
+        } else {
+            this._resolve();
         }
+        return promise;
     }
-
-    // printWord(ctx, word, speed = 50, i = 0) {
-    //     if (word.length + (this.cursor % this.width) > this.width) {
-    //         cursor = (cursor + this.width) % this.width;
-    //     }
-    // }
 }
 
 export default Textbox;

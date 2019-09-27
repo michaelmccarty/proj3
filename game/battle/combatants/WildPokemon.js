@@ -16,10 +16,14 @@ class WildPokemon extends Combatant {
     }
 
     intro() {
+        console.log(this.pokemon);
         return {
             introText: `A wild ${this.pokemon.getSpecies().name} appeared!`,
+            pokemonName: this.pokemon.name,
             isTrainer: false,
-            species: this.pokemon.species
+            species: this.pokemon.species,
+            level: this.pokemon.level,
+            debug: 'debug'
         };
     }
 
@@ -28,6 +32,7 @@ class WildPokemon extends Combatant {
     }
 
     hasUsablePokemon() {
+        // console.log('wild pokemon status: ', this.pokemon.status);
         return this.pokemon.status !== 'FNT';
     }
 
@@ -51,7 +56,12 @@ class WildPokemon extends Combatant {
     }
 
     async chooseAction() {
-        return this.moves[Math.floor(Math.random() * this.moves.length)];
+        return {
+            type: 'fight',
+            movename: this.pokemon.moves[
+                Math.floor(Math.random() * this.pokemon.moves.length)
+            ].name
+        };
     }
 }
 

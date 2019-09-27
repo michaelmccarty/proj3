@@ -87,83 +87,6 @@ class App extends React.Component {
             });
         });
 
-        // socket.on("chat2", data => {
-        //   console.log(data)
-        //   // this.setState({ messages: [...this.state.messages, data]})
-        //   // console.log(this.state.messages)
-        // });
-
-        // state = {
-        //   onlineUsers: [],
-        //   socket: null,
-        //   user: null,
-        //   messages: [],
-        //   // isMobile: true,
-        //   endpoint: "/", //change to /socket when it is time
-        //   party: [{
-        //     image: "https://www.serebii.net/pokearth/sprites/green/001.png",
-        //     name: "Bulbasaur"
-        //   }, {
-        //     image: "https://www.serebii.net/pokearth/sprites/green/002.png",
-        //     name: "Ivysaur"
-        //   }, {
-        //     image: "https://www.serebii.net/pokearth/sprites/green/003.png",
-        //     name: "Venusaur"
-        //   }, {
-        //     image: "https://www.serebii.net/pokearth/sprites/green/004.png",
-        //     name: "Charmander"
-        //   }, {
-        //     image: "https://www.serebii.net/pokearth/sprites/green/005.png",
-        //     name: "Charmeleon"
-        //   }, {
-        //     image: "https://www.serebii.net/pokearth/sprites/green/006.png",
-        //     name: "Charizard"
-        //   }],
-        //   pokedex: pokedex
-        // };
-
-        // componentDidMount() {
-        //   this.initSocket();
-        // }
-
-        // componentWillUnmount() {
-        //   // stop listening to all socket events
-        // }
-
-        // // socket connection established, and then socket listening events defined
-        // initSocket() {
-        //   console.log("init socket")
-        //   const { endpoint } = this.state;
-        //   const socket = socketIOClient(endpoint);
-
-        //   // bread and butter connection confirmation
-        //   socket.on("connect", data => console.log("Connected"));
-
-        //   // asks for the online users
-        //   socket.emit("connectedUserCheck");
-        //   // then listens for online users from server
-        //   socket.on('connectedUserCheck', data => {
-        //     console.log(data);
-        //     //set state with the online users
-        //     this.setState({ onlineUsers: data.onlineUsers });
-
-        //     const { onlineUsers } = this.state;
-        //     console.log(onlineUsers);
-        //   })
-
-        // // allows messages to be passed back and forth from client to server
-        // socket.on("chat", data => {
-        //   this.setState({ messages: [...this.state.messages, data] }, () => {
-        //     document.querySelector("#chat-box").scrollTo(0, document.querySelector("#chat-box").scrollHeight);
-        //   })
-        // });
-
-        // socket.on("chat2", data => {
-        //   console.log(data)
-        //   // this.setState({ messages: [...this.state.messages, data]})
-        //   // console.log(this.state.messages)
-        // });
-
         socket.on('disconnection', disconnectedUser => {
             console.log(disconnectedUser + ' disconnected');
             const index = this.state.onlineUsers.find(user => {
@@ -191,6 +114,8 @@ class App extends React.Component {
             window.location.href = '/';
         });
         this.setState({ user: null });
+        API.logout();
+        window.location.href = '/';
     };
 
     render() {
@@ -213,44 +138,46 @@ class App extends React.Component {
                     }}
                 >
                     <Switch>
-                        <ProtectedRoute
-                            path="/game"
-                            render={() => (
-                                <main className="container">
-                                    <div className="game">
-                                        <Game
-                                            socket={socket}
-                                            isMobile={this.state.isMobile}
+                        {socket && (
+                            <ProtectedRoute
+                                path="/game"
+                                render={() => (
+                                    <main className="container">
+                                        <div className="game">
+                                            <Game
+                                                socket={socket}
+                                                isMobile={this.state.isMobile}
+                                            />
+                                        </div>
+                                        <Route
+                                            path="/game/battle"
+                                            render={() => (
+                                                <div className="game">
+                                                    <Battle socket={socket} />
+                                                </div>
+                                            )}
                                         />
-                                    </div>
-                                    <Route
-                                        path="/game/battle"
-                                        render={() => (
-                                            <div className="game">
-                                                <Battle socket={socket} />
-                                            </div>
-                                        )}
-                                    />
-                                    <div className="options">
-                                        <OptionsWrapper
-                                            socket={socket}
-                                            pressLogout={this.logout}
-                                            party={party}
-                                            pokedex={pokedex}
-                                            logout={this.logout}
-                                        />
-                                    </div>
-                                    <div className="chat">
-                                        <ChatBox
-                                            socket={socket}
-                                            messages={messages}
-                                            onlineUsers={onlineUsers}
-                                            logout={this.logout}
-                                        />
-                                    </div>
-                                </main>
-                            )}
-                        />
+                                        <div className="options">
+                                            <OptionsWrapper
+                                                socket={socket}
+                                                pressLogout={this.logout}
+                                                party={party}
+                                                pokedex={pokedex}
+                                                logout={this.logout}
+                                            />
+                                        </div>
+                                        <div className="chat">
+                                            <ChatBox
+                                                socket={socket}
+                                                messages={messages}
+                                                onlineUsers={onlineUsers}
+                                                logout={this.logout}
+                                            />
+                                        </div>
+                                    </main>
+                                )}
+                            />
+                        )}
                         <Route exact path="/" component={LoginPage} />
                         <Route
                             exact

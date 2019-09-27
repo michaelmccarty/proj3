@@ -21,6 +21,10 @@ import gameActionB from '../../gamepad-imgs/action-button-02.svg';
 let gamepads = {};
 
 class Game extends React.PureComponent {
+    constructor(props) {
+        super(props);
+        this.canvasRef = React.createRef();
+    }
     pressedKeys = new Set();
 
     maps = {};
@@ -34,12 +38,12 @@ class Game extends React.PureComponent {
         }
     });
 
-    setupCanvas = element => {
-        this.canvas = element;
-        console.log(element);
-        this.gl = this.gl || element.getContext('webgl');
-        this.setup();
-    };
+    // setupCanvas = element => {
+    //     this.canvas = element;
+    //     console.log(element);
+    //     this.gl = this.gl || element.getContext('webgl');
+    //     this.setup();
+    // };
 
     playerAvatars = {};
     _NPCs = {};
@@ -63,13 +67,6 @@ class Game extends React.PureComponent {
         // Make some sprites, load a map, whatever
         this.coords = { x: 4, y: 4 };
         this.currentMap = 'Route 1';
-        await this.loadMap(
-            'Route 1',
-            (this.coords.x - 4) * 16,
-            (this.coords.y - 4) * 16
-        );
-
-        requestAnimationFrame(this.gameLoop);
 
         this.actorSpriteSheet = new Texture(
             this.gl,
@@ -77,14 +74,51 @@ class Game extends React.PureComponent {
         );
 
         this.drawSprites = Sprite.drawSpritesFactory(160, 144);
+        {
+            const playerDataPromise = new Promise(resolve =>
+                this.props.socket.once('player data', data => resolve(data))
+            );
 
-        this.player = new Player(
-            this.coords.x,
-            this.coords.y,
-            this.maps[this.currentMap],
-            'player_default',
-            this.getCollidables
-        );
+            // signal the server to spawn us in
+            this.props.socket.emit('load game');
+            const {
+                x,
+                y,
+                map,
+                skin,
+                facing,
+                party,
+                trainerId
+            } = await playerDataPromise;
+
+            this.currentMap = map;
+            this.coords = { x, y };
+
+            await this.loadMap(
+                'Route 1',
+                (this.coords.x - 4) * 16,
+                (this.coords.y - 4) * 16
+            );
+
+            console.log(x, y, map, skin, facing, party, trainerId);
+
+            this.player = new Player(
+                x,
+                y,
+                this.maps[map],
+                this.getCollidables,
+                skin,
+                facing
+            );
+        }
+
+        // this.player = new Player(
+        //     this.coords.x,
+        //     this.coords.y,
+        //     this.maps[this.currentMap],
+        //     'player_default',
+        //     this.getCollidables
+        // );
         this.actors = [this.player];
 
         {
@@ -127,6 +161,8 @@ class Game extends React.PureComponent {
             0,
             this.props.socket
         );
+
+        requestAnimationFrame(this.gameLoop);
     };
 
     getCollidables = () => {
@@ -212,7 +248,13 @@ class Game extends React.PureComponent {
             this.props.socket.once('random encounter', resolve)
         );
         const clientEncounterEvent = new Promise(resolve =>
-            this.player.once('random encounter', resolve)
+            this.player.once('random encounter', () => {
+                this.props.socket.once('battle end', () => {
+                    this.player.inBattle = false;
+                    // this.canvasRef.current.focus();
+                });
+                resolve();
+            })
         );
 
         // serverEncounterEvent.catch(() => {});
@@ -314,10 +356,15 @@ class Game extends React.PureComponent {
         console.log(data);
         await this.animationPromise;
         this.props.history.push('/game/battle');
+        await new Promise(resolve => setTimeout(resolve, 1500));
         this.maps[this.currentMap].resetAnimation();
     };
 
     gameLoop = () => {
+        if (!this.canvasRef.current) {
+            return requestAnimationFrame(this.gameLoop);
+        }
+        this.gl = this.canvasRef.current.getContext('webgl');
         const keys = this.pressedKeys;
 
         if (navigator.getGamepads()[0]) {
@@ -384,7 +431,7 @@ class Game extends React.PureComponent {
             ) {
                 this.player.turn('east');
             }
-        } 
+        }
 
         [this.coords.x, this.coords.y] = [this.player.x, this.player.y];
 
@@ -440,7 +487,7 @@ class Game extends React.PureComponent {
                     tabIndex="0"
                     width="160"
                     height="144"
-                    ref={this.setupCanvas}
+                    ref={this.canvasRef}
                     onKeyDown={this.handleKeyDown}
                     onKeyUp={this.handleKeyUp}
                 />
@@ -532,32 +579,36 @@ class Game extends React.PureComponent {
 
         if (connecting) {
             gamepads[gamepad.index] = gamepad;
-            console.log('gamepad is connected! :', gamepad)
+            console.log('gamepad is connected! :', gamepad);
         } else {
             delete gamepads[gamepad.index];
-            alert('gamepad is disconnected!')
+            alert('gamepad is disconnected!');
         }
-    }
+    };
 
-    handleKeyDown = (e) => {	
-        if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;	
-        this.pressedKeys.add(e.key);	
-    }	
+    handleKeyDown = e => {
+        if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
+        this.pressedKeys.add(e.key);
+    };
 
-    handleKeyUp = (e) => {	
-        this.pressedKeys.delete(e.key);	
-    }
+    handleKeyUp = e => {
+        this.pressedKeys.delete(e.key);
+    };
 
     gamepadEvents = () => {
         const mainGamepad = navigator.getGamepads()[0];
 
         if (gamepads[0]) {
-            const {axes: joy, buttons: btn} = mainGamepad; 
+            const { axes: joy, buttons: btn } = mainGamepad;
 
             if (btn[0].pressed === true) {
-                alert('pressed A! add this to game loop when we use A/B Buttons');
+                alert(
+                    'pressed A! add this to game loop when we use A/B Buttons'
+                );
             } else if (btn[1].pressed === true) {
-                alert('pressed B! add this to game loop when we use A/B Buttons');
+                alert(
+                    'pressed B! add this to game loop when we use A/B Buttons'
+                );
             }
 
             // axes[0] is x-axis
@@ -566,40 +617,64 @@ class Game extends React.PureComponent {
             const axisThreshold = 0.75;
 
             if (joy[0] > axisThreshold) {
-                if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
+                if (!this.pressedKeys.size)
+                    this.movementDelay = Date.now() + 70;
                 this.pressedKeys.add('ArrowRight');
             } else if (joy[0] < -1 * axisThreshold) {
-                if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
+                if (!this.pressedKeys.size)
+                    this.movementDelay = Date.now() + 70;
                 this.pressedKeys.add('ArrowLeft');
-            } else if (joy[0] <= axisThreshold && joy[0] >= -1 * axisThreshold) {
+            } else if (
+                joy[0] <= axisThreshold &&
+                joy[0] >= -1 * axisThreshold
+            ) {
                 this.pressedKeys.delete('ArrowRight');
                 this.pressedKeys.delete('ArrowLeft');
             }
 
             if (joy[1] > axisThreshold) {
-                if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
+                if (!this.pressedKeys.size)
+                    this.movementDelay = Date.now() + 70;
                 this.pressedKeys.add('ArrowDown');
             } else if (joy[1] < -1 * axisThreshold) {
-                if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
+                if (!this.pressedKeys.size)
+                    this.movementDelay = Date.now() + 70;
                 this.pressedKeys.add('ArrowUp');
-            } else if (joy[1] <= axisThreshold && joy[1] >= -1 * axisThreshold) {
+            } else if (
+                joy[1] <= axisThreshold &&
+                joy[1] >= -1 * axisThreshold
+            ) {
                 this.pressedKeys.delete('ArrowDown');
                 this.pressedKeys.delete('ArrowUp');
             }
         }
-    }
+    };
 
     componentDidMount = () => {
-        window.addEventListener('gamepadconnected', event => {
-            this.gamepadHandler(event, true);
-        }, false);
+        this.gl =
+            this.canvasRef.current &&
+            this.canvasRef.current.getContext('webgl');
+        window.addEventListener(
+            'gamepadconnected',
+            event => {
+                this.gamepadHandler(event, true);
+            },
+            false
+        );
 
-        window.addEventListener('gamepaddisconnected', event => {
-            this.gamepadHandler(event, false);
-        }, false);
+        window.addEventListener(
+            'gamepaddisconnected',
+            event => {
+                this.gamepadHandler(event, false);
+            },
+            false
+        );
 
-        document.getElementById('game-canvas-container').oncontextmenu = new Function("return false;");
-    }
+        document.getElementById(
+            'game-canvas-container'
+        ).oncontextmenu = new Function('return false;');
+        this.setup();
+    };
 }
 
 export default withRouter(Game);
