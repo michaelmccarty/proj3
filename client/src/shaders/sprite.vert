@@ -6,11 +6,13 @@ attribute vec2 texOffset;
 attribute vec2 flip;
 attribute vec2 mask;
 attribute float scale;
+attribute float monochromeFilter;
 
 varying vec2 fTexOffset;
 varying float fSpriteSize;
 varying vec2 vflip;
 varying vec2 maskOut;
+varying float monochrome;
 
 uniform vec2 inverseViewportSize;
 
@@ -19,6 +21,7 @@ void main() {
     fTexOffset = texOffset;// * (1.0 / spriteSize);
     fSpriteSize = spriteSize;
     vflip = flip;
+    monochrome = monochromeFilter;
     vec4 screenTransform = vec4(2.0 * inverseViewportSize.x, -2.0 * inverseViewportSize.y, -1.0, 1.0);
     vec2 sizeAdjust = vec2(0.5 * screenTransform.xy * spriteSize * scale); // Points are specified by their center, sprites position is top-left corner.
     // (16, 0) - (16, 0) * 

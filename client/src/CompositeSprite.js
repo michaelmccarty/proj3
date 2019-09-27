@@ -47,6 +47,7 @@ class CompositeSprite extends Sprite {
             buffer[i++] = this.mask[0];
             buffer[i++] = this.mask[1];
             buffer[i++] = this.scale;
+            buffer[i++] = this.filters.monochrome ? 1.0 : 0.0;
         }
 
         return i;

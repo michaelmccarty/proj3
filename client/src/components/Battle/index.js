@@ -129,7 +129,8 @@ class Battle extends React.Component {
             frames: [{ x: 0, y: 0 }],
             frameRate: 1,
             size: 32,
-            scale: 2
+            scale: 2,
+            filters: {monochrome: true}
         });
 
         const enemyData = getSpecies(introData.species);
@@ -138,7 +139,8 @@ class Battle extends React.Component {
             y: 0,
             frames: [enemyData],
             frameRate: 1,
-            size: 56
+            size: 56,
+            filters: {monochrome: true}
         });
 
         this.actorSprites.push(this.opponentSprite, this.mySprite);
@@ -147,6 +149,8 @@ class Battle extends React.Component {
         this.opponentSprite.animate(slide(-56, 0, 96, 0, linear(1000)));
 
         await new Promise(response => setTimeout(response, 1000));
+        this.mySprite.filters.monochrome = false;
+        this.opponentSprite.filters.monochrome = false;
 
         this.text.log.printString(
             this.textCtx,
