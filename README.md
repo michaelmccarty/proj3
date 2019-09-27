@@ -20,7 +20,7 @@ Or, you can create your own account. We use PassportJS to hash and salt our pass
 * [Express](https://expressjs.com/) - Server
 * [MongoDB](https://www.mongodb.com/) - Database structure
 * [Mongoose](https://mongoosejs.com/) - Object modeling for MongoDB
-* [Socket.io](https://socket.io/) - Web sockets
+* [Socket.IO](https://socket.io/) - Web sockets
 * [Axios](https://github.com/axios/axios) - Server HTTP requests
 
 ## Preview
@@ -30,12 +30,12 @@ Or, you can create your own account. We use PassportJS to hash and salt our pass
 
 ## Authors
 
-* **Will West** - [Jyouya](https://github.com/Jyouya)
-* **Logan Miner** - [lrminer](https://github.com/lrminer)
-* **Michael McCarty** - [mccartyatl](https://github.com/mccartyatl)
-* **Rodney Smith** - [smit239](https://github.com/smit239)
-* **Grayson Gantek** - [graysonlee123](https://github.com/graysonlee123)
+* **Will West** - *Game logic* - [Jyouya](https://github.com/Jyouya)
+* **Logan Miner** - *Game logic, sockets, deployment* - [lrminer](https://github.com/lrminer)
+* **Michael McCarty** - *Authentication, deployment* - [mccartyatl](https://github.com/mccartyatl)
+* **Rodney Smith** - *Authentication, deployment* - [smit239](https://github.com/smit239)
+* **Grayson Gantek** - *Front end, React* - [graysonlee123](https://github.com/graysonlee123)
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
+* We got most of our sprites from [spriters-resource.com](https://www.spriters-resource.com/game_boy_gbc/pokemonredblue/)
