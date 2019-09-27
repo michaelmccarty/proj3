@@ -185,6 +185,9 @@ class App extends React.Component {
     logout = () => {
         const { socket } = this.state;
         socket.emit('logout');
+        API.logout().then(function (data){
+          window.location.href="/";
+        });
         this.setState({ user: null });
         API.logout();
         window.location.href = '/';
