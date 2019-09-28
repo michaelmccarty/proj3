@@ -1,6 +1,39 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const BattlePokemon = require('../game/battle/Pokemon');
+// const Pokemon = require('../game/battle/Pokemon');
 
+// Schema.Types.Pokemon = BattlePokemon;
+const Pokemon = new Schema({
+  name: String,
+  species: Number,
+  level: Number,
+  ivs: {
+    attack: Number,
+    defense: Number,
+    speed: Number,
+    special: Number,
+  },
+
+  evs: {
+    attack: Number,
+    defense: Number,
+    speed: Number,
+    special: Number,
+    hp: Number
+  },
+
+  moves: [
+    {
+      name: String,
+      PP: Number
+    }
+  ],
+
+  status: String
+});
+
+// console.log({ ...new Pokemon() });
 const UserSchema = new Schema({
   username: { type: String, required: true },
   password: { type: String, required: true },
@@ -12,23 +45,34 @@ const UserSchema = new Schema({
   },
   skin: {
     type: String,
-    required: true
+    required: true,
   },
   userCreated: {
     type: Date,
     default: Date.now
   },
-  trainerID: { type: Number },
-  party: {
-    pokemon: [
-      {
-        name: { type: String },
-        level: { type: Number },
-        species: { type: Schema.Types.ObjectId, ref: "Pokemon" }
-      }
-    ],
-    // max: 6
+  trainerID: {
+    type: Number,
+    default: () => Math.floor(100000000000000 * Math.random())
   },
+  map: {
+    type: String,
+    default: 'Route 1'
+  },
+  x: {
+    type: Number,
+    default: 4
+  },
+  y: {
+    type: Number,
+    default: 3
+  },
+  facing: {
+    type: String,
+    default: 'east'
+  },
+  party: [Pokemon],
+
   inventory: {
     favoriteItem: { type: String },
     items: { type: Array }
@@ -46,6 +90,14 @@ const UserSchema = new Schema({
   },
   money: { type: Number, default: 2000 },
   flags: { type: Object }
+});
+console.log('debug');
+
+UserSchema.pre('save', function(next){
+  if (this.isNew) {
+    this.party.push(new BattlePokemon(Math.floor(Math.random() * 3) * 3 + 1, 5));
+  }
+  next();
 });
 
 const User = mongoose.model("User", UserSchema);
