@@ -287,6 +287,7 @@ class Game extends React.PureComponent {
         socket.on('despawn', this.handleDespawn);
         socket.on('move response', this.handleMoveResponse);
         socket.on('dialog', this.handleDialog);
+        socket.on('black out', this.handleBlackOut);
         this.listenForEncounters();
         // socket.on('random encounter', this.handleEncounter);
     }
@@ -348,6 +349,13 @@ class Game extends React.PureComponent {
             this.transitionAnimation = 'wildFieldWeak';
         }
     };
+
+    handleBlackOut = newPosition => {
+        this.player.map = this.maps[newPosition.map];
+        this.player.x = newPosition.x;
+        this.player.y = newPosition.y;
+        // Needs to trigger a map reload
+    }
 
     handleMove = data => {
         const player = this.playerAvatars[data[SocketEnum.TRAINER_ID]];

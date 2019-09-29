@@ -68,7 +68,7 @@ class Pokemon {
         for (let i = learnset.length - 1; i >= 0 && moveset.length < 4; i--) {
             if (learnset[i].level <= this.level) {
                 // TODO: look up max PP for move
-                moveset.push({ name: learnset[i].name, PP: 20 });
+                moveset.push({ name: learnset[i].name, PP: 20, maxPP: 20 });
             }
         }
         return moveset;

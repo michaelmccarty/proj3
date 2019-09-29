@@ -4,6 +4,7 @@ module.exports = {
         user.pokemon.forEach(pokemon => {
             pokemon.stats.hp = pokemon.stats.maxHp
             pokemon.status = null;
+            pokemon.moves.forEach(move => move.PP = move.maxPP);
         });
 
     },
