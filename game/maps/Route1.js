@@ -1,3 +1,5 @@
+const NPC = require('../npc/NPC');
+
 const _ = {
     collision: false,
     flags: {}
@@ -86,6 +88,12 @@ module.exports = {
         _, $, _, _, _, _, _, $, G, G, $, _, _, _, _, _, $, _,
         _, $, _, _, _, _, _, $, G, G, $, _, _, _, _, _, $, _,
         _, $, _, _, _, _, _, $, G, G, $, _, _, _, _, _, $, _
+    ],
+    npcs: [
+        new NPC('Route 1\nPallet Town - Viridian City'),
+        new NPC('See those ledges along the road?\n' +
+            'It\'s a bit scary,\n' + 'but you can jump from them.\n' +
+            'You can get back to PALLET TOWN quicker that way')
     ]
 }
 

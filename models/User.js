@@ -89,7 +89,8 @@ const UserSchema = new Schema({
     earth: { type: Boolean, default: false }
   },
   money: { type: Number, default: 2000 },
-  flags: { type: Object }
+  flags: { type: Object },
+  lastPokeCenter: { type: String, default: 'demo'}
 });
 console.log('debug');
 

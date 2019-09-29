@@ -69,6 +69,31 @@ class Battle extends React.Component {
             frameRate: 1,
             size: 80
         });
+
+        this.hpBars = {};
+
+        {
+            const xCoords = [96, 112, 128]
+            this.hpBars.player = xCoords.map(x => new Sprite({
+                x,
+                y: 75,
+                frames: [{ x: 0, y: 160 }],
+                frameRate: 1,
+                size: 16
+            }));
+            console.log(this.hpBars.player);
+        }
+
+        {
+            const xCoords = [32, 48, 64]
+            this.hpBars.enemy = xCoords.map(x => new Sprite({
+                x,
+                y: 19,
+                frames: [{ x: 0, y: 160 }],
+                frameRate: 1,
+                size: 16
+            }));
+        }
     }
 
     componentDidMount() {
@@ -84,6 +109,8 @@ class Battle extends React.Component {
             antialias: false
         });
         const { socket } = this.props;
+
+        socket.on('battle update opponent', this.handleUpdateOpponent);
 
         socket.once('battle end', this.battleEnd);
 
@@ -132,6 +159,9 @@ class Battle extends React.Component {
             filters: { monochrome: true }
         });
 
+        this.enemy = this.enemy || {};
+        this.enemy.previous = this.enemy.previous || {pctHP: 1};
+        this.enemy.current = this.enemy.current || {pctHP: 1};
         const enemyData = getSpecies(introData.species);
         this.opponentSprite = new Sprite({
             x: -56,
@@ -165,6 +195,8 @@ class Battle extends React.Component {
         );
 
         // Enemy HP bar renders here
+        this.hudSprites.push(...this.hpBars.enemy);
+        this.updateHPBar('enemy', 1);
 
         this.text.enemyName.printString(this.textCtx, introData.pokemonName, 0);
 
@@ -179,7 +211,8 @@ class Battle extends React.Component {
 
         await new Promise(response => setTimeout(response, 300));
 
-        this.actorSprites = [this.opponentSprite];
+        // this.actorSprites = [this.opponentSprite];
+        this.actorSprites.pop(); // player backsprite
 
         const myPokemon = introData.myPokemon;
         this.myPokemon = myPokemon;
@@ -188,6 +221,10 @@ class Battle extends React.Component {
         await this.text.log.printString(this.textCtx, `Go! ${myPokemon.name}`);
 
         this.text.myName.printString(this.textCtx, myPokemon.name, 0);
+
+        this.hudSprites.push(...this.hpBars.player);
+        this.updateHPBar('player', this.myPokemon.stats.hp / this.myPokemon.stats.maxHp);
+        // this.updateHPBar('player', myPokemon.stats.hp / myPokemon.stats.maxHp);
 
         this.text.myLevel.printString(
             this.textCtx,
@@ -198,8 +235,8 @@ class Battle extends React.Component {
         this.text.myHP.printString(
             this.textCtx,
             myPokemon.stats.hp.toString().padStart(3, ' ') +
-                '/' +
-                myPokemon.stats.maxHp.toString().padStart(3, ' '),
+            '/' +
+            myPokemon.stats.maxHp.toString().padStart(3, ' '),
             0
         );
 
@@ -247,6 +284,13 @@ class Battle extends React.Component {
         console.log(turnData);
         const meFirst = turnData.script.whoFirst === 'me' ? 0 : 1;
 
+        const updatedPokemon = turnData.pokemon1;
+        this.myPokemonPrevious = { ...this.myPokemon };
+        this.myPokemon.status = updatedPokemon.status;
+        this.myPokemon.stats = updatedPokemon.stats;
+
+        this.handleUpdateOpponent(turnData.pokemon2);
+
         if (meFirst) {
             // don't play the second if the first one feints
             if (await this.executeTurnAction(turnData.script[0]))
@@ -263,6 +307,8 @@ class Battle extends React.Component {
             )
                 await this.executeTurnAction(turnData.script[0]);
         }
+        this.myPokemon.moves = updatedPokemon.moves;
+        this.myPokemon.level = updatedPokemon.level;
 
         this.chooseAction();
     };
@@ -274,15 +320,38 @@ class Battle extends React.Component {
             // sprite animation + screen effects
             // screen shake
             // HP bar
+            const attackText = this.text.log.printString(
+                this.textCtx,
+                `${
+                enemy ? `Enemy ${enemy}` : this.myPokemon.name
+                } used ${action.move.toUpperCase()}!`
+            )
 
-            await this.awaitTextAdvance(
-                this.text.log.printString(
-                    this.textCtx,
-                    `${
-                        enemy ? `Enemy ${enemy}` : this.myPokemon.name
-                    } used ${action.move.toUpperCase()}!`
-                )
-            );
+            // we're taking damage
+            if (enemy && this.myPokemonPrevious.stats.hp - this.myPokemon.stats.hp) {
+                await Promise.all(
+                    [
+                        this.animateHealthText(
+                            this.myPokemonPrevious.stats.hp,
+                            this.myPokemon.stats.hp
+                        ),
+                        this.animateHPBar(
+                            'player',
+                            this.myPokemonPrevious.stats.hp / this.myPokemonPrevious.stats.maxHp,
+                            this.myPokemon.stats.hp / this.myPokemon.stats.maxHp
+                        )
+                    ]);
+            } else {
+                await this.animateHPBar(
+                    'enemy',
+                    this.enemy.previous.pctHP,
+                    this.enemy.current.pctHP
+                );
+            }
+
+
+
+            await this.awaitTextAdvance(attackText);
 
             this.text.log.clear(this.textCtx);
 
@@ -321,7 +390,7 @@ class Battle extends React.Component {
                     this.text.log.printString(
                         this.textCtx,
                         `${
-                            !enemy ? `Enemy ${enemy}` : this.myPokemon.name
+                        !enemy ? `Enemy ${this.enemy.current.name}` : this.myPokemon.name
                         } feinted!`
                     )
                 );
@@ -387,7 +456,7 @@ class Battle extends React.Component {
             this.textAdvance = new Promise(resolve => {
                 this.textAdvanceFunction = () => {
                     console.log('f');
-                    if (!textboxPromise ||textboxPromise.isResolved ) {
+                    if (!textboxPromise || textboxPromise.isResolved) {
                         resolve();
                         delete this.textAdvance;
                     } else {
@@ -400,6 +469,44 @@ class Battle extends React.Component {
         // this.textAdvance.then(() => delete this.textAdvance);
 
         return this.textAdvance;
+    }
+
+    animateHealthText(start, end) {
+        const interval = (start - end) / 90;
+        let current = start;
+        let _resolve;
+        const frame = () => {
+            if (current === end) return _resolve();
+
+            current -= interval;
+            if (current < end) current = end;
+
+            this.text.myHP.clear(this.textCtx);
+            this.text.myHP.printString(
+                this.textCtx,
+                Math.floor(current).toString().padStart(3, ' ') +
+                '/' +
+                this.myPokemon.stats.maxHp.toString().padStart(3, ' '),
+                0
+            );
+            requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+        return new Promise(resolve => _resolve = resolve);
+    }
+
+    animateHPBar(target, start, end) {
+        const interval = 1 / 48;
+        let current = start;
+        let _resolve;
+        const frame = () => {
+            current -= interval;
+            if (current < end) return _resolve();
+            this.updateHPBar(target, current);
+            setTimeout(frame, 33);
+        }
+        setTimeout(frame, 0);
+        return new Promise(resolve => _resolve = resolve);
     }
 
     configureCursor(preset) {
@@ -480,6 +587,24 @@ class Battle extends React.Component {
             movename: this.myPokemon.moves[slot].name
         });
     };
+
+    updateHPBar = (target, pct) => {
+        // console.log(pct);
+        const shift = Math.floor(48 * pct) || (pct > 0 ? 1 : 0);
+        // console.log('shift', shift);
+        this.hpBars[target].forEach((sprite, i) => {
+            // console.log('hp bar shift: ', ((i + 1) * 16 > shift ? (i + 1) * 16 - shift : 0));
+            let shiftBy = ((i + 1) * 16 > shift ? (i + 1) * 16 - shift : 0);
+            shiftBy = shiftBy < 16 ? shiftBy : 16;
+            sprite.mask = [0xFFFF >> shiftBy, 0xFFFF];
+        });
+    }
+    
+    handleUpdateOpponent = (data) => {
+        console.log(data);
+        this.enemy.previous = this.enemy.current;
+        this.enemy.current = data;
+    }
 
     handleKeyDown = e => {
         // console.log(e);
@@ -565,6 +690,8 @@ class Battle extends React.Component {
 
     componentWillUnmount() {
         this.stopDrawLoop = true;
+
+        this.props.socket.removeAllListeners('battle update opponent');
     }
 
     render() {

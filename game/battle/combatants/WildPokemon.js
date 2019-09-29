@@ -51,6 +51,7 @@ class WildPokemon extends Combatant {
     }
 
     updatePokemon(privateStats) {
+        console.log(privateStats);
         this.pokemon.stats = privateStats.stats;
         this.pokemon.status = privateStats.status;
     }

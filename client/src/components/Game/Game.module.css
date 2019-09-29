@@ -8,6 +8,9 @@
 .game-canvas {
     composes: w-100 h-100 from global;
     image-rendering: pixelated;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .game-mobile-controls {

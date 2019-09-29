@@ -3,6 +3,7 @@ const processMove = require('./processMove');
 const makeEncounterGenerator = require('../utils/random');
 const Pokemon = require('./battle/Pokemon');
 const db = require('./../models');
+const handlePoke = require('./npc/pokeNPC');
 
 module.exports = function (io, connectedUsers) {
     const trainerMap = {};
@@ -49,41 +50,6 @@ module.exports = function (io, connectedUsers) {
                         user.rngOffset
                     );
 
-                    console.log(user);
-
-                    // For now, create a dummy user to simulate logging them in
-                    // let user = {
-                    //     trainerId: Math.floor(100000000000000 * Math.random()),
-                    //     name: 'Ash',
-                    //     map: 'Route 1',
-                    //     x: 4,
-                    //     y: 4,
-                    //     socket: socket,
-                    //     skin: 'gary',
-                    //     facing: 'south',
-
-                    //     pokemon: [new Pokemon(1, 5), new Pokemon(4, 5)],
-
-                    //     previousMove: {
-                    //         x: 4,
-                    //         y: 4,
-                    //         facing: 'south',
-                    //         stepNumber: 0,
-                    //         type: 'walk',
-                    //         map: 'Route 1'
-                    //     },
-                    //     // Parameters for random encounters
-                    //     seed: Math.random(),
-                    //     rngOffset: Math.floor(Math.random() * 233280),
-                    //     stepsSinceLastEncounter: 0
-                    // };
-
-                    // user.encounterGenerator = makeEncounterGenerator(
-                    //     user.seed,
-                    //     null,
-                    //     user.rngOffset
-                    // );
-
                     trainerMap[user.trainerId] = socket.id;
 
                     // Should be their user object, loaded from the database, plus the socket.
@@ -99,7 +65,7 @@ module.exports = function (io, connectedUsers) {
                         facing: user.facing,
                         party: user.pokemon
                     });
-                    // socket.on("connect", () => {
+
                     // user = connectedUsers[socket.id];
                     console.log('spawning ' + user.trainerId);
                     socket.join(user.map); // Need to join adjacent maps as well
@@ -114,15 +80,7 @@ module.exports = function (io, connectedUsers) {
                     });
 
                     socket.on('move', data => {
-                        // user = connectedUsers[socket.id];
-                        // console.log('move', socket.id, data);
                         if (processMove(user, data, socket)) return; // return if move is rejected;
-
-                        // user.facing = $$.directions[data[$$.DIRECTION]];
-                        // user.x = data[$$.X];
-                        // user.y = data[$$.Y];
-
-                        // console.log(user.facing);
 
                         socket.to(user.map).broadcast.emit('move', {
                             [$$.MOVE_TYPE]: data[$$.MOVE_TYPE],
@@ -131,7 +89,10 @@ module.exports = function (io, connectedUsers) {
                             [$$.Y]: user.y,
                             [$$.TRAINER_ID]: user.trainerId
                         });
-                        // io.sockets.emit('move', data);
+                    });
+
+                    socket.on('poke', ({id}) => {
+                        handlePoke(user, id);
                     });
 
                     socket.on('populate request', data => {
@@ -183,8 +144,6 @@ module.exports = function (io, connectedUsers) {
                         // console.log(connectedUsers);
 
                         const srvSockets = io.sockets.sockets;
-                        // const onlineUsers =
-                        // console.log(srvSockets);
                         const onlineUsers = Object.entries(srvSockets)
                             .map(([socketId]) => connectedUsers[socketId])
                             .map(user => ({

@@ -5,13 +5,15 @@ import Tilemap from '../../Tilemap';
 import { Sprite } from '../../Sprite';
 import Texture from '../../Texture';
 import Player from '../../actors/Player';
-// import directions from '../../directions';
+import directions from '../../directions';
 import styles from './Game.module.css';
 import Creature from '../../actors/Creature';
 import SocketEnum from '../../SocketEnum';
 import NPC from '../../actors/NPC';
 import makeEncounterGenerator from '../../utils/random';
 import * as battleTransitions from '../../battle transitions';
+// import Textbox from '../../Textbox';
+import playDialog from './dialogBox';
 
 import { withRouter } from 'react-router-dom';
 
@@ -25,6 +27,9 @@ class Game extends React.PureComponent {
     constructor(props) {
         super(props);
         this.canvasRef = React.createRef();
+        this.textRef = React.createRef();
+
+        this.currentContext = 'default';
     }
     pressedKeys = new Set();
 
@@ -39,24 +44,17 @@ class Game extends React.PureComponent {
         }
     });
 
-    // setupCanvas = element => {
-    //     this.canvas = element;
-    //     console.log(element);
-    //     this.gl = this.gl || element.getContext('webgl');
-    //     this.setup();
-    // };
-
     playerAvatars = {};
     _NPCs = {};
     NPCs = new Proxy(this._NPCs, {
-        get: function(target, prop, receiver) {
+        get: function (target, prop, receiver) {
             if (!target[prop]) {
                 target[prop] = [];
             }
             return Reflect.get(...arguments);
         },
 
-        set: function(target, prop, receiver) {
+        set: function (target, prop, receiver) {
             if (!target[prop]) {
                 target[prop] = [];
             }
@@ -65,6 +63,9 @@ class Game extends React.PureComponent {
     });
 
     setup = async () => {
+        this.currentContext = 'default';
+        this.ctx = this.textRef.current.getContext('2d');
+
         // Make some sprites, load a map, whatever
         this.coords = { x: 4, y: 4 };
         this.currentMap = 'Route 1';
@@ -73,6 +74,20 @@ class Game extends React.PureComponent {
             this.gl,
             './spritesheets/overworld-actors.png'
         );
+
+        this.menuSprites = new Texture(
+            this.gl,
+            './spritesheets/battle-base.png'
+        );
+
+        this.dialogBox = new Sprite({
+            x: 0,
+            y: 96,
+            frames: [{ x: 160, y: 208 }],
+            // mask: [0xFFFF, 0xFA00],
+            framerate: 1,
+            size: 160
+        });
 
         this.drawSprites = Sprite.drawSpritesFactory(160, 144);
         {
@@ -111,6 +126,8 @@ class Game extends React.PureComponent {
                 skin,
                 facing
             );
+
+            this.player.party = party;
         }
 
         // this.player = new Player(
@@ -122,30 +139,59 @@ class Game extends React.PureComponent {
         // );
         this.actors = [this.player];
 
-        {
-            const youngster = new NPC(
-                1,
-                13,
-                13,
-                'youngster',
-                'west',
-                this.maps['Route 1'],
-                this.getCollidables
-            );
-            youngster.setAI(
-                youngster.wanderAI(
-                    youngster.uniformInterval(2000, 6000),
-                    12,
-                    12,
-                    15,
-                    15
+        // {
+        //     const youngster = new NPC(
+        //         1,
+        //         13,
+        //         13,
+        //         'youngster',
+        //         'west',
+        //         this.maps['Route 1'],
+        //         this.getCollidables
+        //     );
+        //     youngster.setAI(
+        //         youngster.wanderAI(
+        //             youngster.uniformInterval(2000, 6000),
+        //             12,
+        //             12,
+        //             15,
+        //             15
+        //         )
+        //     );
+        //     youngster.setSpeed(1.5);
+        //     this.NPCs['Route 1'].push(youngster);
+        // }
+
+        this.maps[this.currentMap].npcs.forEach((npc, i) => {
+            console.log(npc);
+            if (npc.actor) {
+                this.maps[this.currentMap].npcs[i] = new NPC(
+                    i,
+                    npc.x,
+                    npc.y,
+                    npc.skin,
+                    npc.facing,
+                    this.maps[this.currentMap],
+                    this.getCollidables
                 )
-            );
-            youngster.setSpeed(1.5);
-            this.NPCs['Route 1'].push(youngster);
-        }
+                const newNPC = this.maps[this.currentMap].npcs[i]
+                if (npc.ai) {
+                    newNPC.setAI(
+                        newNPC[npc.ai.type](
+                            newNPC[npc.ai.timing.type](...npc.ai.timing.args),
+                            ...npc.ai.args
+                        )
+                    )
+                }
+                console.log(newNPC);
+                newNPC.setSpeed(npc.speed);
+                this.NPCs[this.currentMap].push(newNPC);
+                console.log(this.NPCs[this.currentMap]);
+            }
+        })
 
         this.collidables = [this.player, ...this.NPCs[this.currentMap]];
+        console.log('collision', this.collidables);
 
         this.bindPlayerEvents();
         // await Promise.all(this.maps.map(map => map.ready));
@@ -240,6 +286,7 @@ class Game extends React.PureComponent {
         socket.on('populate', this.handlePopulate);
         socket.on('despawn', this.handleDespawn);
         socket.on('move response', this.handleMoveResponse);
+        socket.on('dialog', this.handleDialog);
         this.listenForEncounters();
         // socket.on('random encounter', this.handleEncounter);
     }
@@ -269,6 +316,26 @@ class Game extends React.PureComponent {
         Promise.all([serverEncounterEvent, clientEncounterEvent]).then(
             this.handleEncounter
         );
+    }
+
+    tryPoke() {
+        console.log('poke');
+        const [dx, dy] = directions[this.player.facing];
+        const [newx, newy] = [this.player.x + dx, this.player.y + dy];
+        const npc = this.player.map.npcs.findIndex(npc => {
+            console.log(npc);
+            return npc.x === newx && npc.y === newy
+        });
+        console.log(npc);
+        console.log(newx, newy);
+        if (npc > -1) {
+            this.props.socket.emit('poke', { id: npc });
+            this.player.map.npcs[npc].busy = true;
+            this.player.map.npcs[npc].turn(
+                { north: 'south', south: 'north', east: 'west', west: 'east' }[this.player.facing]
+            )
+            this.busyNPC = npc;
+        }
     }
 
     determineEncounterAnimation = data => {
@@ -312,6 +379,13 @@ class Game extends React.PureComponent {
                 console.log('stuff');
         }
     };
+
+    handleDialog = text => {
+        this.currentContext = 'dialog';
+        this.ctx = this.ctx || this.textRef.current.getContext('2d');
+        this.dialogAdvance = playDialog(text, this.ctx, this.gl);
+        console.log(text);
+    }
 
     handlePlayerTrainerSpawn = player => {
         const newPlayer = new Creature(
@@ -373,65 +447,68 @@ class Game extends React.PureComponent {
             this.gamepadEvents();
         }
 
-        if (Date.now() > this.movementDelay) {
-            if (
-                keys.has('ArrowUp') ||
-                keys.has('w') ||
-                keys.has('W') ||
-                keys.has('mobileUp')
-            ) {
-                this.player.walk('north');
-            } else if (
-                keys.has('ArrowDown') ||
-                keys.has('s') ||
-                keys.has('S') ||
-                keys.has('mobileDown')
-            ) {
-                this.player.walk('south');
-            } else if (
-                keys.has('ArrowLeft') ||
-                keys.has('a') ||
-                keys.has('A') ||
-                keys.has('mobileLeft')
-            ) {
-                this.player.walk('west');
-            } else if (
-                keys.has('ArrowRight') ||
-                keys.has('d') ||
-                keys.has('D') ||
-                keys.has('mobileRight')
-            ) {
-                this.player.walk('east');
-            }
-        } else {
-            if (
-                keys.has('ArrowUp') ||
-                keys.has('w') ||
-                keys.has('W') ||
-                keys.has('mobileUp')
-            ) {
-                this.player.turn('north');
-            } else if (
-                keys.has('ArrowDown') ||
-                keys.has('s') ||
-                keys.has('S') ||
-                keys.has('mobileDown')
-            ) {
-                this.player.turn('south');
-            } else if (
-                keys.has('ArrowLeft') ||
-                keys.has('a') ||
-                keys.has('A') ||
-                keys.has('mobileLeft')
-            ) {
-                this.player.turn('west');
-            } else if (
-                keys.has('ArrowRight') ||
-                keys.has('d') ||
-                keys.has('D') ||
-                keys.has('mobileRight')
-            ) {
-                this.player.turn('east');
+        console.log(this.currentContext);
+        if (this.currentContext === 'default') {
+            if (Date.now() > this.movementDelay) {
+                if (
+                    keys.has('ArrowUp') ||
+                    keys.has('w') ||
+                    keys.has('W') ||
+                    keys.has('mobileUp')
+                ) {
+                    this.player.walk('north');
+                } else if (
+                    keys.has('ArrowDown') ||
+                    keys.has('s') ||
+                    keys.has('S') ||
+                    keys.has('mobileDown')
+                ) {
+                    this.player.walk('south');
+                } else if (
+                    keys.has('ArrowLeft') ||
+                    keys.has('a') ||
+                    keys.has('A') ||
+                    keys.has('mobileLeft')
+                ) {
+                    this.player.walk('west');
+                } else if (
+                    keys.has('ArrowRight') ||
+                    keys.has('d') ||
+                    keys.has('D') ||
+                    keys.has('mobileRight')
+                ) {
+                    this.player.walk('east');
+                }
+            } else {
+                if (
+                    keys.has('ArrowUp') ||
+                    keys.has('w') ||
+                    keys.has('W') ||
+                    keys.has('mobileUp')
+                ) {
+                    this.player.turn('north');
+                } else if (
+                    keys.has('ArrowDown') ||
+                    keys.has('s') ||
+                    keys.has('S') ||
+                    keys.has('mobileDown')
+                ) {
+                    this.player.turn('south');
+                } else if (
+                    keys.has('ArrowLeft') ||
+                    keys.has('a') ||
+                    keys.has('A') ||
+                    keys.has('mobileLeft')
+                ) {
+                    this.player.turn('west');
+                } else if (
+                    keys.has('ArrowRight') ||
+                    keys.has('d') ||
+                    keys.has('D') ||
+                    keys.has('mobileRight')
+                ) {
+                    this.player.turn('east');
+                }
             }
         }
 
@@ -477,6 +554,15 @@ class Game extends React.PureComponent {
             this.actorSpriteSheet
         );
 
+        if (this.currentContext == 'dialog') {
+            this.drawSprites(
+                this.gl,
+                [this.dialogBox],
+                { x: 0, y: 0 },
+                this.menuSprites
+            );
+        }
+
         requestAnimationFrame(this.gameLoop);
     };
 
@@ -490,6 +576,15 @@ class Game extends React.PureComponent {
                     width="160"
                     height="144"
                     ref={this.canvasRef}
+                    onKeyDown={this.handleKeyDown}
+                    onKeyUp={this.handleKeyUp}
+                />
+                <canvas
+                    className={styles['game-canvas']}
+                    tabIndex="1"
+                    width="160"
+                    height="144"
+                    ref={this.textRef}
                     onKeyDown={this.handleKeyDown}
                     onKeyUp={this.handleKeyUp}
                 />
@@ -591,11 +686,28 @@ class Game extends React.PureComponent {
     handleKeyDown = e => {
         if (!this.pressedKeys.size) this.movementDelay = Date.now() + 70;
         this.pressedKeys.add(e.key);
+        if (e.key === 'f' || e.key === 'F') {
+            this.contextButton();
+        }
     };
 
     handleKeyUp = e => {
         this.pressedKeys.delete(e.key);
     };
+
+    // context sensitive button
+    contextButton() {
+        switch (this.currentContext) {
+            case 'dialog':
+                if (this.dialogAdvance()) {
+                    this.currentContext = 'default';
+                    this.player.map.npcs[this.busyNPC].busy = false;
+                }
+                break;
+            default:
+                this.tryPoke();
+        }
+    }
 
     gamepadEvents = () => {
         const mainGamepad = navigator.getGamepads()[0];
@@ -604,9 +716,7 @@ class Game extends React.PureComponent {
             const { axes: joy, buttons: btn } = mainGamepad;
 
             if (btn[0].pressed === true) {
-                alert(
-                    'pressed A! add this to game loop when we use A/B Buttons'
-                );
+                this.contextButton();
             } else if (btn[1].pressed === true) {
                 alert(
                     'pressed B! add this to game loop when we use A/B Buttons'

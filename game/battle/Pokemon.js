@@ -38,7 +38,7 @@ class Pokemon {
             species: this.species,
             name: this.name,
             level: this.level,
-            pctHP: this.stats.HP / this.stats.maxHP,
+            pctHP: this.stats.hp / this.stats.maxHp,
             status: this.status
         };
     }
