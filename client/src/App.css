@@ -35,7 +35,7 @@
 }
 
 @font-face {
-  font-family:"Pokemon";
+  font-family: "Pokemon";
   src:url("/fonts/pokemon/pokemon_generation_1.eot?") 
   format("eot"),url("/fonts/pokemon/pokemon_generation_1.woff") 
   format("woff"),url("/fonts/pokemon/pokemon_generation_1.ttf") 
@@ -43,6 +43,12 @@
   format("svg");
   font-weight:normal;
   font-style:normal;
+}
+
+@font-face {
+  font-family: "Pokemon";
+  src: local('Arial');
+  unicode-range: U+0040, U+0026;
 }
 
 * { box-sizing: border-box; }
