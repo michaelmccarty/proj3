@@ -1,11 +1,34 @@
 class NPC {
-    constructor(dialog) {
-        this.dialog = dialog;
+    constructor(script) {
+        if (Array.isArray(script)) {
+            this.type = 'event'
+            this.script = script;
+        } else {
+            this.type = 'textOnly'
+            this.dialog = script;
+        }
     }
 
-    onPoke (user)  {
-        console.log(this.dialog);
-        user.socket.emit('dialog', this.dialog);
+    async onPoke(user) {
+        if (this.type === 'textOnly') {
+            user.socket.emit('dialog', this.dialog);
+        } else {
+            for (let item of this.script) {
+                switch (item.type) {
+                    case 'dialog':
+                        const next = new Promise(resolve => {
+                            user.socket.once('end dialog', resolve)
+                        });
+                        user.socket.emit('dialog', item.message)
+                        await next;
+                        break;
+                    case 'event':
+                        item.event(user, ...(item.args || []));
+                        break;
+                }
+            }
+            // this.events && this.events.forEach(event => event.func(user, ...(event.args || [])));
+        }
     }
 }
 

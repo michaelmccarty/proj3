@@ -15,7 +15,7 @@ module.exports = function (io, connectedUsers) {
         // console.log(socket)
         socket.on('load game', function () {
             db.User.findById(socket.handshake.session.userId)
-                .then(function ({ username: name, party, inventory, badges, caught, money, skin, facing, map, x, y, trainerId }) {
+                .then(function ({ username: name, party, inventory, badges, caught, money, skin, facing, map, x, y, trainerId, lastPokeCenter }) {
                     const user = {
                         trainerId,
                         name,
@@ -40,6 +40,7 @@ module.exports = function (io, connectedUsers) {
                             type: 'walk',
                             map
                         },
+                        lastPokeCenter,
                         seed: Math.random(),
                         rngOffset: Math.floor(Math.random() * 233280),
                         stepsSinceLastEncounter: 0

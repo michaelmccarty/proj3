@@ -37,6 +37,30 @@ const map = {
         args: [12, 12, 15, 15]
       },
       speed: 1.5
+    },
+    {
+      actor: true,
+      x: 8,
+      y: 31,
+      skin: 'link lady',
+      facing: 'north',
+      speed: 1
+    },
+    {
+      actor: true,
+      x: 9,
+      y: 31,
+      skin: 'chansey',
+      facing: 'north',
+      speed: 1,
+      ai: {
+        type: 'spinAI',
+        timing: {
+          type: 'uniformInterval',
+          args: [1000, 5000]
+        },
+        args: []
+      }
     }
   ],
   tiles: [

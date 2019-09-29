@@ -1,5 +1,5 @@
 const NPC = require('../npc/NPC');
-
+const events = require('../npc/events');
 const _ = {
     collision: false,
     flags: {}
@@ -93,7 +93,24 @@ module.exports = {
         new NPC('Route 1\nPallet Town - Viridian City'),
         new NPC('See those ledges along the road?\n' +
             'It\'s a bit scary,\n' + 'but you can jump from them.\n' +
-            'You can get back to PALLET TOWN quicker that way')
+            'You can get back to PALLET TOWN quicker that way'),
+        new NPC([
+            {
+                type: 'dialog',
+                message: 'The path to\n Pallet Town is currently under construction.\nLet me heal your Pokemon.'
+            },
+            {
+                type: 'event',
+                event: events.heal,
+            },
+            {
+                type: 'event',
+                event: events.setPokecenter,
+                args: ['demo']
+            }
+        ]),
+
+        new NPC('Chansey~')
     ]
 }
 

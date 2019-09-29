@@ -447,7 +447,6 @@ class Game extends React.PureComponent {
             this.gamepadEvents();
         }
 
-        console.log(this.currentContext);
         if (this.currentContext === 'default') {
             if (Date.now() > this.movementDelay) {
                 if (
@@ -702,6 +701,7 @@ class Game extends React.PureComponent {
                 if (this.dialogAdvance()) {
                     this.currentContext = 'default';
                     this.player.map.npcs[this.busyNPC].busy = false;
+                    this.props.socket.emit('end dialog');
                 }
                 break;
             default:
