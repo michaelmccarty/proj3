@@ -109,8 +109,8 @@ module.exports = {
                 args: ['demo']
             }
         ]),
-
-        new NPC('Chansey~')
+        new NPC('Chansey~'),
+        new NPC('Route to Viridian City closed.')
     ]
 }
 

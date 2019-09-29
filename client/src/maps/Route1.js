@@ -61,7 +61,8 @@ const map = {
         },
         args: []
       }
-    }
+    },
+    { x: 8, y: 1, }
   ],
   tiles: [
     {
@@ -247,16 +248,16 @@ const map = {
       flags: {}
     },
     {
-      id: 2,
+      id: 5,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: {}
     },
     {
-      id: 2,
+      id: 7,
       frames: 1,
-      collision: false,
+      collision: true,
       events: [],
       flags: {}
     },

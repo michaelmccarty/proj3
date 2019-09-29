@@ -331,10 +331,13 @@ class Game extends React.PureComponent {
         console.log(newx, newy);
         if (npc > -1) {
             this.props.socket.emit('poke', { id: npc });
-            this.player.map.npcs[npc].busy = true;
-            this.player.map.npcs[npc].turn(
-                { north: 'south', south: 'north', east: 'west', west: 'east' }[this.player.facing]
-            )
+            if (this.player.map.npcs[npc].AI) {
+                console.log('actor true');
+                this.player.map.npcs[npc].busy = true;
+                this.player.map.npcs[npc].turn(
+                    { north: 'south', south: 'north', east: 'west', west: 'east' }[this.player.facing]
+                )
+            }
             this.busyNPC = npc;
         }
     }
