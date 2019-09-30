@@ -30,6 +30,16 @@ class Pokemon {
         this.stats = stats || this.calculateStats(); // calculate if not provided
 
         this.status = status;
+
+        this.statChanges = {
+            attack: 0,
+            defense: 0,
+            speed: 0,
+            special: 0,
+            accuracy: 0
+        }
+
+        this.confused = false;
     }
 
     publicStats() {
@@ -68,10 +78,21 @@ class Pokemon {
         for (let i = learnset.length - 1; i >= 0 && moveset.length < 4; i--) {
             if (learnset[i].level <= this.level) {
                 // TODO: look up max PP for move
-                moveset.push({ name: learnset[i].name, PP: 20 });
+                moveset.push({ name: learnset[i].name, PP: 20, maxPP: 20 });
             }
         }
         return moveset;
+    }
+
+    resetBattleStats() {
+        this.confused = false;
+        this.statChanges = {
+            attack: 0,
+            defense: 0,
+            speed: 0,
+            special: 0,
+            accuracy: 0
+        }
     }
 
     calculateStats() {

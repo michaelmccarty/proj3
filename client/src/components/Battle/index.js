@@ -101,6 +101,7 @@ class Battle extends React.Component {
     }
 
     componentDidMount() {
+        // this.props.initSocket();
         this.stopDrawLoop = false;
         this.startBattle();
         this.canvasRef.current.focus();
@@ -164,8 +165,8 @@ class Battle extends React.Component {
         });
 
         this.enemy = this.enemy || {};
-        this.enemy.previous = this.enemy.previous || {pctHP: 1};
-        this.enemy.current = this.enemy.current || {pctHP: 1};
+        this.enemy.previous = this.enemy.previous || { pctHP: 1 };
+        this.enemy.current = this.enemy.current || { pctHP: 1 };
         const enemyData = getSpecies(introData.species);
         this.opponentSprite = new Sprite({
             x: -56,
@@ -345,7 +346,7 @@ class Battle extends React.Component {
                             this.myPokemon.stats.hp / this.myPokemon.stats.maxHp
                         )
                     ]);
-            } else {
+            } else if (!enemy) {
                 await this.animateHPBar(
                     'enemy',
                     this.enemy.previous.pctHP,
@@ -353,9 +354,17 @@ class Battle extends React.Component {
                 );
             }
 
-
-
             await this.awaitTextAdvance(attackText);
+
+            if (action.miss) {
+                const missText = this.text.log.printString(
+                    this.textCtx,
+                    enemy ? `Enemy ${this.enemy.current.name}` : this.myPokemon.name + '\'s attack missed.'
+                )
+                this.text.log.clear(this.textCtx);
+                await this.awaitTextAdvance(missText);
+                
+            }
 
             this.text.log.clear(this.textCtx);
 
@@ -399,8 +408,28 @@ class Battle extends React.Component {
                     )
                 );
                 this.text.log.clear(this.textCtx);
+            } else if (action.effect) {
+                let adjective;
+                switch (action.effect.value) {
+                    case -2:
+                        adjective = 'sharply';
+                        break;
+                    case 2:
+                        adjective = 'greatly';
+                        break;
+                }
+                await this.awaitTextAdvance(
+                    this.text.log.printString(
+                        this.textCtx,
+                        (action.effect.target === 'enemy' &&
+                            (!enemy ? `Enemy ${this.enemy.current.name}` : this.myPokemon.name)) +
+                            '\'s ' + action.effect.stat +
+                            (adjective || '') + ' ' +
+                            (action.effect.value < 0 ? 'fell' : 'rose')
+                    )
+                )
+                this.text.log.clear(this.textCtx);
             }
-
             // Pokemon was statused
 
             return !(action.effect === 'FNT');
@@ -438,6 +467,7 @@ class Battle extends React.Component {
                 this.exitBattle();
             }
         } else {
+
             // respawn player with full health pokemon
             this.canExitBattle = true;
             if (this._instantExit) {
@@ -446,13 +476,27 @@ class Battle extends React.Component {
         }
     };
 
-    exitBattle() {
+    async exitBattle(code) {
+        if (code) {
+            await this.awaitTextAdvance(
+                this.text.log.printString(
+                    this.textCtx,
+                    `Player has no more usable pokemon\nPlayer blacks out`
+                )
+            );
+            await this.fadeToBlack();
+        }
+        // Play post battle message here
         Object.entries(this.text).map(([, textbox]) =>
             textbox.clear(this.textCtx)
         );
         this.hudSprites = [];
         this.actorSprites = [];
         this.props.history.goBack();
+    }
+
+    async fadeToBlack() {
+        // need to do some canvas post processing here.
     }
 
     awaitTextAdvance(textboxPromise) {
@@ -603,7 +647,7 @@ class Battle extends React.Component {
             sprite.mask = [0xFFFF >> shiftBy, 0xFFFF];
         });
     }
-    
+
     handleUpdateOpponent = (data) => {
         console.log(data);
         this.enemy.previous = this.enemy.current;
@@ -726,28 +770,28 @@ class Battle extends React.Component {
                     <div className={styles['left-controls']}>
                         <button
                             onTouchStart={() => {
-                                this.handleKeyDown(new KeyboardEvent('keydown',{'key':'ArrowUp'}));
+                                this.handleKeyDown(new KeyboardEvent('keydown', { 'key': 'ArrowUp' }));
                             }}
                         >
                             <img src={gameDPad} alt="Up" />
                         </button>
                         <button
                             onTouchStart={() => {
-                                this.handleKeyDown(new KeyboardEvent('keydown',{'key':'ArrowDown'}));
+                                this.handleKeyDown(new KeyboardEvent('keydown', { 'key': 'ArrowDown' }));
                             }}
                         >
                             <img src={gameDPad} alt="Down" />
                         </button>
                         <button
                             onTouchStart={() => {
-                                this.handleKeyDown(new KeyboardEvent('keydown',{'key':'ArrowLeft'}));
+                                this.handleKeyDown(new KeyboardEvent('keydown', { 'key': 'ArrowLeft' }));
                             }}
                         >
                             <img src={gameDPad} alt="Left" />
                         </button>
                         <button
                             onTouchStart={() => {
-                                this.handleKeyDown(new KeyboardEvent('keydown',{'key':'ArrowRight'}));
+                                this.handleKeyDown(new KeyboardEvent('keydown', { 'key': 'ArrowRight' }));
                             }}
                         >
                             <img src={gameDPad} alt="Right" />
@@ -757,7 +801,7 @@ class Battle extends React.Component {
                         <button
                             className={styles['game-action-buttons']}
                             onTouchStart={() => {
-                                this.handleKeyDown(new KeyboardEvent('keydown',{'key':'f'}));
+                                this.handleKeyDown(new KeyboardEvent('keydown', { 'key': 'f' }));
                             }}
                         >
                             <img src={gameActionA} alt="A" />
@@ -765,7 +809,7 @@ class Battle extends React.Component {
                         <button
                             className={styles['game-action-buttons']}
                             onTouchStart={() => {
-                                this.handleKeyDown(new KeyboardEvent('keydown',{'key':'b'}));
+                                this.handleKeyDown(new KeyboardEvent('keydown', { 'key': 'b' }));
                             }}
                         >
                             <img src={gameActionB} alt="B" />

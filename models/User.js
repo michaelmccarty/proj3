@@ -26,7 +26,8 @@ const Pokemon = new Schema({
   moves: [
     {
       name: String,
-      PP: Number
+      PP: Number,
+      maxPP: Number
     }
   ],
 

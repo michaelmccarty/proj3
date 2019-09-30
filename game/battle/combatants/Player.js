@@ -1,5 +1,7 @@
 const Combatant = require('../Combatant');
 const Pokemon = require('../Pokemon');
+const pokecenters = require('../../data/pokecenters');
+const events = require('../../npc/events');
 
 class Player extends Combatant {
     constructor(player) {
@@ -55,6 +57,9 @@ class Player extends Combatant {
                 this.trainer.socket.emit('battle turn results', data);
                 break;
             case 'battle end':
+                if (data.winner !== 'me') {
+                    this.onLose();
+                }
                 this.trainer.socket.emit('battle end', data);
                 break;
 
@@ -72,6 +77,13 @@ class Player extends Combatant {
 
         // TODO: validate if user is allowed to take the action.  don't resolve until valid
         return action;
+    }
+
+    onLose() {
+        this.trainer.socket.emit('black out', pokecenters[this.trainer.lastPokeCenter]);
+        this.trainer.previousMove = { ...this.trainer.previousMove, ...pokecenters[this.trainer.lastPokeCenter] }
+        // console.log(this.trainer.previousMove);
+        events.heal(this.trainer);
     }
 }
 

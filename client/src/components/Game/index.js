@@ -287,6 +287,7 @@ class Game extends React.PureComponent {
         socket.on('despawn', this.handleDespawn);
         socket.on('move response', this.handleMoveResponse);
         socket.on('dialog', this.handleDialog);
+        socket.on('black out', this.handleBlackOut);
         this.listenForEncounters();
         // socket.on('random encounter', this.handleEncounter);
     }
@@ -330,10 +331,13 @@ class Game extends React.PureComponent {
         console.log(newx, newy);
         if (npc > -1) {
             this.props.socket.emit('poke', { id: npc });
-            this.player.map.npcs[npc].busy = true;
-            this.player.map.npcs[npc].turn(
-                { north: 'south', south: 'north', east: 'west', west: 'east' }[this.player.facing]
-            )
+            if (this.player.map.npcs[npc].AI) {
+                console.log('actor true');
+                this.player.map.npcs[npc].busy = true;
+                this.player.map.npcs[npc].turn(
+                    { north: 'south', south: 'north', east: 'west', west: 'east' }[this.player.facing]
+                )
+            }
             this.busyNPC = npc;
         }
     }
@@ -348,6 +352,13 @@ class Game extends React.PureComponent {
             this.transitionAnimation = 'wildFieldWeak';
         }
     };
+
+    handleBlackOut = newPosition => {
+        this.player.map = this.maps[newPosition.map];
+        this.player.x = newPosition.x;
+        this.player.y = newPosition.y;
+        // Needs to trigger a map reload
+    }
 
     handleMove = data => {
         const player = this.playerAvatars[data[SocketEnum.TRAINER_ID]];

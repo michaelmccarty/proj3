@@ -92,7 +92,7 @@ module.exports = function (io, connectedUsers) {
                         });
                     });
 
-                    socket.on('poke', ({id}) => {
+                    socket.on('poke', ({ id }) => {
                         handlePoke(user, id);
                     });
 
@@ -127,6 +127,9 @@ module.exports = function (io, connectedUsers) {
                         socket.broadcast.emit('despawn', {
                             [$$.TRAINER_ID]: connectedUsers[socket.id].trainerId
                         });
+                        db.User.findByIdAndUpdate(socket.handshake.session.userId,
+                            { $set: user }).catch(err => console.log(err));
+
                         delete connectedUsers[socket.id];
                     });
 
