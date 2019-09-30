@@ -5,7 +5,7 @@ PokémOnline is a way to play Pokémon with your friends. Back when Pokémon was
 ## Getting Started
 
 ### Jump right in
-To play, visit our deployed link **[here](https://obscure-anchorage-49534.herokuapp.com/)**. Login with our test account. 
+To play, visit our deployed link **[here](https://calm-ridge-34957.herokuapp.com/)**. Login with our test account. 
 
 Email: `test@test.com`
 Password: `password`
