@@ -8,12 +8,18 @@ class NPC extends CollidableCreature {
         this.sightRange = sightRange;
     }
 
-    AI() {
+    _AI() {
         return null;
     }
 
+    AI() {
+        if (!this.busy) {
+            this._AI();
+        }
+    }
+
     setAI(aiFunction) {
-        this.AI = aiFunction;
+        this._AI = aiFunction;
     }
 
     wanderAI(intervalFunction, x1, y1, x2, y2) {

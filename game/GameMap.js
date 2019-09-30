@@ -1,10 +1,11 @@
 class GameMap {
-    constructor(connections, width, height, encounterParams, tiles, mapDictionary) {
+    constructor(connections, width, height, encounterParams, tiles, npcs, mapDictionary) {
         this.connections = connections;
         this.width = width;
         this.height = height;
         this.encounterParams = encounterParams;
         this.tiles = tiles;
+        this.npcs = npcs;
         this.mapDictionary = mapDictionary
     }
 

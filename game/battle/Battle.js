@@ -46,7 +46,7 @@ class Battle extends EventEmitter {
                 this.combatant2
             );
             // This function can also do exp gain.
-            console.log(results);
+            // console.log(results);
 
             pokemon1 = results.pokemon1;
             pokemon2 = results.pokemon2;
@@ -74,7 +74,7 @@ class Battle extends EventEmitter {
             // determine if either pokemon fainted
             // if so, determine if the battle is over
             // TIE needs to be determined first
-            console.log(pokemon1.status, pokemon2.status);
+            // console.log(pokemon1.status, pokemon2.status);
             if (pokemon1.status == 'FNT') {
                 if (this.combatant1.hasUsablePokemon()) {
                     pokemon1 = await this.combatant1.nextPokemon();

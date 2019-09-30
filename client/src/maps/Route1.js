@@ -20,6 +20,49 @@ const map = {
     density: 25 // out of 256
   },
   type: 'field',
+  npcs: [
+    { x: 7, y: 27 },
+    {
+      actor: true,
+      x: 13,
+      y: 13,
+      skin: 'youngster',
+      facing: 'west',
+      ai: {
+        type: 'wanderAI',
+        timing: {
+          type: 'uniformInterval',
+          args: [2000, 6000]
+        },
+        args: [12, 12, 15, 15]
+      },
+      speed: 1.5
+    },
+    {
+      actor: true,
+      x: 8,
+      y: 31,
+      skin: 'link lady',
+      facing: 'north',
+      speed: 1
+    },
+    {
+      actor: true,
+      x: 9,
+      y: 31,
+      skin: 'chansey',
+      facing: 'north',
+      speed: 1,
+      ai: {
+        type: 'spinAI',
+        timing: {
+          type: 'uniformInterval',
+          args: [1000, 5000]
+        },
+        args: []
+      }
+    }
+  ],
   tiles: [
     {
       id: 23,

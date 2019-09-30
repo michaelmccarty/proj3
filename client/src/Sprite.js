@@ -24,6 +24,8 @@ class Sprite {
 
         this.scale = options.scale || 1;
 
+        this.filters = options.filters || {};
+
         new Promise(resolve => this._promise = resolve);
 
         this.frameGen = (function* (sprite) {
@@ -131,11 +133,12 @@ Sprite.drawSpritesFactory = function (canvasWidth, canvasHeight) {
         gl.uniform2f(shader.uniform.inverseViewportSize, inverseWidth, inverseHeight);
         gl.uniform2f(shader.uniform.viewOffset, offset.x, offset.y);
         gl.uniform2f(shader.uniform.inverseTextureSize, spritesheet.inverseWidth, spritesheet.inverseHeight);
+        // gl.uniform1f(shader.uniform.monochrome, monochrome ? 1.0 : 0.0);
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, spritesheet.texture);
 
-        const buffer = new Float32Array(448); // 64 sprites active at once;
+        const buffer = new Float32Array(704); // 64 sprites active at once;
         let i = 0;
         let count = 0;
         for (let sprite of sprites) { //eslint-disable-line
@@ -154,12 +157,13 @@ Sprite.drawSpritesFactory = function (canvasWidth, canvasHeight) {
                 buffer[i++] = sprite.mask[0];
                 buffer[i++] = sprite.mask[1];
                 buffer[i++] = sprite.scale;
+                buffer[i++] = sprite.filters.monochrome ? 1.0 : 0.0;
                 // count++;
             }
             // console.log(i);
         }
 
-        count = i / 10;
+        count = i / 11;
 
         const glBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, glBuffer);
@@ -171,13 +175,15 @@ Sprite.drawSpritesFactory = function (canvasWidth, canvasHeight) {
         gl.enableVertexAttribArray(shader.attribute.flip);
         gl.enableVertexAttribArray(shader.attribute.mask);
         gl.enableVertexAttribArray(shader.attribute.scale);
+        gl.enableVertexAttribArray(shader.attribute.monochromeFilter);
 
-        gl.vertexAttribPointer(shader.attribute.spritePosition, 2, gl.FLOAT, false, 40, 0);
-        gl.vertexAttribPointer(shader.attribute.spriteSize, 1, gl.FLOAT, false, 40, 8);
-        gl.vertexAttribPointer(shader.attribute.texOffset, 2, gl.FLOAT, false, 40, 12);
-        gl.vertexAttribPointer(shader.attribute.flip, 2, gl.FLOAT, false, 40, 20);
-        gl.vertexAttribPointer(shader.attribute.mask, 2, gl.FLOAT, false, 40, 28)
-        gl.vertexAttribPointer(shader.attribute.scale, 1, gl.FLOAT, false, 40, 36)
+        gl.vertexAttribPointer(shader.attribute.spritePosition, 2, gl.FLOAT, false, 44, 0);
+        gl.vertexAttribPointer(shader.attribute.spriteSize, 1, gl.FLOAT, false, 44, 8);
+        gl.vertexAttribPointer(shader.attribute.texOffset, 2, gl.FLOAT, false, 44, 12);
+        gl.vertexAttribPointer(shader.attribute.flip, 2, gl.FLOAT, false, 44, 20);
+        gl.vertexAttribPointer(shader.attribute.mask, 2, gl.FLOAT, false, 44, 28)
+        gl.vertexAttribPointer(shader.attribute.scale, 1, gl.FLOAT, false, 44, 36)
+        gl.vertexAttribPointer(shader.attribute.monochromeFilter, 1, gl.FLOAT, false, 44, 40);
 
         gl.drawArrays(gl.POINTS, 0, count);
     }

@@ -2,157 +2,160 @@ const $$ = require('../SocketEnum');
 const processMove = require('./processMove');
 const makeEncounterGenerator = require('../utils/random');
 const Pokemon = require('./battle/Pokemon');
+const db = require('./../models');
+const handlePoke = require('./npc/pokeNPC');
 
-module.exports = function(io, connectedUsers) {
+module.exports = function (io, connectedUsers) {
     const trainerMap = {};
-    return function(socket) {
+    return function (socket) {
+        console.log('session: ', ...Object.keys(socket.handshake.session));
+        // const claims = authenticateSocket(socket);
+        // console.log(socket.handshake.headers);
         console.log('made socket connection', socket.id);
+        // console.log(socket)
+        socket.on('load game', function () {
+            db.User.findById(socket.handshake.session.userId)
+                .then(function ({ username: name, party, inventory, badges, caught, money, skin, facing, map, x, y, trainerId, lastPokeCenter }) {
+                    const user = {
+                        trainerId,
+                        name,
+                        map,
+                        x,
+                        y,
+                        socket,
+                        skin,
+                        facing,
+                        pokemon: party.map(
+                            ({ name, species, level, ivs, evs, moves, status }) => (
+                                new Pokemon(species, level, ivs, evs, null, moves, status, name)
+                            )),
+                        inventory,
+                        badges,
+                        money,
+                        previousMove: {
+                            x,
+                            y,
+                            facing,
+                            stepNumber: 0,
+                            type: 'walk',
+                            map
+                        },
+                        lastPokeCenter,
+                        seed: Math.random(),
+                        rngOffset: Math.floor(Math.random() * 233280),
+                        stepsSinceLastEncounter: 0
+                    }
+                    user.encounterGenerator = makeEncounterGenerator(
+                        user.seed,
+                        null,
+                        user.rngOffset
+                    );
 
-        // For now, create a dummy user to simulate logging them in
-        let user = {
-            trainerId: Math.floor(100000000000000 * Math.random()),
-            name: 'Ash',
-            map: 'Route 1',
-            x: 4,
-            y: 4,
-            socket: socket,
-            skin: 'gary',
-            facing: 'south',
+                    trainerMap[user.trainerId] = socket.id;
 
-            pokemon: [new Pokemon(1, 5), new Pokemon(4, 5)],
+                    // Should be their user object, loaded from the database, plus the socket.
+                    connectedUsers[socket.id] = user;
 
-            previousMove: {
-                x: 4,
-                y: 4,
-                facing: 'south',
-                stepNumber: 0,
-                type: 'walk',
-                map: 'Route 1'
-            },
-            // Parameters for random encounters
-            seed: Math.random(),
-            rngOffset: Math.floor(Math.random() * 233280),
-            stepsSinceLastEncounter: 0
-        };
+                    socket.emit('player data', {
+                        trainerId: user.trainerId,
+                        name: user.name,
+                        map: user.map,
+                        skin: user.skin,
+                        x: user.x,
+                        y: user.y,
+                        facing: user.facing,
+                        party: user.pokemon
+                    });
 
-        user.encounterGenerator = makeEncounterGenerator(
-            user.seed,
-            null,
-            user.rngOffset
-        );
+                    // user = connectedUsers[socket.id];
+                    console.log('spawning ' + user.trainerId);
+                    socket.join(user.map); // Need to join adjacent maps as well
+                    socket.to(user.map).broadcast.emit('spawn', {
+                        //TODO broadcast name
+                        [$$.MAP]: user.map,
+                        [$$.DIRECTION]: $$[user.facing],
+                        [$$.SKIN]: user.skin,
+                        [$$.X]: user.x,
+                        [$$.Y]: user.y,
+                        [$$.TRAINER_ID]: user.trainerId
+                    });
 
-        trainerMap[user.trainerId] = socket.id;
+                    socket.on('move', data => {
+                        if (processMove(user, data, socket)) return; // return if move is rejected;
 
-        // Should be their user object, loaded from the database, plus the socket.
-        connectedUsers[socket.id] = user;
+                        socket.to(user.map).broadcast.emit('move', {
+                            [$$.MOVE_TYPE]: data[$$.MOVE_TYPE],
+                            [$$.DIRECTION]: $$[user.facing],
+                            [$$.X]: user.x,
+                            [$$.Y]: user.y,
+                            [$$.TRAINER_ID]: user.trainerId
+                        });
+                    });
 
-        socket.on('load game', function() {
-            socket.emit('player data', {
-                trainerId: user.trainerId,
-                name: user.name,
-                map: user.map,
-                skin: user.skin,
-                x: user.x,
-                y: user.y,
-                facing: user.facing,
-                party: user.pokemon
-            });
-        });
-        // socket.on("connect", () => {
-        user = connectedUsers[socket.id];
-        console.log('spawning ' + user.trainerId);
-        socket.join(user.map); // Need to join adjacent maps as well
-        socket.to(user.map).broadcast.emit('spawn', {
-            //TODO broadcast name
-            [$$.MAP]: user.map,
-            [$$.DIRECTION]: $$[user.facing],
-            [$$.SKIN]: user.skin,
-            [$$.X]: user.x,
-            [$$.Y]: user.y,
-            [$$.TRAINER_ID]: user.trainerId
-        });
+                    socket.on('poke', ({id}) => {
+                        handlePoke(user, id);
+                    });
 
-        socket.on('move', data => {
-            user = connectedUsers[socket.id];
-            // console.log('move', socket.id, data);
-            if (processMove(user, data, socket)) return; // return if move is rejected;
+                    socket.on('populate request', data => {
+                        const sender = connectedUsers[socket.id];
+                        const output = Object.entries(connectedUsers)
+                            .filter(
+                                ([_, user]) =>
+                                    user.map === data[$$.MAP] &&
+                                    user.socket.id !== sender.socket.id
+                            )
+                            .map(([_, user]) => ({
+                                [$$.MAP]: user.map,
+                                [$$.DIRECTION]: $$[user.facing],
+                                [$$.SKIN]: user.skin,
+                                [$$.X]: user.x,
+                                [$$.Y]: user.y,
+                                [$$.TRAINER_ID]: user.trainerId
+                            }));
+                        socket.emit('populate', output);
+                    });
 
-            // user.facing = $$.directions[data[$$.DIRECTION]];
-            // user.x = data[$$.X];
-            // user.y = data[$$.Y];
+                    socket.on('seed me', data => {
+                        socket.emit('reseed', {
+                            seed: user.seed,
+                            offset: user.rngOffset
+                        });
+                    });
 
-            // console.log(user.facing);
+                    socket.on('disconnect', data => {
+                        console.log(socket.id + 'disconnected');
+                        socket.broadcast.emit('despawn', {
+                            [$$.TRAINER_ID]: connectedUsers[socket.id].trainerId
+                        });
+                        delete connectedUsers[socket.id];
+                    });
 
-            socket.to(user.map).broadcast.emit('move', {
-                [$$.MOVE_TYPE]: data[$$.MOVE_TYPE],
-                [$$.DIRECTION]: $$[user.facing],
-                [$$.X]: user.x,
-                [$$.Y]: user.y,
-                [$$.TRAINER_ID]: user.trainerId
-            });
-            // io.sockets.emit('move', data);
-        });
+                    socket.on('chat', function (data) {
+                        // const user = connectedUsers[socket.id];
+                        data.userName = getDisplayName(user);
+                        io.sockets.emit('chat', data);
+                        io.sockets.emit('chat2', data);
+                    });
 
-        socket.on('populate request', data => {
-            const sender = connectedUsers[socket.id];
-            const output = Object.entries(connectedUsers)
-                .filter(
-                    ([_, user]) =>
-                        user.map === data[$$.MAP] &&
-                        user.socket.id !== sender.socket.id
-                )
-                .map(([_, user]) => ({
-                    [$$.MAP]: user.map,
-                    [$$.DIRECTION]: $$[user.facing],
-                    [$$.SKIN]: user.skin,
-                    [$$.X]: user.x,
-                    [$$.Y]: user.y,
-                    [$$.TRAINER_ID]: user.trainerId
-                }));
-            socket.emit('populate', output);
-        });
+                    socket.on('typing', function (data) {
+                        socket.broadcast.emit('typing', data);
+                    });
 
-        socket.on('seed me', data => {
-            socket.emit('reseed', {
-                seed: user.seed,
-                offset: user.rngOffset
-            });
-        });
+                    socket.on('connectedUserCheck', data => {
+                        // console.log(connectedUsers);
 
-        socket.on('disconnect', data => {
-            console.log(socket.id + 'disconnected');
-            socket.broadcast.emit('despawn', {
-                [$$.TRAINER_ID]: connectedUsers[socket.id].trainerId
-            });
-            delete connectedUsers[socket.id];
-        });
+                        const srvSockets = io.sockets.sockets;
+                        const onlineUsers = Object.entries(srvSockets)
+                            .map(([socketId]) => connectedUsers[socketId])
+                            .map(user => ({
+                                name: user.name,
+                                userName: getDisplayName(user),
+                                trainerId: user.trainerId
+                            }));
 
-        socket.on('chat', function(data) {
-            const user = connectedUsers[socket.id];
-            data.userName = getDisplayName(user);
-            io.sockets.emit('chat', data);
-            io.sockets.emit('chat2', data);
-        });
-
-        socket.on('typing', function(data) {
-            socket.broadcast.emit('typing', data);
-        });
-
-        socket.on('connectedUserCheck', data => {
-            // console.log(connectedUsers);
-
-            const srvSockets = io.sockets.sockets;
-            // const onlineUsers =
-            // console.log(srvSockets);
-            const onlineUsers = Object.entries(srvSockets)
-                .map(([socketId]) => connectedUsers[socketId])
-                .map(user => ({
-                    name: user.name,
-                    userName: getDisplayName(user),
-                    trainerId: user.trainerId
-                }));
-
-            io.sockets.emit('connectedUserCheck', { onlineUsers });
+                        io.sockets.emit('connectedUserCheck', { onlineUsers });
+                    });
+                });
         });
     };
 };

@@ -25,16 +25,17 @@ if (process.env.NODE_ENV === "production") {
 
 const LocalStrategy = require('passport-local').Strategy;
 
-app.use(
-    session({
-        secret: process.env.SESSIONKEY,
-        resave: false,
-        saveUninitialized: true
-    })
-);
+const sessionMW = session({
+    secret: process.env.SESSIONKEY,
+    resave: false,
+    saveUninitialized: true
+});
+
+app.use(sessionMW);
 
 app.use(passport.initialize());
-app.use(passport.session());
+const passportSession = passport.session();
+app.use(passportSession);
 
 require('./routes/api/user')(app, passport, db);
 
@@ -42,43 +43,46 @@ passport.use(
     new LocalStrategy(
         {
             usernameField: 'email',
-            passwordField: 'password'
+            passwordField: 'password',
+            passReqToCallback: true,
         },
-        function(email, password, done) {
+        function (req, email, password, done) {
             db.User.findOne({
                 email: email
-            }).then(function(user) {
+            }).then(function (user) {
                 if (!user) {
                     console.log('\n\nuser not found. login failed');
                 } else if (user) {
 
                     // hashing taking place
-                    bcrypt.compare(password, user.password, function (req, res){
-                        if (res){
+                    bcrypt.compare(password, user.password, function (err, res) {
+                        if (res) {
                             console.log('\n\nsuccessful login, ' + user.username + '\n\n');
+                            console.log(user);
+                            req.session.userId = user._id;
                             return done(null, user);
                         }
-                        else{
+                        else {
                             console.log('\n\nbad password. login failed');
                         }
                     });
-                    
+
                 }
             });
         }
     )
 );
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
     done(null, user.id);
 });
 
-passport.deserializeUser(function(id, done) {
+passport.deserializeUser(function (id, done) {
     db.User.findById(id)
-        .then(function(user) {
+        .then(function (user) {
             done(null, user);
         })
-        .catch(function(err) {
+        .catch(function (err) {
             done(err);
         });
 });
@@ -92,9 +96,16 @@ if (process.env.NODE_ENV === "production") {
 // socket setup
 const io = socket(server);
 
-server.listen(PORT, function() {
+server.listen(PORT, function () {
     console.log('listening to requests on port ' + PORT);
     console.log('http://localhost:' + PORT);
+});
+
+var sharedsession = require("express-socket.io-session");
+
+// Use shared session middleware for socket.io
+io.use(sharedsession(sessionMW), {
+    autoSave: true
 });
 
 // console.log(io)

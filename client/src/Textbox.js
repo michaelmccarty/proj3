@@ -9,7 +9,7 @@ class Textbox {
         this.cursor = 0;
         this.width = Math.floor((x2 - x1) / 8);
         this.height = Math.floor((y2 - y1) / 8);
-        console.log(this.width, this.height);
+        // console.log(this.width, this.height);
     }
 
     get bounds() {
@@ -18,7 +18,7 @@ class Textbox {
 
     clear(ctx) {
         this.stopText();
-        console.log(this.x1, this.y1, this.x2 - this.x1, this.y2 - this.y1);
+        // console.log(this.x1, this.y1, this.x2 - this.x1, this.y2 - this.y1);
         ctx.clearRect(
             this.x1 - 1,
             this.y1 - 1,
@@ -44,10 +44,14 @@ class Textbox {
         return [x, y];
     }
 
+    newLine(force) {
+        if (this.cursor % this.width !== 0 || force)
+            this.cursor = Math.floor(this.cursor / this.width + 1) * this.width;
+    }
+
     printChar(ctx, char) {
         if (char === '\n') {
-            return (this.cursor =
-                Math.floor(this.cursor / this.width + 1) * this.width);
+            return this.newLine();
         } else if (char === ' ' && this.cursor % this.width === 0) {
             return;
         }
@@ -56,10 +60,18 @@ class Textbox {
         this.cursor++;
     }
 
+    advance(ctx) {
+        if (this.cursor) {
+            this._instantText = true;
+        }
+    }
+
     printString(ctx, string, speed = 50, i = 0, nested = false) {
         let promise;
         if (!nested) {
             promise = new Promise(resolve => (this._resolve = resolve));
+            promise.textbox = this;
+            promise.then(() => promise.isResolved = true);
         }
         if (string[i]) {
             this.printChar(ctx, string[i]);
@@ -73,7 +85,7 @@ class Textbox {
                     // console.log(j);
                     j++;
                 }
-                console.log(j + (this.cursor % this.width));
+                // console.log(j + (this.cursor % this.width));
                 if (j + (this.cursor % this.width) - 1 > this.width) {
                     this.cursor =
                         Math.floor(this.cursor / this.width + 1) * this.width;
@@ -83,13 +95,14 @@ class Textbox {
             // instant text if speed is 0;
             if (speed) {
                 setTimeout(
-                    () => this.printString(ctx, string, speed, i + 1, true),
-                    speed
+                    () => this.printString(ctx, string, this._instantText ? 0 : speed, i + 1, true),
+                    this._instantText ? 0 : speed
                 );
             } else {
                 this.printString(ctx, string, speed, i + 1, true);
             }
         } else {
+            this._instantText = false;
             this._resolve();
         }
         return promise;

@@ -38,7 +38,7 @@ class Pokemon {
             species: this.species,
             name: this.name,
             level: this.level,
-            pctHP: this.stats.HP / this.stats.maxHP,
+            pctHP: this.stats.hp / this.stats.maxHp,
             status: this.status
         };
     }
@@ -62,6 +62,7 @@ class Pokemon {
 
     getDefaultMoves() {
         // assume learnset is sorted for now
+        // console.log(this);
         const { learnset } = this.getSpecies();
         const moveset = [];
         for (let i = learnset.length - 1; i >= 0 && moveset.length < 4; i--) {
@@ -115,16 +116,16 @@ class Pokemon {
 }
 
 // Create a pokemon object from packed pokemon data
-Pokemon.fromPacked = function(packed) {
+Pokemon.fromPacked = function (packed) {
     // unpack the binary data
     return new Pokemon();
 };
 
-Pokemon.generateIV = function() {
+Pokemon.generateIV = function () {
     return Math.floor(Math.random() * 16);
 };
 
-Pokemon.calculateHPIV = function(ivs) {
+Pokemon.calculateHPIV = function (ivs) {
     return (
         (ivs.attack % 2) * 8 +
         (ivs.defense % 2) * 4 +
@@ -133,7 +134,7 @@ Pokemon.calculateHPIV = function(ivs) {
     );
 };
 
-Pokemon.calculateStat = function(base, iv, ev, level) {
+Pokemon.calculateStat = function (base, iv, ev, level) {
     return (
         Math.floor(
             (((base + iv) * 2 + Math.floor(Math.sqrt(ev) / 4)) * level) / 100

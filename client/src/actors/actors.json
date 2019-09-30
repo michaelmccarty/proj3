@@ -654,5 +654,121 @@
                 }
             ]
         }
+    },
+    "link lady": {
+        "south": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 0,
+                    "y": 128,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "north": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 16,
+                    "y": 128,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "west": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 32,
+                    "y": 128,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "east": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 32,
+                    "y": 128,
+                    "flip_h": true,
+                    "flip_v": false
+                }
+            ]
+        }
+    },
+    "chansey": {
+        "south": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 0,
+                    "y": 144,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "north": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 16,
+                    "y": 144,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "west": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 32,
+                    "y": 144,
+                    "flip_h": false,
+                    "flip_v": false
+                }
+            ]
+        },
+        "east": {
+            "x": 0,
+            "y": 0,
+            "size": 16,
+            "framerate": 2,
+            "frames": [
+                {
+                    "x": 32,
+                    "y": 144,
+                    "flip_h": true,
+                    "flip_v": false
+                }
+            ]
+        }
     }
 }
