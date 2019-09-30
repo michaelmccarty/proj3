@@ -52,7 +52,7 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  trainerID: {
+  trainerId: {
     type: Number,
     default: () => Math.floor(100000000000000 * Math.random())
   },

@@ -59,7 +59,7 @@ passport.use(
                     bcrypt.compare(password, user.password, function (err, res) {
                         if (res) {
                             console.log('\n\nsuccessful login, ' + user.username + '\n\n');
-                            console.log(user);
+                            // console.log(user);
                             req.session.userId = user._id;
                             return done(null, user);
                         }

@@ -62,19 +62,22 @@ class App extends React.Component {
         const socket = socketIOClient(endpoint);
 
         // bread and butter connection confirmation
-        socket.on('connect', data => console.log('Connected'));
+        socket.on('connect', data => {
+            console.log('Connected')
 
-        // asks for the online users
-        socket.emit('connectedUserCheck');
-        // then listens for online users from server
+            // asks for the online users
+            // then listens for online users from server
+        });
+        
         socket.on('connectedUserCheck', data => {
-            console.log(data);
+            console.log('connected user check:', data);
             //set state with the online users
             this.setState({ onlineUsers: data.onlineUsers });
 
             const { onlineUsers } = this.state;
             console.log(onlineUsers);
         });
+        
 
         // allows messages to be passed back and forth from client to server
         socket.on('chat', data => {
@@ -144,13 +147,13 @@ class App extends React.Component {
                             render={() => (
                                 <main className="container">
                                     <div className="game">
-                                       
-                                            <GameSocket
-                                                initSocket={this.initSocket}
-                                                socket={socket}
-                                                isMobile={this.state.isMobile}
-                                            />
-                                        
+
+                                        <GameSocket
+                                            initSocket={this.initSocket}
+                                            socket={socket}
+                                            isMobile={this.state.isMobile}
+                                        />
+
                                     </div>
                                     <Route
                                         path="/game/battle"
