@@ -145,7 +145,7 @@ module.exports = function (io, connectedUsers) {
                     });
 
                     socket.on('connectedUserCheck', data => {
-                        // console.log(connectedUsers);
+                        // console.log('connected:', connectedUsers);
 
                         const srvSockets = io.sockets.sockets;
                         const onlineUsers = Object.entries(srvSockets)
@@ -156,7 +156,7 @@ module.exports = function (io, connectedUsers) {
                                 trainerId: user.trainerId
                             }));
 
-                        io.sockets.emit('connectedUserCheck', { onlineUsers });
+                        socket.emit('connectedUserCheck', { onlineUsers });
                     });
                 });
         });

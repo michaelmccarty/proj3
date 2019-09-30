@@ -48,7 +48,7 @@
 @font-face {
   font-family: "Pokemon";
   src: local('Arial');
-  unicode-range: U+0040, U+0026;
+  unicode-range: U+0040;/*, U+0026;*/
 }
 
 * { box-sizing: border-box; }

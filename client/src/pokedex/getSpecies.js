@@ -233,8 +233,8 @@ const getSpecies = (dexNumber) => {
     return species[dexNumber];
 }
  
-console.log(getSpecies(1).name)
-console.log(getSpecies(1).learnset)
-console.log(getSpecies(1).baseStats)
+// console.log(getSpecies(1).name)
+// console.log(getSpecies(1).learnset)
+// console.log(getSpecies(1).baseStats)
 
 module.exports = getSpecies;

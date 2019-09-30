@@ -107,6 +107,8 @@ class Game extends React.PureComponent {
                 trainerId
             } = await playerDataPromise;
 
+            this.props.socket.emit('connectedUserCheck');  
+
             this.currentMap = map;
             this.coords = { x, y };
 
@@ -116,7 +118,7 @@ class Game extends React.PureComponent {
                 (this.coords.y - 4) * 16
             );
 
-            console.log(x, y, map, skin, facing, party, trainerId);
+            // console.log(x, y, map, skin, facing, party, trainerId);
 
             this.player = new Player(
                 x,
@@ -163,7 +165,7 @@ class Game extends React.PureComponent {
         // }
 
         this.maps[this.currentMap].npcs.forEach((npc, i) => {
-            console.log(npc);
+            // console.log(npc);
             if (npc.actor) {
                 this.maps[this.currentMap].npcs[i] = new NPC(
                     i,
@@ -183,15 +185,15 @@ class Game extends React.PureComponent {
                         )
                     )
                 }
-                console.log(newNPC);
+                // console.log(newNPC);
                 newNPC.setSpeed(npc.speed);
                 this.NPCs[this.currentMap].push(newNPC);
-                console.log(this.NPCs[this.currentMap]);
+                // console.log(this.NPCs[this.currentMap]);
             }
         })
 
         this.collidables = [this.player, ...this.NPCs[this.currentMap]];
-        console.log('collision', this.collidables);
+        // console.log('collision', this.collidables);
 
         this.bindPlayerEvents();
         // await Promise.all(this.maps.map(map => map.ready));
@@ -324,10 +326,10 @@ class Game extends React.PureComponent {
         const [dx, dy] = directions[this.player.facing];
         const [newx, newy] = [this.player.x + dx, this.player.y + dy];
         const npc = this.player.map.npcs.findIndex(npc => {
-            console.log(npc);
+            // console.log(npc);
             return npc.x === newx && npc.y === newy
         });
-        console.log(npc);
+        // console.log(npc);
         console.log(newx, newy);
         if (npc > -1) {
             this.props.socket.emit('poke', { id: npc });
