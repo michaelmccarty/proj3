@@ -30,6 +30,16 @@ class Pokemon {
         this.stats = stats || this.calculateStats(); // calculate if not provided
 
         this.status = status;
+
+        this.statChanges = {
+            attack: 0,
+            defense: 0,
+            speed: 0,
+            special: 0,
+            accuracy: 0
+        }
+
+        this.confused = false;
     }
 
     publicStats() {
@@ -72,6 +82,17 @@ class Pokemon {
             }
         }
         return moveset;
+    }
+
+    resetBattleStats() {
+        this.confused = false;
+        this.statChanges = {
+            attack: 0,
+            defense: 0,
+            speed: 0,
+            special: 0,
+            accuracy: 0
+        }
     }
 
     calculateStats() {

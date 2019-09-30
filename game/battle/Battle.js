@@ -25,6 +25,9 @@ class Battle extends EventEmitter {
             this.combatant2.nextPokemon()
         ]);
 
+        pokemon1.resetBattleStats();
+        pokemon2.resetBattleStats();
+
         // send pokemon species, name, level, %hp, and status
         this.combatant1.send('updateOpponent', pokemon2.publicStats());
         this.combatant2.send('updateOpponent', pokemon1.publicStats());

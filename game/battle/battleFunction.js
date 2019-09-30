@@ -1,7 +1,7 @@
 const Pokemon = require('./Pokemon');
+const moves = require('../data/moves');
 
 const damage = (yourAttack, yourLevel, yourMovePower, theirDefense, isCrit) => {
-  yourMovePower = yourMovePower || 50;
   return Math.ceil(
     (((2 * yourLevel * (1 + isCrit ? 1 : 0)) / 5) *
       yourMovePower *
@@ -93,7 +93,20 @@ function fight(pokemon1, pokemon2, move1, move2, combatant1, combatant2) {
 }
 
 function halfRound(attacker, defender, move) {
-  // bitwise and to round down to the nearest even number
+
+  // console.log(move);
+  if (Math.random() > moves[move.movename.toLowerCase()].accuracy) {
+    return {
+      type: 'fight',
+      miss: true,
+      move: move.movename,
+      crit: false,
+      effectiveness: 0,
+      effect: null
+    };
+  }
+
+  // bitwise AND to round down to the nearest even number
   const critRate =
     ((attacker.getSpecies().baseStats.speed & 0xfe) * 100) / 512;
 
@@ -104,20 +117,58 @@ function halfRound(attacker, defender, move) {
     crit = true;
   }
 
+  // TODO: determine if move is physical or special, use atk/def or spc accordingly
+
+  // ignore stat changes on a crit
+  const attackMod = crit ? 1 : (
+    1 + (attacker.statChanges.attack > 0 ?
+      attacker.statChanges.attack * 0.5 :
+      2 / (2 - attacker.statChanges.attack)
+    )
+  );
+
+  const defenseMod = crit ? 1 : (
+    1 + (defender.statChanges.defense > 0 ?
+      defender.statChanges.defense * 0.5 :
+      2 / (2 - defender.statChanges.defense)
+    )
+  );
+
+  console.log(attackMod, defenseMod);
+
+  const attack = attacker.stats.attack * attackMod;
+  const defense = defender.stats.defense * defenseMod;
+
   let dmg = damage(
-    attacker.stats.attack,
+    attack,
     attacker.level,
-    50,
-    defender.stats.defense,
+    moves[move.movename.toLowerCase()].power,
+    defense,
     crit
   );
+
+  // Determine additional effects
+  const extraEffect = moves[move.movename.toLowerCase()].effect;
+  if (extraEffect) {
+    // check accuracy
+    if (Math.random() < extraEffect.accuracy) {
+      const target = extraEffect.target === 'enemy' ? defender : attacker;
+      switch (extraEffect.type) {
+        case 'stat change':
+          target.statChanges[extraEffect.stat] += extraEffect.value;
+          effect = extraEffect;
+      }
+    }
+  }
 
   // calculate effectiveness based on move type and defender type
   let effectiveness = 1;
 
   dmg *= effectiveness;
 
-  defender.stats.hp -= dmg;
+  if (moves[move.movename.toLowerCase()].power) {
+    defender.stats.hp -= dmg;
+  }
 
   if (defender.stats.hp <= 0) {
     defender.status = 'FNT';

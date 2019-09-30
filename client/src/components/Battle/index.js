@@ -345,7 +345,7 @@ class Battle extends React.Component {
                             this.myPokemon.stats.hp / this.myPokemon.stats.maxHp
                         )
                     ]);
-            } else {
+            } else if (!enemy) {
                 await this.animateHPBar(
                     'enemy',
                     this.enemy.previous.pctHP,
@@ -353,9 +353,17 @@ class Battle extends React.Component {
                 );
             }
 
-
-
             await this.awaitTextAdvance(attackText);
+
+            if (action.miss) {
+                const missText = this.text.log.printString(
+                    this.textCtx,
+                    enemy ? `Enemy ${this.enemy.current.name}` : this.myPokemon.name + '\'s attack missed.'
+                )
+                this.text.log.clear(this.textCtx);
+                await this.awaitTextAdvance(missText);
+                
+            }
 
             this.text.log.clear(this.textCtx);
 
@@ -399,8 +407,28 @@ class Battle extends React.Component {
                     )
                 );
                 this.text.log.clear(this.textCtx);
+            } else if (action.effect) {
+                let adjective;
+                switch (action.effect.value) {
+                    case -2:
+                        adjective = 'sharply';
+                        break;
+                    case 2:
+                        adjective = 'greatly';
+                        break;
+                }
+                await this.awaitTextAdvance(
+                    this.text.log.printString(
+                        this.textCtx,
+                        (action.effect.target === 'enemy' &&
+                            (!enemy ? `Enemy ${this.enemy.current.name}` : this.myPokemon.name)) +
+                            '\'s ' + action.effect.stat +
+                            (adjective || '') + ' ' +
+                            (action.effect.value < 0 ? 'fell' : 'rose')
+                    )
+                )
+                this.text.log.clear(this.textCtx);
             }
-
             // Pokemon was statused
 
             return !(action.effect === 'FNT');

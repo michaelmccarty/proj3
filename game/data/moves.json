@@ -1,0 +1,59 @@
+{
+    "scratch": {
+        "power": 40,
+        "maxPP": 35,
+        "accuracy": 1,
+        "type": "normal"
+    },
+    "tackle": {
+        "power": 35,
+        "maxPP": 35,
+        "accuracy": 0.95,
+        "type": "normal"
+    },
+    "gust": {
+        "power": 40,
+        "maxPP": 35,
+        "accuracy": 1,
+        "type": "normal"
+    },
+    "growl": {
+        "power": 0,
+        "maxPP": 40,
+        "accuracy": 1,
+        "effect": {
+            "accuracy": 1,
+            "target": "enemy",
+            "type": "stat change",
+            "stat": "attack",
+            "value": -1
+        },
+        "type": "normal"
+    },
+    "tail whip": {
+        "power": 0,
+        "maxPP": 30,
+        "accuracy": 1,
+        "effect": {
+            "type": "stat change",
+            "target": "enemy",
+            "accuracy": 1,
+            "stat": "defense",
+            "value": -1
+        },
+        "type": "normal"
+    },
+    "sand-attack": {
+        "power": 0,
+        "maxPP": 30,
+        "accuracy": 1,
+        "effect": {
+            "type": "stat change",
+            "target": "enemy",
+            "accuracy": 1,
+            "stat": "accuracy",
+            "value": -1
+        },
+        "type": "normal"
+    }
+}
