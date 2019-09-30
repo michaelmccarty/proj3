@@ -38,7 +38,7 @@ class RegisterPage extends React.Component {
         console.log(body);
         API.register(body)
             .then(() => {
-                this.props.history.push('/game');
+                this.props.history.push('/');
             })
             .catch(function(err) {
                 console.log(err);
