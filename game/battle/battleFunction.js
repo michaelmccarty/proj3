@@ -134,8 +134,6 @@ function halfRound(attacker, defender, move) {
     )
   );
 
-  console.log(attackMod, defenseMod);
-
   const attack = attacker.stats.attack * attackMod;
   const defense = defender.stats.defense * defenseMod;
 

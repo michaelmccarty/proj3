@@ -101,6 +101,7 @@ class Battle extends React.Component {
     }
 
     componentDidMount() {
+        // this.props.initSocket();
         this.stopDrawLoop = false;
         this.startBattle();
         this.canvasRef.current.focus();
