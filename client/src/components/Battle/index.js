@@ -461,6 +461,13 @@ class Battle extends React.Component {
 
     battleEnd = ({ condition, winner }) => {
         console.log(condition, winner);
+        if (condition === 'run') {
+            this.canExitBattle = true;
+            if (this._instantExit) {
+                this.exitBattle(2, winner);
+            }
+            return;
+        }
         if (winner === 'me') {
             this.canExitBattle = true;
             if (this._instantExit) {
@@ -471,13 +478,13 @@ class Battle extends React.Component {
             // respawn player with full health pokemon
             this.canExitBattle = true;
             if (this._instantExit) {
-                this.exitBattle();
+                this.exitBattle(1);
             }
         }
     };
 
     async exitBattle(code) {
-        if (code) {
+        if (code === 1) {
             await this.awaitTextAdvance(
                 this.text.log.printString(
                     this.textCtx,
@@ -485,6 +492,17 @@ class Battle extends React.Component {
                 )
             );
             await this.fadeToBlack();
+        } else if (code === 2) {
+            this.hudSprites.pop();
+            this.hudSprites.pop();
+            this.hudSprites.pop();
+            this.text.battleMenu.clear(this.textCtx);
+            await this.awaitTextAdvance(
+                this.text.log.printString(
+                    this.textCtx,
+                    arguments[1] !== 'me' ? `Enemy ${this.enemy.current.name} Fled`: 'Got away safely'
+                )
+            );
         }
         // Play post battle message here
         Object.entries(this.text).map(([, textbox]) =>
@@ -625,6 +643,20 @@ class Battle extends React.Component {
         this.text.moveMenu.printString(this.textCtx, moveString, 0);
         this.configureCursor('move menu');
     };
+
+    itemMenu = () => {
+        this.configureCursor('battle menu');
+    }
+
+    pkmnMenu = () => {
+        this.configureCursor('battle menu');
+    }
+
+    run = () => {
+        this._select({
+            type: 'run'
+        })
+    }
 
     useMove = slot => {
         this.text.moveMenu.clear(this.textCtx);

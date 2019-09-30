@@ -74,6 +74,10 @@ class Battle extends EventEmitter {
             this.combatant1.send('turn results', message1);
             this.combatant2.send('turn results', message2);
 
+            if (results.script[0].type === 'run') {
+                return this.endBattle('run', results.whoFirst);
+            }
+
             // determine if either pokemon fainted
             // if so, determine if the battle is over
             // TIE needs to be determined first
