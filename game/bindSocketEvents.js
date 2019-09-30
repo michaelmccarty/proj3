@@ -158,6 +158,10 @@ module.exports = function (io, connectedUsers) {
 
                         socket.emit('connectedUserCheck', { onlineUsers });
                     });
+                })
+                .catch(err => {
+                    console.log(err);
+                    socket.disconnect();
                 });
         });
     };
