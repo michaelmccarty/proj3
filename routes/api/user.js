@@ -29,7 +29,7 @@ module.exports = (app, passport, db) => {
     app.post('/api/users', (req, res) => {
         const unhashedpw = req.body.password;
 
-        console.log(req.body);
+        // console.log(req.body);
 
         bcrypt.hash(unhashedpw, 10, function(err, hash) {
             db.User.create({
