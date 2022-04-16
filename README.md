@@ -1,5 +1,8 @@
 # PokémOnline
 
+![](readme-gifs/register.gif)
+![](readme-gifs/game.gif)
+
 PokémOnline is a way to play Pokémon with your friends. Pokémon was played only on the Gameboy, online play wasn't available. In fact, users had to be sitting next to each other and connect with a wire to play together. With PokémOnline you can play with anyone, anywhere.
 
 ## Getting Started
@@ -18,11 +21,6 @@ Can create your own account! We use Passport to hash and salt our passwords. On 
 * [MongoDB](https://www.mongodb.com/) - Database structure
 * [Mongoose](https://mongoosejs.com/) - Object modeling for MongoDB
 * [Axios](https://github.com/axios/axios) - Server HTTP requests
-
-## Preview
-
-![](readme-gifs/register.gif)
-![](readme-gifs/game.gif)
 
 ## Authors
 
