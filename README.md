@@ -7,8 +7,11 @@ PokémOnline is a way to play Pokémon with your friends. Pokémon was played on
 
 ## Getting Started
 
-TODO: redeploy to herokuapp
+### Jump right in
+To play, visit our deployed link **[here](https://pokem-online.herokuapp.com/)**. Login with our test account. 
 
+Email: `test@test.com`
+Password: `password`
 ### Make an account
 Can create your own account! We use Passport to hash and salt our passwords. On the registration page, you can create an account and pick your character.
 
