@@ -30,7 +30,7 @@ Or, you can create your own account. We use PassportJS to hash and salt our pass
 
 ## Authors
 
-* **Michael McCarty** - *Authentication, sockets, deployment* - [mccartyatl](https://github.com/mccartyatl)
+* **Michael McCarty** - *Authentication, sockets, deployment* - [mccartyatl](https://github.com/michaelmccarty)
 * **Will West** - *Game logic* - [Jyouya](https://github.com/Jyouya)
 * **Logan Miner** - *Game logic, sockets, deployment* - [lrminer](https://github.com/lrminer)
 * **Rodney Smith** - *Authentication, deployment* - [smit239](https://github.com/smit239)
